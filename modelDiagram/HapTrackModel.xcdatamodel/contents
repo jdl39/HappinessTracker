@@ -37,12 +37,12 @@
         <attribute name="timeToComplete" optional="YES" syncable="YES"/>
         <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="goalTypes" inverseEntity="ActivityType" syncable="YES"/>
         <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="goalType" inverseEntity="Goal" syncable="YES"/>
-        <relationship name="guide" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Guide" inverseName="goals" inverseEntity="Guide" syncable="YES"/>
-        <relationship name="measurementType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="goals" inverseEntity="MeasurementType" syncable="YES"/>
+        <relationship name="guide" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Guide" inverseName="goalTypes" inverseEntity="Guide" syncable="YES"/>
+        <relationship name="measurementType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="goalTypes" inverseEntity="MeasurementType" syncable="YES"/>
     </entity>
     <entity name="Guide" syncable="YES">
         <attribute name="timeCreated" optional="YES" syncable="YES"/>
-        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="guide" inverseEntity="GoalType" syncable="YES"/>
+        <relationship name="goalTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="guide" inverseEntity="GoalType" syncable="YES"/>
     </entity>
     <entity name="HappinessCategory" syncable="YES">
         <attribute name="name" optional="YES" syncable="YES"/>
@@ -74,7 +74,7 @@
         <attribute name="isQuantifiable" optional="YES" syncable="YES"/>
         <attribute name="name" optional="YES" syncable="YES"/>
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="measurementTypes" inverseEntity="Activity" syncable="YES"/>
-        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="measurementType" inverseEntity="GoalType" syncable="YES"/>
+        <relationship name="goalTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="measurementType" inverseEntity="GoalType" syncable="YES"/>
         <relationship name="measurements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Measurement" inverseName="measurementType" inverseEntity="Measurement" syncable="YES"/>
     </entity>
     <entity name="Message" syncable="YES">

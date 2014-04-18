@@ -6,5 +6,10 @@ class CreateMeasurementTypes < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    create_table :activities_measurement_types, id: false do |t|
+      t.belongs_to :activity
+      t.belongs_to :measurement_type
+    end
   end
 end

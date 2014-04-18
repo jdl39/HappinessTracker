@@ -24,6 +24,11 @@ ActiveRecord::Schema.define(version: 20140418203721) do
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
+  create_table "activities_measurement_types", id: false, force: true do |t|
+    t.integer "activity_id"
+    t.integer "measurement_type_id"
+  end
+
   create_table "activity_types", force: true do |t|
     t.string   "name"
     t.integer  "num_users"
