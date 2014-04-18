@@ -99,18 +99,18 @@
     <elements>
         <element name="Activity" positionX="333" positionY="104" width="128" height="133"/>
         <element name="ActivityType" positionX="349" positionY="-37" width="128" height="103"/>
-        <element name="Message" positionX="-189" positionY="275" width="128" height="118"/>
+        <element name="Challenge" positionX="63" positionY="368" width="128" height="88"/>
         <element name="Friendship" positionX="-189" positionY="144" width="128" height="73"/>
+        <element name="Goal" positionX="475" positionY="74" width="128" height="88"/>
+        <element name="GoalType" positionX="531" positionY="-142" width="128" height="163"/>
+        <element name="Guide" positionX="538" positionY="-270" width="128" height="73"/>
         <element name="HappinessCategory" positionX="-171" positionY="-189" width="128" height="73"/>
         <element name="HappinessQuestion" positionX="-144" positionY="-55" width="128" height="88"/>
         <element name="HappinessResponse" positionX="106" positionY="-90" width="128" height="103"/>
         <element name="Measurement" positionX="324" positionY="296" width="128" height="118"/>
         <element name="MeasurementNote" positionX="558" positionY="341" width="128" height="73"/>
         <element name="MeasurementType" positionX="628" positionY="135" width="128" height="118"/>
+        <element name="Message" positionX="-189" positionY="275" width="128" height="118"/>
         <element name="User" positionX="117" positionY="54" width="128" height="223"/>
-        <element name="GoalType" positionX="531" positionY="-142" width="128" height="163"/>
-        <element name="Guide" positionX="538" positionY="-270" width="128" height="73"/>
-        <element name="Goal" positionX="475" positionY="74" width="128" height="88"/>
-        <element name="Challenge" positionX="63" positionY="368" width="128" height="88"/>
     </elements>
 </model>
