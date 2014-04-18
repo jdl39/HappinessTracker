@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guide_id: 
+  activity_type_id: 
+  measurement_type_id: 
+  is_repeated: false
+  requires_greater: false
+  measure_value: 1.5
+  seconds_to_complete: 1
+
+two:
+  guide_id: 
+  activity_type_id: 
+  measurement_type_id: 
+  is_repeated: false
+  requires_greater: false
+  measure_value: 1.5
+  seconds_to_complete: 1

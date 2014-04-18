@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  measurement_type_id: 
+  measurement_note_id: 
+  value: 1.5
+
+two:
+  measurement_type_id: 
+  measurement_note_id: 
+  value: 1.5

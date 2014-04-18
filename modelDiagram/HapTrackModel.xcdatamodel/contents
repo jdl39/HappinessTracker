@@ -4,6 +4,7 @@
         <attribute name="timeCreated" optional="YES" syncable="YES"/>
         <attribute name="timeLastAccessed" optional="YES" syncable="YES"/>
         <relationship name="activityType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="activities" inverseEntity="ActivityType" syncable="YES"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="activity" inverseEntity="Goal" syncable="YES"/>
         <relationship name="measurements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Measurement" inverseName="activity" inverseEntity="Measurement" syncable="YES"/>
         <relationship name="measurementTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="activities" inverseEntity="MeasurementType" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="activities" inverseEntity="User" syncable="YES"/>
@@ -12,7 +13,7 @@
         <attribute name="name" optional="YES" syncable="YES"/>
         <attribute name="numUsers" optional="YES" syncable="YES"/>
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="activityType" inverseEntity="Activity" syncable="YES"/>
-        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="activity" inverseEntity="GoalType" syncable="YES"/>
+        <relationship name="goalTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="activity" inverseEntity="GoalType" syncable="YES"/>
     </entity>
     <entity name="Challenge" syncable="YES">
         <attribute name="timeCompleted" optional="YES" syncable="YES"/>
@@ -26,6 +27,7 @@
     <entity name="Goal" syncable="YES">
         <attribute name="numCompleted" optional="YES" syncable="YES"/>
         <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="goals" inverseEntity="Activity" syncable="YES"/>
         <relationship name="goalType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GoalType" inverseName="goals" inverseEntity="GoalType" syncable="YES"/>
     </entity>
     <entity name="GoalType" syncable="YES">
@@ -33,7 +35,7 @@
         <attribute name="lessOrGreater" optional="YES" syncable="YES"/>
         <attribute name="measureValue" optional="YES" syncable="YES"/>
         <attribute name="timeToComplete" optional="YES" syncable="YES"/>
-        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="goals" inverseEntity="ActivityType" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="goalTypes" inverseEntity="ActivityType" syncable="YES"/>
         <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="goalType" inverseEntity="Goal" syncable="YES"/>
         <relationship name="guide" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Guide" inverseName="goals" inverseEntity="Guide" syncable="YES"/>
         <relationship name="measurementType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="goals" inverseEntity="MeasurementType" syncable="YES"/>
@@ -97,11 +99,11 @@
         <relationship name="messagesSent" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="sender" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Activity" positionX="333" positionY="104" width="128" height="133"/>
-        <element name="ActivityType" positionX="349" positionY="-37" width="128" height="103"/>
+        <element name="Activity" positionX="333" positionY="104" width="128" height="148"/>
+        <element name="ActivityType" positionX="349" positionY="-58" width="128" height="103"/>
         <element name="Challenge" positionX="63" positionY="368" width="128" height="88"/>
         <element name="Friendship" positionX="-189" positionY="144" width="128" height="73"/>
-        <element name="Goal" positionX="475" positionY="74" width="128" height="88"/>
+        <element name="Goal" positionX="502" positionY="90" width="128" height="103"/>
         <element name="GoalType" positionX="531" positionY="-142" width="128" height="163"/>
         <element name="Guide" positionX="538" positionY="-270" width="128" height="73"/>
         <element name="HappinessCategory" positionX="-171" positionY="-189" width="128" height="73"/>
@@ -109,7 +111,7 @@
         <element name="HappinessResponse" positionX="106" positionY="-90" width="128" height="103"/>
         <element name="Measurement" positionX="324" positionY="296" width="128" height="118"/>
         <element name="MeasurementNote" positionX="558" positionY="341" width="128" height="73"/>
-        <element name="MeasurementType" positionX="628" positionY="135" width="128" height="118"/>
+        <element name="MeasurementType" positionX="646" positionY="135" width="128" height="118"/>
         <element name="Message" positionX="-189" positionY="275" width="128" height="118"/>
         <element name="User" positionX="117" positionY="54" width="128" height="223"/>
     </elements>
