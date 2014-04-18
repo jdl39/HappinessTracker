@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Activity" syncable="YES">
+        <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <attribute name="timeLastAccessed" optional="YES" syncable="YES"/>
+        <relationship name="activityType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="activities" inverseEntity="ActivityType" syncable="YES"/>
+        <relationship name="measurements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Measurement" inverseName="activity" inverseEntity="Measurement" syncable="YES"/>
+        <relationship name="measurementTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="activities" inverseEntity="MeasurementType" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="activities" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="ActivityType" syncable="YES">
+        <attribute name="name" optional="YES" syncable="YES"/>
+        <attribute name="numUsers" optional="YES" syncable="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="activityType" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="activity" inverseEntity="GoalType" syncable="YES"/>
+    </entity>
+    <entity name="Challenge" syncable="YES">
+        <attribute name="timeCompleted" optional="YES" syncable="YES"/>
+        <attribute name="timeDue" optional="YES" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="challenge" inverseEntity="Message" syncable="YES"/>
+    </entity>
+    <entity name="Friendship" syncable="YES">
+        <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="friendships" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Goal" syncable="YES">
+        <attribute name="numCompleted" optional="YES" syncable="YES"/>
+        <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <relationship name="goalType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GoalType" inverseName="goals" inverseEntity="GoalType" syncable="YES"/>
+    </entity>
+    <entity name="GoalType" syncable="YES">
+        <attribute name="isRepeated" optional="YES" syncable="YES"/>
+        <attribute name="lessOrGreater" optional="YES" syncable="YES"/>
+        <attribute name="measureValue" optional="YES" syncable="YES"/>
+        <attribute name="timeToComplete" optional="YES" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityType" inverseName="goals" inverseEntity="ActivityType" syncable="YES"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="goalType" inverseEntity="Goal" syncable="YES"/>
+        <relationship name="guide" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Guide" inverseName="goals" inverseEntity="Guide" syncable="YES"/>
+        <relationship name="measurementType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="goals" inverseEntity="MeasurementType" syncable="YES"/>
+    </entity>
+    <entity name="Guide" syncable="YES">
+        <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="guide" inverseEntity="GoalType" syncable="YES"/>
+    </entity>
+    <entity name="HappinessCategory" syncable="YES">
+        <attribute name="name" optional="YES" syncable="YES"/>
+        <relationship name="questions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HappinessQuestion" inverseName="categories" inverseEntity="HappinessQuestion" syncable="YES"/>
+    </entity>
+    <entity name="HappinessQuestion" syncable="YES">
+        <attribute name="content" optional="YES" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HappinessCategory" inverseName="questions" inverseEntity="HappinessCategory" syncable="YES"/>
+        <relationship name="responses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HappinessResponse" inverseName="question" inverseEntity="HappinessResponse" syncable="YES"/>
+    </entity>
+    <entity name="HappinessResponse" syncable="YES">
+        <attribute name="timestamp" optional="YES" syncable="YES"/>
+        <attribute name="value" optional="YES" syncable="YES"/>
+        <relationship name="question" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HappinessQuestion" inverseName="responses" inverseEntity="HappinessQuestion" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="happinessResponses" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Measurement" syncable="YES">
+        <attribute name="timestamp" optional="YES" syncable="YES"/>
+        <attribute name="value" optional="YES" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="measurements" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="measurementType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementType" inverseName="measurements" inverseEntity="MeasurementType" syncable="YES"/>
+        <relationship name="note" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MeasurementNote" inverseName="measurement" inverseEntity="MeasurementNote" syncable="YES"/>
+    </entity>
+    <entity name="MeasurementNote" syncable="YES">
+        <attribute name="contents" optional="YES" syncable="YES"/>
+        <relationship name="measurement" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Measurement" inverseName="note" inverseEntity="Measurement" syncable="YES"/>
+    </entity>
+    <entity name="MeasurementType" syncable="YES">
+        <attribute name="isQuantifiable" optional="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" syncable="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="measurementTypes" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GoalType" inverseName="measurementType" inverseEntity="GoalType" syncable="YES"/>
+        <relationship name="measurements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Measurement" inverseName="measurementType" inverseEntity="Measurement" syncable="YES"/>
+    </entity>
+    <entity name="Message" syncable="YES">
+        <attribute name="content" optional="YES" syncable="YES"/>
+        <attribute name="timeCreated" optional="YES" syncable="YES"/>
+        <relationship name="challenge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Challenge" inverseName="message" inverseEntity="Challenge" syncable="YES"/>
+        <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="messagesReceived" inverseEntity="User" syncable="YES"/>
+        <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="messagesSent" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="User" syncable="YES">
+        <attribute name="email" optional="YES" syncable="YES"/>
+        <attribute name="firstName" optional="YES" syncable="YES"/>
+        <attribute name="lastName" optional="YES" syncable="YES"/>
+        <attribute name="passwordHash" optional="YES" syncable="YES"/>
+        <attribute name="phone" optional="YES" syncable="YES"/>
+        <attribute name="salt" optional="YES" syncable="YES"/>
+        <attribute name="username" optional="YES" syncable="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="user" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="friendships" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Friendship" inverseName="users" inverseEntity="Friendship" syncable="YES"/>
+        <relationship name="happinessResponses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HappinessResponse" inverseName="user" inverseEntity="HappinessResponse" syncable="YES"/>
+        <relationship name="messagesReceived" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="receiver" inverseEntity="Message" syncable="YES"/>
+        <relationship name="messagesSent" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="sender" inverseEntity="Message" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Activity" positionX="333" positionY="104" width="128" height="133"/>
+        <element name="ActivityType" positionX="349" positionY="-37" width="128" height="103"/>
+        <element name="Message" positionX="-189" positionY="275" width="128" height="118"/>
+        <element name="Friendship" positionX="-189" positionY="144" width="128" height="73"/>
+        <element name="HappinessCategory" positionX="-171" positionY="-189" width="128" height="73"/>
+        <element name="HappinessQuestion" positionX="-144" positionY="-55" width="128" height="88"/>
+        <element name="HappinessResponse" positionX="106" positionY="-90" width="128" height="103"/>
+        <element name="Measurement" positionX="324" positionY="296" width="128" height="118"/>
+        <element name="MeasurementNote" positionX="558" positionY="341" width="128" height="73"/>
+        <element name="MeasurementType" positionX="628" positionY="135" width="128" height="118"/>
+        <element name="User" positionX="117" positionY="54" width="128" height="223"/>
+        <element name="GoalType" positionX="531" positionY="-142" width="128" height="163"/>
+        <element name="Guide" positionX="538" positionY="-270" width="128" height="73"/>
+        <element name="Goal" positionX="475" positionY="74" width="128" height="88"/>
+        <element name="Challenge" positionX="63" positionY="368" width="128" height="88"/>
+    </elements>
+</model>
