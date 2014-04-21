@@ -1,0 +1,2 @@
+module MeasurementNotesHelper
+end
