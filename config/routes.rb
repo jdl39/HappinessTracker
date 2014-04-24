@@ -1,5 +1,13 @@
 HappinessApp::Application.routes.draw do
   resources :users
+  resources :activities
+  resources :activity_types
+  resources :goals
+  resources :goal_types
+  resources :guides
+  resources :measurements
+  resources :measurement_notes
+  resources :measurement_types
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
