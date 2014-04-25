@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   def index
     # see if there's an existing, user logged in
+    @user = User.new
   end
 
 	def show
