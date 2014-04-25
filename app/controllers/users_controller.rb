@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
 
+  def index
+    # see if there's an existing, user logged in
+  end
+
 	def show
 		@user = User.find(params[:id])
 	end
@@ -9,6 +13,11 @@ class UsersController < ApplicationController
 	end
 
 	def create
+      # names of fields:
+      # firstname
+      # lastname
+      # username
+      # password
     	@user = User.new(user_params)
     	if @user.save
       		redirect_to @user
