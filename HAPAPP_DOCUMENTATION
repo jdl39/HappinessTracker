@@ -1,0 +1,71 @@
+HAPAPP DOCUMENTATION
+--------------------
+This is the documentation for HapApp as a system. Whenever we add new work to the app, we should update this file so that our expected interface is clear and available to everyone else.
+
+-----------------------------
+ROUTES
+-----------------------------
+Here are all the working routes in the app.
+Format:
+URL -- CONTROLLER#ACTION
+Description.
+
+/ -- users#index
+This is the root page of the site. For users not logged in, it redirects to the login page. Otherwise, it displays the landing page.
+
+
+-----------------------------
+CONTROLLERS
+-----------------------------
+Here are all the controllers for the app, and their potential actions.
+Format:
+CONTROLLER
+----------
+ACTION1: Renders / redirects to - view / url
+param1 - description.
+param2 - description.
+action description.
+
+ACTION2: ...
+
+-----------------------------
+VIEWS
+-----------------------------
+The views of the app.
+Format:
+VIEW_NAME:
+param1 - description
+param2 - description
+view description.
+
+-----------------------------
+PARTIALS
+-----------------------------
+The partials that views have access to.
+Format: same as views
+
+-----------------------------
+HELPERS
+-----------------------------
+Helper modules. By default, they are accessable by the views, but can also be accessed by the controllers if the line "include MODULE_NAME" is placed in application_controller.rb
+Format:
+MODULE
+------
+FUNCTION1:
+param1 - description.
+param2 - description.
+function description.
+
+FUNCTION2: ...
+
+SessionsHelper
+--------------
+sign_in:
+user - The User (model) object representing the user we wish to sign in.
+This method signs in the user, and stores a permanent cookie representing this fact.
+
+sign_out:
+This method signs out the current user by invalidating the browser's cookie.
+
+current_user:
+This method represents the currently logged in user, and can be get and set like a variable. The first time it's called per page, it makes a database query using the browser cookie, but it caches the result for subsequent calls.

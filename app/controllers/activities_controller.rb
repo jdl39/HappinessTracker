@@ -1,3 +1,5 @@
+# TODO: update and delete look copy-pasted.
+
 class ActivitiesController < ApplicationController
     before_action :set_activity, only: [:show, :edit, :update, :destroy]
 
@@ -49,6 +51,22 @@ class ActivitiesController < ApplicationController
 		end
     end
 
+    # Intelligent search for activities
+    # Must include:
+    # BOOLEAN: stringIsExistingActivity (do we need to present the "add new" option)
+    # BOOLEAN: userHasDone
+    # OBJECT: mostProbable activity
+    # => Should have all data needed to render (past measurements, measurement-types, etc.)
+    # => Should also include friends who do activity
+    # LIST OF STRINGS: otherProbableActivities
+    def search
+    end
+
+    # Takes in an activity_type id and a user id and returns all data associated with them.
+    def data_for_user
+    	# Return data_for_user_helper
+    end
+
 
 	private
        # Use callbacks to share common setup or constraints between actions.	   
@@ -59,5 +77,9 @@ class ActivitiesController < ApplicationController
 	   # Restrict parameters
 	   def activity_params
 		   #params.require(:activity).permit(Fill in)
+	   end
+
+	   # Helper for search and data_for_user
+	   def data_for_user_helper(user_id, activity_type_id)
 	   end
 end
