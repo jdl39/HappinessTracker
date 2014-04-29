@@ -28,6 +28,28 @@ action description.
 
 ACTION2: ...
 
+ActivitiesController
+--------------------
+create_activity: # TODO: fill in renders/redirects
+activity_type_id - the id of the activity type to create an instance of.
+This action creates a new activity associated with the current user and the specified activity type.
+
+create_activity_type: # TODO: fill in renders/redirects
+name - the name of the activity type to create.
+This action creates a new activity type with the given name.
+
+search: Renders JSON # NOTE: NOT YET IMPLEMENTED
+query - the activity string that we want to search for.
+This method searches the database for results similar to the query and returns the most probable results.
+# TODO: Specify the format of the returned JSON.
+
+data_for_user: Renders JSON # NOTE: NOT YET IMPLEMENTED
+activity_type_id - the id of the activity type we wish to search for.
+user_id - the id of the user we wish to search for.
+This method returns JSON representing the data associated with the user-activity_type pair. Useful for querying how well friends perform on activities you are doing.
+# TODO: Sepcify the format of the returned JSON.
+
+
 -----------------------------
 VIEWS
 -----------------------------

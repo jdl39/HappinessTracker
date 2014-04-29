@@ -7,5 +7,6 @@ class CreateActivities < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :activities, [:user_id, :activity_type_id], unique: true
   end
 end
