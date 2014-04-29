@@ -1,18 +1,17 @@
 <%= @users %>
 
 <!--Login stuff-->
-<p>Login to HapApp</p>
-<form method="post">
-	<ul>
-		<li><label for="username">Username</label></li>
-		<li><input type="text" id="username" name="username" required /></li>
-		<li><label for="password">Password</label></li>
-		<li><input type="password" id="password" name="password" required /></li>
-		<li><input type="submit" id="login" value="Login" name="Log In" required /></li>
-		<li><input type="checkbox" name="stayLoggedIn" value="yes">Remember me</li>
-		<li><a href="">Forgot Password?</a></li>
-	</ul>
-</form>
+<h1>Sign in</h1>
+
+<%= form_for(:session, url: sessions_path) do |f| %>
+	<%= f.label :username %>
+    <%= f.text_field :username %>
+
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+
+    <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
+<% end %>
 <p>Not a member? <a href="">Get happy now!</a></p>
 <br><br><br><br>
 
