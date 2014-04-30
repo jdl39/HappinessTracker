@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
 
-  def index
-    # see if there's an existing, user logged in
-    @user = User.new
-  end
+    def index
+      # see if there's an existing, user logged in
+      @user = User.new
+    end
 
 	def show
 		@user = User.find(params[:id])
@@ -13,8 +13,12 @@ class UsersController < ApplicationController
 		@user = User.new
 	end
 
-  def profile
-  end
+    def profile
+    end
+
+    def home
+    # Render landing page
+	end
 
 	def create
       # names of fields:
