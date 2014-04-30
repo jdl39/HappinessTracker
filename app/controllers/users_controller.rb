@@ -13,6 +13,9 @@ class UsersController < ApplicationController
 		@user = User.new
 	end
 
+  def profile
+  end
+
 	def create
       # names of fields:
       # firstname

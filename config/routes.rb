@@ -7,7 +7,13 @@ HappinessApp::Application.routes.draw do
   match '/signup',  to: 'users#new',            via: 'get'
   #match '/signin',  to: 'sessions#new',         via: 'get'
   match '/signout', to: 'sessions#destroy',     via: 'delete'
-  get '/track' => 'search#index'
+  get '/track', to: 'search#index'
+  get '/happiness', to: 'happiness#index'
+  get '/goals', to: 'goals#index'
+  get '/guides', to: 'guides#index'
+  get '/inbox', to: 'messages#inbox'
+  get '/profile', to: 'users#profile'
+  get '/challenges', to: 'challenges#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
