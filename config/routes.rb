@@ -14,7 +14,7 @@ HappinessApp::Application.routes.draw do
   get '/inbox', to: 'messages#inbox'
   get '/profile', to: 'users#profile'
   get '/challenges', to: 'challenges#index'
-  get '/home' to: 'users#home'
+  get '/home', to: 'users#home'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
