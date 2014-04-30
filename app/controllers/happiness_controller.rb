@@ -1,0 +1,2 @@
+class HappinessController < ApplicationController
+end
