@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-before_action :require_login, :except=>[:index]
+before_action :require_login, :except=>[:index, :create]
 
   def index
     # see if there's an existing, user logged in

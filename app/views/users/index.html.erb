@@ -58,10 +58,10 @@
 
 <%= form_for(:session, url: sessions_path) do |f| %>
 	<%= f.label :username %>
-    <%= f.text_field :username %>
+    <%= f.text_field :username, :required => true %>
 
     <%= f.label :password %>
-    <%= f.password_field :password %>
+    <%= f.password_field :password, :required => true  %>
 
     <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
 <% end %>
@@ -73,6 +73,7 @@
 <div class="row">
   <div class="span6 offset3">
 	  <%= form_for(@user) do |f| %>
+	  	<%= render 'shared/error_messages' %>
         <ul>
 		  <li>
 		     <%= f.label :first_name %>
