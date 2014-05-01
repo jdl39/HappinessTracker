@@ -8,7 +8,7 @@ HappinessApp::Application.routes.draw do
   resources :sessions, only: [:create, :destroy] # removed "new"
   match '/signup',  to: 'users#new',            via: 'get'
   #match '/signin',  to: 'sessions#new',         via: 'get'
-  match '/signout', to: 'sessions#destroy',     via: 'delete'
+  match '/signout', to: 'sessions#destroy',     via: 'get'
   get '/track', to: 'search#index'
   get '/happiness', to: 'happiness#index'
   get '/goals', to: 'goals#index'
