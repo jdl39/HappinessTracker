@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
 			redirect_to user
 		else
 			flash.now[:error] = "Invalid username/password."
-			render 'index'
+			redirect_to controller: 'user', action: 'index'
 		end
 	end
 
