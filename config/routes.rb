@@ -1,6 +1,8 @@
 HappinessApp::Application.routes.draw do
 
   root 'users#index'
+  post 'users/login' => 'users#login'
+  get 'new' => 'users#new'
 
   resources :users
   resources :sessions, only: [:new, :create, :destroy]

@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   def index
     # see if there's an existing, user logged in
+    @user = User.new
   end
 
 	def show
@@ -11,6 +12,10 @@ class UsersController < ApplicationController
 	def new
 		@user = User.new
 	end
+
+  def login
+    redirect_to :action => 'show'
+  end
 
 	def create
       # names of fields:
@@ -23,8 +28,8 @@ class UsersController < ApplicationController
       		redirect_to @user
     	else
       		render 'new'
-      	end
-    end
+      end
+  end
 
     private
     	def user_params

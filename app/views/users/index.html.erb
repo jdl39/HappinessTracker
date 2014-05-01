@@ -1,23 +1,60 @@
-<%= @users %>
+<script>
+	$(document).ready(function() {
+		$('#create').click(function(e) {
+
+			alert('create clicked');
+
+
+			$.get("new", function(response) {
+				$("#content").html(response);
+			});
+
+			pageurl = "new";
+			if(pageurl!=window.location){
+				window.history.pushState({path:pageurl},'',pageurl);
+			}
+
+			return false;
+			/*
+			e.preventDefault();
+			
+			//get the link location that was clicked
+			pageurl = $(this).attr('href');
+			alert(pageurl);
+
+			//to change the browser URL to the given link location
+			if(pageurl!=window.location){
+				window.history.pushState({path:pageurl},'',pageurl);
+			}
+			
+			//stop refreshing to the page given in
+			return false;
+			*/
+
+		});
+	});
+</script>
 
 <!--Login stuff-->
-<p>Login to HapApp</p>
-<form method="post">
-	<ul>
-		<li><label for="username">Username</label></li>
-		<li><input type="text" id="username" name="username" required /></li>
-		<li><label for="password">Password</label></li>
-		<li><input type="password" id="password" name="password" required /></li>
-		<li><input type="submit" id="login" value="Login" name="Log In" required /></li>
-		<li><input type="checkbox" name="stayLoggedIn" value="yes">Remember me</li>
-		<li><a href="">Forgot Password?</a></li>
-	</ul>
-</form>
-<p>Not a member? <a href="">Get happy now!</a></p>
-<br><br><br><br>
+<div id="content">
+	<p>Login to HapApp</p>
+	<%= form_for @user, :url => { :action => "login" } do |f| %>
+		<ul>
+			<li><label for="username">Username</label></li>
+			<li><input type="text" id="username" name="username" required /></li>
+			<li><label for="password">Password</label></li>
+			<li><input type="password" id="password" name="password" required /></li>
+			<li><input type="submit" id="login" value="Login" name="Log In" required /></li>
+			<li><input type="checkbox" name="stayLoggedIn" value="yes">Remember me</li>
+			<li><a href="">Forgot Password?</a></li>
+		</ul>
+	<% end %>
+	<p>Not a member? <a href="" id="create">Get happy now!</a></p>
+</div>
 
 	
 <!--Create account stuff-->
+<!--
 <form method="post">
 	<ul>
 		<li><label for="firstname">First Name</label></li>
@@ -31,3 +68,4 @@
 		<li><input type="submit" value="Get Happy!"></li>
 	</ul>
 </form>
+-->
