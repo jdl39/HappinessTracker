@@ -10,16 +10,16 @@ before_action :require_login, :except=>[:index, :create]
     end
   end
 
-	def show
-		@user = User.find(params[:id])
-	end
+	#def show
+	#	@user = User.find(params[:id])
+	#end
 
 	def new
 		@user = User.new
 	end
 
   def login
-    redirect_to :action => 'show'
+    redirect_to action: 'home'
   end
 
   def profile
@@ -38,6 +38,7 @@ before_action :require_login, :except=>[:index, :create]
       # password
     @user = User.new(user_params)
     if @user.save
+      sign_in @user
       redirect_to @user
     else
       render 'index'
