@@ -30,13 +30,17 @@ ACTION2: ...
 
 ActivitiesController
 --------------------
-create_activity: # TODO: fill in renders/redirects
-activity_type_id - the id of the activity type to create an instance of.
-This action creates a new activity associated with the current user and the specified activity type.
+create_activity: Renders JSON - {"hapapperror": "...", "errors": [...]} # TODO: Do you need any other things returned?
+json - A json object of the parameters. It must include:
+	activity_name - the name of the activity type to add.
+	measurements - an array of measurement type names to associate with the activity.
+This action creates a new activity associated with the current user and the specified activity type / measurement types. Currently, it returns a json object that contains "hapapperror" and "errors" if anything went wrong.
 
-create_activity_type: # TODO: fill in renders/redirects
-name - the name of the activity type to create.
-This action creates a new activity type with the given name.
+track_new_measurement: Renders JSON - {"hapapperror": "...", "errors": [...]} # TODO: Do you need any other things returned?
+json - A json object of the parameters. It must include:
+	activity_name - the name of the activity type to measure.
+	measurements - an object containing measurement names as keys and values as values.
+This action creates measurements for the specified activity and the current user. It returns json containing any errors that occurred.
 
 search: Renders JSON # NOTE: NOT YET IMPLEMENTED
 query - the activity string that we want to search for.
