@@ -36,6 +36,7 @@
 </script>
 
 <!--Login stuff-->
+<!--
 <div id="content">
 	<p>Login to HapApp</p>
 	<%= form_for @user, :url => { :action => "login" } do |f| %>
@@ -51,11 +52,67 @@
 	<% end %>
 	<p>Not a member? <a href="" id="create">Get happy now!</a></p>
 </div>
+-->
+
+<h1>Sign in</h1>
+
+<%= form_for(:session, url: sessions_path) do |f| %>
+	<%= f.label :username %>
+    <%= f.text_field :username %>
+
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+
+    <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
+<% end %>
+<p>Not a member? <a href="">Get happy now!</a></p>
+<br><br><br><br>
 
 	
 <!--Create account stuff-->
-<!--
-<form method="post">
+<div class="row">
+  <div class="span6 offset3">
+	  <%= form_for(@user) do |f| %>
+        <ul>
+		  <li>
+		     <%= f.label :first_name %>
+		     <%= f.text_field :first_name %>
+	      </li>
+
+		  <li>
+		     <%= f.label :last_name %>
+		     <%= f.text_field :last_name %>
+          </li>
+
+		  <li>
+	         <%= f.label :username %>
+		     <%= f.text_field :username %>
+          </li>
+
+		  <li>
+		     <%= f.label :email %>
+	         <%= f.text_field :email %>
+          </li>
+
+		  <li>
+		     <%= f.label :password %>
+		     <%= f.password_field :password %>
+          </li>
+
+		  <li>
+		     <%= f.label :password_confirmation, "Confirmation" %>
+		     <%= f.password_field :password_confirmation %>
+          </li>
+
+		  <li>
+		     <%= f.submit "Get Happy!", class: "btn btn-large btn-primary" %>
+	      </li>	 
+	  </ul>
+	<% end %>
+  </div>
+</div>
+
+<!--<form method="post">
 	<ul>
 		<li><label for="firstname">First Name</label></li>
 		<li><input type"text" id="firstname" name="firstname" required /></li>
@@ -68,4 +125,4 @@
 		<li><input type="submit" value="Get Happy!"></li>
 	</ul>
 </form>
--->
+

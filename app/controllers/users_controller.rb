@@ -17,18 +17,25 @@ class UsersController < ApplicationController
     redirect_to :action => 'show'
   end
 
+  def profile
+  end
+
+  def home
+    # Render landing page
+	end
+
 	def create
       # names of fields:
       # firstname
       # lastname
       # username
       # password
-    	@user = User.new(user_params)
-    	if @user.save
-      		redirect_to @user
-    	else
-      		render 'new'
-      end
+    @user = User.new(user_params)
+    if @user.save
+      redirect_to @user
+    else
+      render 'index'
+    end
   end
 
     private

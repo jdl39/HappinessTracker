@@ -114,3 +114,55 @@ for d in userdata do
 		last_name: d['last_name'], password: d['password'],
 		password_confirmation: d['password_confirmation'], username: d['username'])
 end
+
+activity_type_data = [
+	{'name' => 'running'},
+	{'name' => 'reading'},
+	{'name' => 'meditation'},
+	{'name' => 'hanging out with friends'},
+	{'name' => 'mindful eating'},
+	{'name' => 'weight lifting'},
+	{'name' => 'playing guitar'},
+	{'name' => 'singing'},
+	{'name' => 'acting for theater'},
+	{'name' => 'acting for film'},
+	{'name' => 'playing video games'},
+	{'name' => 'reading comic books'},
+]
+
+for d in activity_type_data do
+	at = ActivityType.create(name: d['name'].split.map(&:capitalize).join(' '), num_users: 0)
+end
+
+activity_data = [
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Running')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Weight Lifting')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Hanging Out With Friends')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Reading')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Meditation')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Mindful Eating')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Reading')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Singing')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Acting For Theater')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Acting For Film')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Hanging Out With Friends')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Playing Video Games')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Reading Comic Books')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Meditation')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Running')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Reading')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Singing')},
+]
+
+for d in activity_data do
+	puts d['user'].username + "+" + d['activity_type'].name
+	d['activity_type'].reload
+	act = Activity.new
+	act.user = d['user']
+	act.activity_type = d['activity_type']
+	d['activity_type'].update_attribute(:num_users, d['activity_type'].num_users + 1)
+	act.save
+end

@@ -1,0 +1,79 @@
+#content {
+    border-style: solid;
+    border-width: 2px;
+    height: 600px;
+    width: 900px;
+    border-color: #bbb;
+}
+
+#left-panel {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #ddd;
+    width: 250px;
+    height: 100%;
+    float: left;
+}
+
+#right-panel {
+    width: 645;
+    float: left;
+    height: 100%;
+}
+
+#graph {
+    margin: 100px;
+}
+
+/*#graph {
+    width: 640px;
+    margin: 50 auto;
+}*/
+
+#graph img {
+    width: 400px;
+    height: 250px;
+    padding: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #aaa;
+}
+
+.activity-title {
+    text-align: center;
+}
+
+#search {
+    height: 40px;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.measurements {
+    width: 70px;
+}
+
+#add-activity {
+    background-color: #ddd;
+    width: 300px;
+    margin-left: 100px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #aaa;
+}
+
+#friends-header {
+
+}
+
+#friends-list td {
+    background-color: #ddd;
+    text-align: center;
+}
+
+#friends-list td a {
+    text-decoration: none;
+    color: #777;    
+    padding: 55px;
+}
