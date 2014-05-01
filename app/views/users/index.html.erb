@@ -65,7 +65,7 @@
 
     <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
 <% end %>
-<p>Not a member? <a href="">Get happy now!</a></p>
+<p>Not a member? <a href="" id="create">Get happy now!</a></p>
 <br><br><br><br>
 
 	
@@ -76,32 +76,32 @@
         <ul>
 		  <li>
 		     <%= f.label :first_name %>
-		     <%= f.text_field :first_name %>
+		     <%= f.text_field :first_name, :required => true %>
 	      </li>
 
 		  <li>
 		     <%= f.label :last_name %>
-		     <%= f.text_field :last_name %>
+		     <%= f.text_field :last_name, :required => true %>
           </li>
 
 		  <li>
 	         <%= f.label :username %>
-		     <%= f.text_field :username %>
+		     <%= f.text_field :username, :required => true %>
           </li>
 
 		  <li>
 		     <%= f.label :email %>
-	         <%= f.text_field :email %>
+	         <%= f.text_field :email, :required => true %>
           </li>
 
 		  <li>
 		     <%= f.label :password %>
-		     <%= f.password_field :password %>
+		     <%= f.password_field :password, :required => true %>
           </li>
 
 		  <li>
 		     <%= f.label :password_confirmation, "Confirmation" %>
-		     <%= f.password_field :password_confirmation %>
+		     <%= f.password_field :password_confirmation, :required => true %>
           </li>
 
 		  <li>

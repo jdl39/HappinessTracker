@@ -2,7 +2,11 @@ class UsersController < ApplicationController
 
   def index
     # see if there's an existing, user logged in
-    @user = User.new
+    if signed_in?
+      redirect_to action: 'home'
+    else
+      @user = User.new
+    end
   end
 
 	def show
@@ -21,6 +25,7 @@ class UsersController < ApplicationController
   end
 
   def home
+    @user = current_user
     # Render landing page
 	end
 
