@@ -1,12 +1,13 @@
 # TODO: update and delete look copy-pasted.
 
 class ActivitiesController < ApplicationController
-    # TODO: Handle correct end behavior.
+    # TODO: Handle correct end behavior. (JSON)
     # TODO: Allow for measurement type to be given?
     def create_activity
     	@activity = Activity.new
     	@activity.user = current_user
-    	@activity.activity_type = ActivityType.find(params[:activity_type_id])
+    	@activity.activity_type = ActivityType.find_by(name: params[:activity_type_name])
+        # TODO: Couple measurements. Create if doesn't exist.
     	if @activity.save
     		if @activity.activity_type.update_attribute(:num_users, @activity.activity_type.num_users + 1) # TODO: Could this cause race conditions?
     			# Redirect somewhere swanky
@@ -19,6 +20,7 @@ class ActivitiesController < ApplicationController
     end
 
     # TODO: Handle end behavior.
+    # TODO: Change to be part of the create_activity endpoint.
     def create_activity_type
     	@act_type = ActivityType.new
     	name = params[:name].split.map(&:capitalize).join(' ')
