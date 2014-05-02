@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 	has_many :activities
+	has_many :friendships
+    has_many :users, :through => :friendships
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
