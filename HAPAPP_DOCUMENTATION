@@ -42,6 +42,9 @@ json - A json object of the parameters. It must include:
 	measurements - an object containing measurement names as keys and values as values.
 This action creates measurements for the specified activity and the current user. It returns json containing any errors that occurred.
 
+recommendations: Renders JSON - {"recommendation_array": [...]}
+Returns a sorted array of our recommendations for the current user.
+
 search: Renders JSON # NOTE: NOT YET IMPLEMENTED
 query - the activity string that we want to search for.
 This method searches the database for results similar to the query and returns the most probable results.

@@ -18,6 +18,9 @@ HappinessApp::Application.routes.draw do
   get '/challenges', to: 'challenges#index'
   get '/home', to: 'users#home'
 
+  # TEST FOR RECOMMENDATIONS
+  get '/recommendations', to: 'activities#recommendations'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
