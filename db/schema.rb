@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140418203721) do
+ActiveRecord::Schema.define(version: 20140502215926) do
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20140418203721) do
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
+  add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
   create_table "activities_measurement_types", id: false, force: true do |t|
@@ -37,6 +38,21 @@ ActiveRecord::Schema.define(version: 20140418203721) do
   end
 
   add_index "activity_types", ["name"], name: "index_activity_types_on_name", unique: true
+
+  create_table "challenges", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "friendships", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "first_id"
+    t.integer  "second_id"
+  end
+
+  add_index "friendships", ["first_id"], name: "index_friendships_on_first_id"
+  add_index "friendships", ["second_id"], name: "index_friendships_on_second_id"
 
   create_table "goal_types", force: true do |t|
     t.integer  "guide_id"
@@ -95,6 +111,18 @@ ActiveRecord::Schema.define(version: 20140418203721) do
   add_index "measurements", ["activity_id"], name: "index_measurements_on_activity_id"
   add_index "measurements", ["measurement_note_id"], name: "index_measurements_on_measurement_note_id"
   add_index "measurements", ["measurement_type_id"], name: "index_measurements_on_measurement_type_id"
+
+  create_table "messages", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.integer  "challenge_id"
+  end
+
+  add_index "messages", ["challenge_id"], name: "index_messages_on_challenge_id"
+  add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id"
+  add_index "messages", ["sender_id"], name: "index_messages_on_sender_id"
 
   create_table "users", force: true do |t|
     t.string   "email"
