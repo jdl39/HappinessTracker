@@ -219,8 +219,14 @@ class ActivitiesController < ApplicationController
             end
         end
 
-        #render json: 
-        #make JSON object with query_activity_exists, user_does_activity, search_results, friends, measurement_type, recent_measurements
+        render json:  {
+            query_activity_exists: query_activity_exists,
+            user_does_activity: user_does_activity,
+            search_results: search_results,
+            friends: friends,
+            measurement_type: measurement_type,
+            recent_measurements: recent_measurements
+        }
     end
 
     def getTypesForWords(searchWords)
