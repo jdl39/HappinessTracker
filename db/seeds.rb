@@ -172,8 +172,8 @@ activity_type_data = [
 	{'name' => 'lucid dreaming'},
 ]
 
-for d in activity_type_data do
-	at = ActivityType.create(name: d['name'].split.map(&:capitalize).join(' '), num_users: 0)
+for datum in activity_type_data do
+	at = ActivityType.create(name: datum['name'].downcase, num_users: 0)
 end
 
 activity_data = [

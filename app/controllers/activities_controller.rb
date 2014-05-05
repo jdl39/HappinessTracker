@@ -12,23 +12,12 @@ class ActivitiesController < ApplicationController
     	activity = Activity.new
     	activity.user = current_user
 
-        # Normalize activity name
-        activity_name = json[:activity_name].split.map(&:capitalize).join(' ')
+        # Normalize activity name; for now, let's just downcase everything
+        activity_name = json[:activity_name].split.map(&:downcase).join(' ')
 
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
-        if activity_type.nil?
-            activity_type = ActivityType.new
-            activity_type.name = activity_name
-            activity_type.num_users = 0
-            if not activity_type.save
-                # Activity_type save error
-                to_return["hapapp_error"] = "Could not save the activity type."
-                to_return["errors"] = activity_type.errors.full_messages
-                render json: to_return
-                return
-            end
-        end
+        create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
@@ -64,6 +53,26 @@ class ActivitiesController < ApplicationController
 
         # TODO: Build the json to return.
         render json: to_return
+    end
+
+    def create_activity_type(activity_name)
+        activity_type = ActivityType.new
+        activity_type.name = activity_name
+        lemmatizer = Lemmatizer.new
+        activity_words = activity_name.split
+        activity_words |= activity_words.map{|word| lemmatizer.lemma(word)}
+        activity_words.split.each do |word|
+            activity_word.word = ActivityWord.new
+            activity_word.activity_type = activity_type
+        end
+        activity_type.num_users = 0
+        unless activity_type.save
+            # Activity_type save error
+            to_return["hapapp_error"] = "Could not save the activity type."
+            to_return["errors"] = activity_type.errors.full_messages
+            render json: to_return
+            return
+        end
     end
 
     # TODO: Allow for measurement notes to be submitted.
@@ -122,30 +131,33 @@ class ActivitiesController < ApplicationController
 
     # Intelligent search for activities
     # Must include:
-    # BOOLEAN: stringIsExistingActivity (do we need to present the "add new" option)
-    # BOOLEAN: userHasDone
-    # OBJECT: mostProbable activity
+    # BOOLEAN: query_activity_exists (do we need to present the "add new" option)
+    # BOOLEAN: user_does_activity
+    # LIST<ACTIVITY>: search_results (can be empty)
+    # LIST<FRIEND>: friends (who do the topmost activity)
+    # MEASUREMENT_TYPE: measurement_type (for topmost activity)
     # => Should have all data needed to render (past measurements, measurement-types, etc.)
     # => Should also include friends who do activity
-    # LIST OF STRINGS: otherProbableActivities
+    #
     # for now, I'm assuming everything is lower case
     def search
-        maxResultSize = 7
-
-#TODO: add words and lemmas of words to activity_words
+        max_result_size = 7
+        recent_measurements_size = 30
 
         # (1) do prefix search on activity db (not activity words) for exact matching
-        searchResults = []
+        search_results = []
         type = ActivityType.name_equals(searchString)
-        searchResults << type unless type.nil?
-        types = ActivityType.descend_by_num_users.name_begins_with(searchString)
-        searchResults.concat types
+        query_activity_exists = !type.nil?
+        search_results << type unless type.nil?
+        #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
+        types = ActivityType.where('name LIKE ?%', searchString).order('num_users DESC')
+        search_results.concat types
 
         lex = WordNet::Lexicon.new
 
         # (2) get activities by how many words they have in common with the query, spelling fixed or not, plus synonyms
         spellCheckedWords
-        if searchResults.size < maxResultSize
+        if search_results.size < max_result_size
             spellCheckedWords = Spellchecker.check(searchString)
             # lemmatize words
             lemmatizer = Lemmatizer.new
@@ -166,11 +178,11 @@ class ActivitiesController < ApplicationController
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)} << wordCheck[:original] << wordCheck[:lemma] : wordCheck[:suggestions]}
 
 
-            searchResults.concat getTypesForWords(searchWords)
+            searc_results.concat getTypesForWords(searchWords)
         end
 
         # (3) same as (2) except for cousins, where I'm defining cousins as hyponyms of hypernyms
-        if searchResults.size < maxResultSize
+        if search_results.size < max_result_size
             spellCheckedWords.each do |wordCheck|
                 if wordCheck[:correct]
                     # get cousins 
@@ -179,16 +191,42 @@ class ActivitiesController < ApplicationController
                 # could also do the same for words spelled incorrectly, but passing for now
             end
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:cousins].reduce([]){|sum, n| sum | n.words.map(&:lemma)}} 
-            searchResults.concat getTypesForWords(searchWords)
+            search_results.concat getTypesForWords(searchWords)
         end
 
         # that's all the search results!
+
+        friends = []
+        measurement_type = nil
+        recent_measurements = []
+        unless search_results.empty?
+            # get the friends who do the topmost activity sorted by who does it the most
+            top_type = search_results.first 
+            friends = Friendship.where(first: current_user).map(&:second)
+            top_activities = Activity.where(activity_type: top_type)
+            user_activity = top_activities.select{|activity| activity.user = current_user}
+            user_does_activity = !user_version.empty?
+            friends = top_activites.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
+
+            if user_does_activity
+                # get user's personal data for the activity
+                measurement_type = user_activity.measurement_type
+                #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
+                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC') first recent_measurements_size
+            else
+                # get the most common measurement for the topmost activity
+                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
+            end
+        end
+
+        #render json: 
+        #make JSON object with query_activity_exists, user_does_activity, search_results, friends, measurement_type, recent_measurements
     end
 
     def getTypesForWords(searchWords)
         types = searchWords.map{|wordGroup|
             wordGroup.reduce([]){|sum, searchWord|
-                sum | ActivityType.activity_word_equals(searchWord)
+                sum | ActivityType.where(activity_word: searchWord)
             }
         }
         return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1], pair[0].num_users}.map{|pair| pair[0]}
@@ -234,7 +272,7 @@ class ActivitiesController < ApplicationController
         end
 
         def num_users
-            @num_users ||= User.count
+            @num_users ||= User.size
             return @num_users
         end
 

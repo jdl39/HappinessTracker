@@ -16,12 +16,15 @@ ActiveRecord::Schema.define(version: 20140502215926) do
   create_table "activities", force: true do |t|
     t.integer  "user_id"
     t.integer  "activity_type_id"
+    t.integer  "measurement_type_id"
     t.datetime "last_accessed"
+    t.integer  "num_measured"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
+  add_index "activities", ["measurement_type_id"], name: "index_activities_on_measurement_type_id"
   add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
@@ -38,6 +41,15 @@ ActiveRecord::Schema.define(version: 20140502215926) do
   end
 
   add_index "activity_types", ["name"], name: "index_activity_types_on_name", unique: true
+
+  create_table "activity_words", force: true do |t|
+    t.integer  "activity_type_id"
+    t.text     "word"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
     t.datetime "created_at"
