@@ -109,10 +109,10 @@ userdata = [
 	{'email' => 'fermentum@mauris.ca', 'first_name' => 'Janna', 'last_name' => 'Allen', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'JannaAllen'}
 ];
 
-for d in userdata do
-	user = User.create(email: d['email'], first_name: d['first_name'],
-		last_name: d['last_name'], password: d['password'],
-		password_confirmation: d['password_confirmation'], username: d['username'])
+for datum in userdata do
+	user = User.create(email: datum['email'], first_name: datum['first_name'],
+		last_name: datum['last_name'], password: datum['password'],
+		password_confirmation: datum['password_confirmation'], username: datum['username'])
 end
 
 activity_type_data = [
@@ -172,8 +172,11 @@ activity_type_data = [
 	{'name' => 'lucid dreaming'},
 ]
 
+lemmatizer = Lemmatizer.new
 for datum in activity_type_data do
-	at = ActivityType.create(name: datum['name'].downcase, num_users: 0)
+	type = ActivityType.create(name: datum['name'].downcase!, num_users: 0)
+    datum['name'].split.each{|word| ActivityWord.create(word: word, activity_type: type)}
+    datum['name'].split.each{|word| ActivityWord.create(word: lemmatizer.lemma(word), activity_type: type)}
 end
 
 activity_data = [
@@ -199,12 +202,12 @@ activity_data = [
 	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Singing')},
 ]
 
-for d in activity_data do
-	puts d['user'].username + "+" + d['activity_type'].name
-	d['activity_type'].reload
+for datum in activity_data do
+	puts datum['user'].username + "+" + datum['activity_type'].name
+	datum['activity_type'].reload
 	act = Activity.new
-	act.user = d['user']
-	act.activity_type = d['activity_type']
-	d['activity_type'].update_attribute(:num_users, d['activity_type'].num_users + 1)
+	act.user = datum['user']
+	act.activity_type = datum['activity_type']
+	datum['activity_type'].update_attribute(:num_users, datum['activity_type'].num_users + 1)
 	act.save
 end
