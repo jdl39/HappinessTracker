@@ -141,59 +141,76 @@ class ActivitiesController < ApplicationController
     #
     # for now, I'm assuming everything is lower case
     def search
-        max_result_size = 7
+        max_result_size = 6
         recent_measurements_size = 30
 
-        searchString = params['str'] + '%'
+        searchString = params['str']
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
         type = ActivityType.where(name: searchString)
         query_activity_exists = !type.empty?
-        search_results << type unless type.nil?
-        #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
-        types = ActivityType.where('name LIKE ?', searchString).order('num_users DESC')
-        search_results.concat types
+        search_results.concat type.to_a unless type.nil?
+        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC')
+        search_results.concat types.to_a
 
         lex = WordNet::Lexicon.new
 
-        # (2) get activities by how many words they have in common with the query, spelling fixed or not, plus synonyms
+        # (2) get activities by how many words they have in common with the query, spelling fixed or not
         spellCheckedWords = nil
+        puts "SEARCH RESULTS"
+        p search_results.size
+        p search_results
         if search_results.size < max_result_size
             spellCheckedWords = Spellchecker.check(searchString)
             # lemmatize words
             lemmatizer = Lemmatizer.new
             spellCheckedWords.each do |wordCheck|
                 if wordCheck[:correct]
-                    # get lemma and synonyms 
                     wordCheck[:lemma] = lemmatizer.lemma(wordCheck[:original])
-                    wordCheck[:synsets] = lex.lookup_synsets(wordCheck[:original]) | lex.lookup_synsets(wordCheck[:lemma])
                 else
                     # prune spelling suggestions
                     nonCompounds =  wordCheck[:suggestions].select{|sug| !(sug =~ /^\w*$/).nil?}[0]#can change: [0...n]
                     nonCompounds = [wordCheck[:suggestions][0]] if nonCompounds.empty?
-                    wordCheck[:suggestions] |= nonCompounds.map{|sug| lemmatizer.lemma(sug)}
+                    wordCheck[:suggestions] = nonCompounds
                 end
             end
 
             # get actual words out
-            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)} << wordCheck[:original] << wordCheck[:lemma] : wordCheck[:suggestions]}
-
-
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]] : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
             search_results.concat getTypesForWords(searchWords)
+
+            puts "SEARCH RESULTS"
+            p search_results.size
+            p search_results
         end
 
-        # (3) same as (2) except for cousins, where I'm defining cousins as hyponyms of hypernyms
+        # (3) get activities by how many words they have in common with synonyms of correctly spelled words
         if search_results.size < max_result_size
             spellCheckedWords.each do |wordCheck|
-                if wordCheck[:correct]
-                    # get cousins 
-                    wordCheck[:cousins] = wordCheck[:synsets].map{|synset| synset.hypernyms.map{|x| x.hyponyms}}.flatten
-                end
+                wordCheck[:synsets] = wordCheck[:correct] ? lex.lookup_synsets(wordCheck[:lemma]) : []
+            end
+
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)}}
+            search_results.concat getTypesForWords(searchWords)
+
+            puts "SEARCH RESULTS"
+            p search_results.size
+            p search_results
+        end
+
+        # (4) same as (3) except for cousins, where I'm defining cousins as hyponyms of hypernyms
+        if search_results.size < max_result_size
+            spellCheckedWords.each do |wordCheck|
+                wordCheck[:cousins] = wordCheck[:correct] ? wordCheck[:synsets].map{|synset| synset.hypernyms.map{|x| x.hyponyms}}.flatten : []
                 # could also do the same for words spelled incorrectly, but passing for now
             end
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:cousins].reduce([]){|sum, n| sum | n.words.map(&:lemma)}} 
             search_results.concat getTypesForWords(searchWords)
+            
+            puts "SEARCH RESULTS"
+            p search_results.size
+            p search_results
         end
 
         # that's all the search results!
@@ -201,7 +218,9 @@ class ActivitiesController < ApplicationController
         friends = []
         measurement_type = nil
         recent_measurements = []
-        unless search_results.empty?
+        puts "CURRENT USER"
+        p current_user
+        unless search_results.empty? || current_user.nil?
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
             friends = User.where(friend: current_user)
@@ -215,7 +234,6 @@ class ActivitiesController < ApplicationController
             if user_does_activity
                 # get user's personal data for the activity
                 measurement_type = user_activity.measurement_type
-                #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
                 recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
@@ -224,13 +242,16 @@ class ActivitiesController < ApplicationController
             end
         end
 
+        spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first}
+
         render json:  {
             query_activity_exists: query_activity_exists,
-            # user_does_activity: user_does_activity,
+            user_does_activity: user_does_activity,
             search_results: search_results,
             friends: friends,
             measurement_type: measurement_type,
-            recent_measurements: recent_measurements
+            recent_measurements: recent_measurements,
+            spellings_sugs: spelling_sugs
         }
     end
 
@@ -240,8 +261,12 @@ class ActivitiesController < ApplicationController
                 sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
             }
         }
-        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1]}.map{|pair| pair[0]}
-# don't actually know if the ', pair[0].num_users' works
+        types = types.flatten.group_by{|type| type}.to_a.map{|type, group| [type, group.size]}
+        types.sort! do |a, b|
+            comp = a[1] <=> b[1]
+            comp == 0 ? a[0] <=> b[0] : comp
+        end
+        return types.map{|type, size| type}
     end
 
     # Takes in an activity_type id and a user id and returns all data associated with them.
