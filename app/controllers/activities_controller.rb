@@ -180,7 +180,7 @@ class ActivitiesController < ApplicationController
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)} << wordCheck[:original] << wordCheck[:lemma] : wordCheck[:suggestions]}
 
 
-            searc_results.concat getTypesForWords(searchWords)
+            search_results.concat getTypesForWords(searchWords)
         end
 
         # (3) same as (2) except for cousins, where I'm defining cousins as hyponyms of hypernyms
@@ -234,7 +234,7 @@ class ActivitiesController < ApplicationController
     def getTypesForWords(searchWords)
         types = searchWords.map{|wordGroup|
             wordGroup.reduce([]){|sum, searchWord|
-                sum | ActivityType.where(activity_word: searchWord)
+                sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
             }
         }
         return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1]}.map{|pair| pair[0]}
