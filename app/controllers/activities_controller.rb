@@ -205,10 +205,10 @@ class ActivitiesController < ApplicationController
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
             friends = User.where(friend: current_user)
-            top_activities = Activity.where(activity_type: top_type)
+            top_activities = Activity.where(activity_type_id: top_type)
             user_activity = top_activities.select{|activity| activity.user = current_user}
-            user_does_activity = !user_version.empty?
-            friends = top_activites.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
+            user_does_activity = !user_activity.empty?
+            friends = top_activities.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
 
             if user_does_activity
                 # get user's personal data for the activity
