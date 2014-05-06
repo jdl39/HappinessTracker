@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  happiness_question_id: 
+  value: 1.5
+  user_id: 
+
+two:
+  happiness_question_id: 
+  value: 1.5
+  user_id: 
