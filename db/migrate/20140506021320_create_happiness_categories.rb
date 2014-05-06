@@ -6,7 +6,7 @@ class CreateHappinessCategories < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table :happiness_categories_happiness_questions do |t|
+    create_table :happiness_categories_questions do |t|
     	t.belongs_to :happiness_category
     	t.belongs_to :happiness_question
     end
