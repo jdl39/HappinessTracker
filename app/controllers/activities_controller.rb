@@ -206,9 +206,11 @@ class ActivitiesController < ApplicationController
             top_type = search_results.first 
             friends = User.where(friend: current_user)
             top_activities = Activity.where(activity_type_id: top_type)
-            user_activity = top_activities.select{|activity| activity.user = current_user}
-            user_does_activity = !user_activity.empty?
-            friends = top_activities.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
+            user_activity = top_activities.select{|activity| activity.user = current_user}.first
+            user_does_activity = !user_activity.nil?
+            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
+            friends = []
+            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
 
             if user_does_activity
                 # get user's personal data for the activity
@@ -217,7 +219,8 @@ class ActivitiesController < ApplicationController
                 recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
-                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
+                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last
+                measurement_type = measurement_type.nil? ? nil : measurement_type.first
             end
         end
 

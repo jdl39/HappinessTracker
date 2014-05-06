@@ -106,14 +106,14 @@ ActiveRecord::Schema.define(version: 20140506053313) do
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
-    t.float    "max_score"
+    t.integer  "max_score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
-    t.float    "value"
+    t.integer  "value"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
