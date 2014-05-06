@@ -144,12 +144,12 @@ class ActivitiesController < ApplicationController
         max_result_size = 7
         recent_measurements_size = 30
 
-        searchString = "a" + '%'
+        searchString = params['str'] + '%'
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
         type = ActivityType.where(name: searchString)
-        query_activity_exists = !type.nil?
+        query_activity_exists = !type.empty?
         search_results << type unless type.nil?
         #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
         types = ActivityType.where('name LIKE ?', searchString).order('num_users DESC')
@@ -201,29 +201,29 @@ class ActivitiesController < ApplicationController
         friends = []
         measurement_type = nil
         recent_measurements = []
-        unless search_results.empty?
-            # get the friends who do the topmost activity sorted by who does it the most
-            top_type = search_results.first 
-            friends = Friendship.where(first: current_user).map(&:second)
-            top_activities = Activity.where(activity_type: top_type)
-            user_activity = top_activities.select{|activity| activity.user = current_user}
-            user_does_activity = !user_version.empty?
-            friends = top_activites.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
+        # unless search_results.empty?
+        #     # get the friends who do the topmost activity sorted by who does it the most
+        #     top_type = search_results.first 
+        #     friends = Friendship.where(first: current_user).map(&:second)
+        #     top_activities = Activity.where(activity_type: top_type)
+        #     user_activity = top_activities.select{|activity| activity.user = current_user}
+        #     user_does_activity = !user_version.empty?
+        #     friends = top_activites.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
 
-            if user_does_activity
-                # get user's personal data for the activity
-                measurement_type = user_activity.measurement_type
-                #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
-            else
-                # get the most common measurement for the topmost activity
-                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
-            end
-        end
+        #     if user_does_activity
+        #         # get user's personal data for the activity
+        #         measurement_type = user_activity.measurement_type
+        #         #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
+        #         recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
+        #     else
+        #         # get the most common measurement for the topmost activity
+        #         measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
+        #     end
+        # end
 
         render json:  {
             query_activity_exists: query_activity_exists,
-            user_does_activity: user_does_activity,
+            # user_does_activity: user_does_activity,
             search_results: search_results,
             friends: friends,
             measurement_type: measurement_type,
