@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140506021401) do
+=======
+ActiveRecord::Schema.define(version: 20140506053313) do
+>>>>>>> fb361d63a063f01151870d2141967fe75d72f835
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
@@ -47,15 +51,10 @@ ActiveRecord::Schema.define(version: 20140506021401) do
     t.datetime "updated_at"
   end
 
-  create_table "friendships", force: true do |t|
+  create_table "friends", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "first_id"
-    t.integer  "second_id"
   end
-
-  add_index "friendships", ["first_id"], name: "index_friendships_on_first_id"
-  add_index "friendships", ["second_id"], name: "index_friendships_on_second_id"
 
   create_table "goal_types", force: true do |t|
     t.integer  "guide_id"
@@ -102,14 +101,22 @@ ActiveRecord::Schema.define(version: 20140506021401) do
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
+<<<<<<< HEAD
     t.integer  "max_score"
+=======
+    t.float    "max_score"
+>>>>>>> fb361d63a063f01151870d2141967fe75d72f835
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
+<<<<<<< HEAD
     t.integer  "value"
+=======
+    t.float    "value"
+>>>>>>> fb361d63a063f01151870d2141967fe75d72f835
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

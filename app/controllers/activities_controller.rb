@@ -144,19 +144,21 @@ class ActivitiesController < ApplicationController
         max_result_size = 7
         recent_measurements_size = 30
 
+        searchString = params['str'] + '%'
+
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
-        type = ActivityType.name_equals(searchString)
-        query_activity_exists = !type.nil?
+        type = ActivityType.where(name: searchString)
+        query_activity_exists = !type.empty?
         search_results << type unless type.nil?
         #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
-        types = ActivityType.where('name LIKE ?%', searchString).order('num_users DESC')
+        types = ActivityType.where('name LIKE ?', searchString).order('num_users DESC')
         search_results.concat types
 
         lex = WordNet::Lexicon.new
 
         # (2) get activities by how many words they have in common with the query, spelling fixed or not, plus synonyms
-        spellCheckedWords
+        spellCheckedWords = nil
         if search_results.size < max_result_size
             spellCheckedWords = Spellchecker.check(searchString)
             # lemmatize words
@@ -178,7 +180,7 @@ class ActivitiesController < ApplicationController
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)} << wordCheck[:original] << wordCheck[:lemma] : wordCheck[:suggestions]}
 
 
-            searc_results.concat getTypesForWords(searchWords)
+            search_results.concat getTypesForWords(searchWords)
         end
 
         # (3) same as (2) except for cousins, where I'm defining cousins as hyponyms of hypernyms
@@ -202,26 +204,29 @@ class ActivitiesController < ApplicationController
         unless search_results.empty?
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
-            friends = Friendship.where(first: current_user).map(&:second)
-            top_activities = Activity.where(activity_type: top_type)
-            user_activity = top_activities.select{|activity| activity.user = current_user}
-            user_does_activity = !user_version.empty?
-            friends = top_activites.select!{|activity| friends.include? activity.user}.sort!{|activity| activity.num_measured}.reverse.map(&:user)
+            friends = User.where(friend: current_user)
+            top_activities = Activity.where(activity_type_id: top_type)
+            user_activity = top_activities.select{|activity| activity.user = current_user}.first
+            user_does_activity = !user_activity.nil?
+            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
+            friends = []
+            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
 
             if user_does_activity
                 # get user's personal data for the activity
                 measurement_type = user_activity.measurement_type
                 #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC') first recent_measurements_size
+                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
-                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
+                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last
+                measurement_type = measurement_type.nil? ? nil : measurement_type.first
             end
         end
 
         render json:  {
             query_activity_exists: query_activity_exists,
-            user_does_activity: user_does_activity,
+            # user_does_activity: user_does_activity,
             search_results: search_results,
             friends: friends,
             measurement_type: measurement_type,
@@ -232,10 +237,10 @@ class ActivitiesController < ApplicationController
     def getTypesForWords(searchWords)
         types = searchWords.map{|wordGroup|
             wordGroup.reduce([]){|sum, searchWord|
-                sum | ActivityType.where(activity_word: searchWord)
+                sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
             }
         }
-        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1], pair[0].num_users}.map{|pair| pair[0]}
+        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1]}.map{|pair| pair[0]}
 # don't actually know if the ', pair[0].num_users' works
     end
 

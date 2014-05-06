@@ -3,8 +3,8 @@
 //     console.log(document.getElementById('friends-list'));
 //     console.log(document.getElementById('activity-title'));
 function search() {
-    // xhr = new XMLHttpRequest();
-    // xhr.onreadystatechange = xhrHandler;
+    xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = xhrHandler;
     var str = document.getElementById('search').value;
     console.log(str);
     var friends_header = document.getElementById('friends-header');

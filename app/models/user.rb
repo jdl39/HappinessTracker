@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 	has_many :activities
-	has_many :friendships
-    has_many :users, :through => :friendships
+    has_many :friends
+    has_many :users, :source => :friend, :through => :friends
     has_many :happiness_responses
 
 	validates :username, presence: true, uniqueness: true
