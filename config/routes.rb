@@ -17,6 +17,7 @@ HappinessApp::Application.routes.draw do
   get '/profile', to: 'users#profile'
   get '/challenges', to: 'challenges#index'
   get '/home', to: 'users#home'
+  get '/searchjson', to: 'activities#search'
 
   # TEST FOR RECOMMENDATIONS
   get '/recommendations', to: 'activities#recommendations'

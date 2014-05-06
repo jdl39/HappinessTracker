@@ -62,3 +62,7 @@ a img {
 input, textarea	{
 	outline:none;
 }
+
+.hidden {
+	visibility: hidden;
+}

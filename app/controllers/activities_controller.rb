@@ -144,21 +144,21 @@ class ActivitiesController < ApplicationController
         max_result_size = 7
         recent_measurements_size = 30
 
-        searchString = params[:str]
+        searchString = "a" + '%'
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
-        type = ActivityType.name_equals(searchString)
+        type = ActivityType.where(name: searchString)
         query_activity_exists = !type.nil?
         search_results << type unless type.nil?
         #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
-        types = ActivityType.where('name LIKE ?%', searchString).order('num_users DESC')
+        types = ActivityType.where('name LIKE ?', searchString).order('num_users DESC')
         search_results.concat types
 
         lex = WordNet::Lexicon.new
 
         # (2) get activities by how many words they have in common with the query, spelling fixed or not, plus synonyms
-        spellCheckedWords
+        spellCheckedWords = nil
         if search_results.size < max_result_size
             spellCheckedWords = Spellchecker.check(searchString)
             # lemmatize words
@@ -214,7 +214,7 @@ class ActivitiesController < ApplicationController
                 # get user's personal data for the activity
                 measurement_type = user_activity.measurement_type
                 #recent_measurements = Measurement.descend_by_timestamp.activity_equals(user_activity).first recent_measurements_size
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC') first recent_measurements_size
+                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
                 measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last.first
@@ -237,7 +237,7 @@ class ActivitiesController < ApplicationController
                 sum | ActivityType.where(activity_word: searchWord)
             }
         }
-        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1], pair[0].num_users}.map{|pair| pair[0]}
+        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1]}.map{|pair| pair[0]}
 # don't actually know if the ', pair[0].num_users' works
     end
 
