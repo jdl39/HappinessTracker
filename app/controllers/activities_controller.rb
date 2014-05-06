@@ -218,7 +218,9 @@ class ActivitiesController < ApplicationController
         friends = []
         measurement_type = nil
         recent_measurements = []
-        unless search_results.empty?
+        puts "CURRENT USER"
+        p current_user
+        unless search_results.empty? || current_user.nil?
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
             friends = User.where(friend: current_user)
