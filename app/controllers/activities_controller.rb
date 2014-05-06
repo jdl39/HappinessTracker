@@ -144,6 +144,8 @@ class ActivitiesController < ApplicationController
         max_result_size = 7
         recent_measurements_size = 30
 
+        searchString = params[:str]
+
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
         type = ActivityType.name_equals(searchString)
