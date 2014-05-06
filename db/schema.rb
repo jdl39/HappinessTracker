@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20140506053313) do
     t.datetime "updated_at"
   end
 
-  create_table "happiness_categories_happiness_questions", force: true do |t|
+  create_table "happiness_categories_questions", force: true do |t|
     t.integer "happiness_category_id"
     t.integer "happiness_question_id"
   end

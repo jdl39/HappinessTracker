@@ -174,7 +174,7 @@ activity_type_data = [
 
 lemmatizer = Lemmatizer.new
 for datum in activity_type_data do
-	type = ActivityType.create(name: datum['name'].downcase!, num_users: 0)
+	type = ActivityType.create(name: datum['name'].downcase, num_users: 0)
     datum['name'].split.each{|word| ActivityWord.create(word: word, activity_type: type)}
     datum['name'].split.each{|word| ActivityWord.create(word: lemmatizer.lemma(word), activity_type: type)}
 end
