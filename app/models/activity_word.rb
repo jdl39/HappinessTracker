@@ -1,3 +1,3 @@
 class ActivityWord < ActiveRecord::Base
-    belongs_to :activities
+    belongs_to :activity_type
 end

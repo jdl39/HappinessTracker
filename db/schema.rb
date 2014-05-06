@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20140506021401) do
-=======
 ActiveRecord::Schema.define(version: 20140506053313) do
->>>>>>> fb361d63a063f01151870d2141967fe75d72f835
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
@@ -45,6 +41,15 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   end
 
   add_index "activity_types", ["name"], name: "index_activity_types_on_name", unique: true
+
+  create_table "activity_words", force: true do |t|
+    t.integer  "activity_type_id"
+    t.text     "word"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
     t.datetime "created_at"
@@ -101,22 +106,14 @@ ActiveRecord::Schema.define(version: 20140506053313) do
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
-<<<<<<< HEAD
     t.integer  "max_score"
-=======
-    t.float    "max_score"
->>>>>>> fb361d63a063f01151870d2141967fe75d72f835
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
-<<<<<<< HEAD
     t.integer  "value"
-=======
-    t.float    "value"
->>>>>>> fb361d63a063f01151870d2141967fe75d72f835
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
