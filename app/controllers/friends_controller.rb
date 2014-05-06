@@ -4,7 +4,8 @@ class FriendsController < ApplicationController
    # Params:
 	#        user_id
    def get_friends:
-
+      friends = User.where(friend: params[:user_id])
+	  render json:friends
    end
 
    # Creates a friend request if it does not yet exist

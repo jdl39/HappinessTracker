@@ -57,9 +57,14 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   end
 
   create_table "friends", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "friends", ["friend_id"], name: "index_friends_on_friend_id"
+  add_index "friends", ["user_id"], name: "index_friends_on_user_id"
 
   create_table "goal_types", force: true do |t|
     t.integer  "guide_id"
