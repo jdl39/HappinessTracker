@@ -19,6 +19,14 @@ HappinessApp::Application.routes.draw do
   get '/home', to: 'users#home'
   get '/searchjson', to: 'activities#search'
 
+  # FRIENDSHIP
+  get '/friends/:user_id', to: 'friends#get_friends'   
+  get '/friend_request/:request_id/decline', to: 'friends#decline_request'
+  get '/friend_request/:request_id/accept', to: 'friends#accept_request'
+  get '/friend_request/:user_id/:friend_id/create', to: 'friends#create_request'
+  get '/friend_request/:user_id/sent', to: 'friends#requests_sent'
+  get '/friend_request/:user_id/received', to: 'friends#requests_received'
+
   # TEST FOR RECOMMENDATIONS
   get '/recommendations', to: 'activities#recommendations'
 
