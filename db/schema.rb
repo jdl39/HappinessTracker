@@ -99,21 +99,21 @@ ActiveRecord::Schema.define(version: 20140506053313) do
     t.datetime "updated_at"
   end
 
-  create_table "happiness_categories_questions", force: true do |t|
+  create_table "happiness_categories_happiness_questions", force: true do |t|
     t.integer "happiness_category_id"
     t.integer "happiness_question_id"
   end
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
-    t.integer  "max_score"
+    t.float    "max_score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
-    t.integer  "value"
+    t.float    "value"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -144,7 +144,7 @@ class ActivitiesController < ApplicationController
         max_result_size = 7
         recent_measurements_size = 30
 
-        searchString = params['str'] + '%'
+        searchString = params['str']
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
@@ -152,7 +152,7 @@ class ActivitiesController < ApplicationController
         query_activity_exists = !type.empty?
         search_results << type unless type.nil?
         #types = ActivityType.descend_by_num_users.name_begins_with(searchString)
-        types = ActivityType.where('name LIKE ?', searchString).order('num_users DESC')
+        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC')
         search_results.concat types
 
         lex = WordNet::Lexicon.new
@@ -240,7 +240,15 @@ class ActivitiesController < ApplicationController
                 sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
             }
         }
-        return types.flatten.group_by{|type| type}.to_a.map{|pair| [pair[0], pair[1].size]}.sort{|pair| pair[1]}.map{|pair| pair[0]}
+        puts "yo yo yo!!!"
+        p types
+        puts "yo"
+        types = types.flatten.group_by{|type| type}.to_a.map{|type, group| [type, group.size]}
+        types.sort! do |a, b|
+            comp = a[1] <=> b[1]
+            comp == 0 ? a[0] <=> b[0] : comp
+        end
+        return types.map{|type, size| type}
 # don't actually know if the ', pair[0].num_users' works
     end
 
