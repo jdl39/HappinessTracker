@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140502215926) do
+ActiveRecord::Schema.define(version: 20140506021401) do
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
@@ -41,15 +41,6 @@ ActiveRecord::Schema.define(version: 20140502215926) do
   end
 
   add_index "activity_types", ["name"], name: "index_activity_types_on_name", unique: true
-
-  create_table "activity_words", force: true do |t|
-    t.integer  "activity_type_id"
-    t.text     "word"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
     t.datetime "created_at"
@@ -97,6 +88,35 @@ ActiveRecord::Schema.define(version: 20140502215926) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "happiness_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "happiness_categories_happiness_questions", force: true do |t|
+    t.integer "happiness_category_id"
+    t.integer "happiness_question_id"
+  end
+
+  create_table "happiness_questions", force: true do |t|
+    t.text     "content"
+    t.integer  "max_score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "happiness_responses", force: true do |t|
+    t.integer  "happiness_question_id"
+    t.integer  "value"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "happiness_responses", ["happiness_question_id"], name: "index_happiness_responses_on_happiness_question_id"
+  add_index "happiness_responses", ["user_id"], name: "index_happiness_responses_on_user_id"
 
   create_table "measurement_notes", force: true do |t|
     t.text     "contents"
