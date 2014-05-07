@@ -54,7 +54,7 @@
     width: 70px;
 }
 
-#add-activity {
+.activity-form {
     background-color: #ddd;
     width: 300px;
     margin-left: 100px;

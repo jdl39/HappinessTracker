@@ -11,17 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140502215926) do
+ActiveRecord::Schema.define(version: 20140506053313) do
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
     t.integer  "activity_type_id"
+    t.integer  "measurement_type_id"
     t.datetime "last_accessed"
+    t.integer  "num_measured"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
+  add_index "activities", ["measurement_type_id"], name: "index_activities_on_measurement_type_id"
   add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
@@ -39,20 +42,29 @@ ActiveRecord::Schema.define(version: 20140502215926) do
 
   add_index "activity_types", ["name"], name: "index_activity_types_on_name", unique: true
 
+  create_table "activity_words", force: true do |t|
+    t.integer  "activity_type_id"
+    t.text     "word"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
+
   create_table "challenges", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "friendships", force: true do |t|
+  create_table "friends", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "first_id"
-    t.integer  "second_id"
   end
 
-  add_index "friendships", ["first_id"], name: "index_friendships_on_first_id"
-  add_index "friendships", ["second_id"], name: "index_friendships_on_second_id"
+  add_index "friends", ["friend_id"], name: "index_friends_on_friend_id"
+  add_index "friends", ["user_id"], name: "index_friends_on_user_id"
 
   create_table "goal_types", force: true do |t|
     t.integer  "guide_id"
@@ -85,6 +97,35 @@ ActiveRecord::Schema.define(version: 20140502215926) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "happiness_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "happiness_categories_happiness_questions", force: true do |t|
+    t.integer "happiness_category_id"
+    t.integer "happiness_question_id"
+  end
+
+  create_table "happiness_questions", force: true do |t|
+    t.text     "content"
+    t.float    "max_score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "happiness_responses", force: true do |t|
+    t.integer  "happiness_question_id"
+    t.float    "value"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "happiness_responses", ["happiness_question_id"], name: "index_happiness_responses_on_happiness_question_id"
+  add_index "happiness_responses", ["user_id"], name: "index_happiness_responses_on_user_id"
 
   create_table "measurement_notes", force: true do |t|
     t.text     "contents"

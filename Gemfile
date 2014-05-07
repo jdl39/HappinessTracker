@@ -8,9 +8,6 @@ gem 'wordnet'
 gem 'spellchecker'
 gem 'lemmatizer'
 
-# Simplifies constructor logic
-gem 'searchlogic'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.4'
 

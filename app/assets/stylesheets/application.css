@@ -63,6 +63,7 @@ input, textarea	{
 	outline:none;
 }
 
+<<<<<<< HEAD
 section {
 	margin-bottom: 20px;
 }
@@ -83,4 +84,7 @@ nav {
 .nav li {
 	float: left;
 	margin-right: 60px;
+
+.hidden {
+	visibility: hidden;
 }

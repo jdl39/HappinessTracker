@@ -109,10 +109,10 @@ userdata = [
 	{'email' => 'fermentum@mauris.ca', 'first_name' => 'Janna', 'last_name' => 'Allen', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'JannaAllen'}
 ];
 
-for d in userdata do
-	user = User.create(email: d['email'], first_name: d['first_name'],
-		last_name: d['last_name'], password: d['password'],
-		password_confirmation: d['password_confirmation'], username: d['username'])
+for datum in userdata do
+	user = User.create(email: datum['email'], first_name: datum['first_name'],
+		last_name: datum['last_name'], password: datum['password'],
+		password_confirmation: datum['password_confirmation'], username: datum['username'])
 end
 
 activity_type_data = [
@@ -172,39 +172,142 @@ activity_type_data = [
 	{'name' => 'lucid dreaming'},
 ]
 
-for d in activity_type_data do
-	at = ActivityType.create(name: d['name'].split.map(&:capitalize).join(' '), num_users: 0)
+lemmatizer = Lemmatizer.new
+for datum in activity_type_data do
+	type = ActivityType.create(name: datum['name'].downcase, num_users: 0)
+    datum['name'].split.each{|word| ActivityWord.create(word: word, activity_type: type)}
+    datum['name'].split.each{|word| ActivityWord.create(word: lemmatizer.lemma(word), activity_type: type)}
 end
 
 activity_data = [
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Running')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Weight Lifting')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Hanging Out With Friends')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'Reading')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Meditation')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Mindful Eating')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'Reading')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Singing')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Acting For Theater')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'Acting For Film')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Hanging Out With Friends')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Playing Video Games')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Reading Comic Books')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'Playing Guitar')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Meditation')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Running')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Reading')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'Singing')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'running')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'weight lifting')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'reading')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'meditation')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'mindful eating')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'reading')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'singing')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for theater')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for film')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing video games')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'reading comic books')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'meditation')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'running')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'reading')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'singing')},
 ]
 
-for d in activity_data do
-	puts d['user'].username + "+" + d['activity_type'].name
-	d['activity_type'].reload
+for datum in activity_data do
+	puts "Activity: " + datum['user'].username + "+" + datum['activity_type'].name
+	datum['activity_type'].reload
 	act = Activity.new
-	act.user = d['user']
-	act.activity_type = d['activity_type']
-	d['activity_type'].update_attribute(:num_users, d['activity_type'].num_users + 1)
+	act.user = datum['user']
+	act.activity_type = datum['activity_type']
+	datum['activity_type'].update_attribute(:num_users, datum['activity_type'].num_users + 1)
 	act.save
 end
+
+happiness_question_data = [
+	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 7},
+	{'content' => "How happy are you compared to your peers?", 'max_score' => 7},
+	{'content' => "Some people are generally very happy. They enjoy life regardless of their circumstances. How much do you feel this describes you?", 'max_score' => 7},
+	{'content' => "How pleased are you with yourself?", 'max_score' => 6},
+	{'content' => "How intensely interested are you in other people?", 'max_score' => 6},
+	{'content' => "How much do you feel that life is rewarding?", 'max_score' => 6},
+	{'content' => "How much do you have warm feelings towards everyone?", 'max_score' => 6},
+	{'content' => "How often do you wake up feeling rested?", 'max_score' => 6},
+	{'content' => "How optimistic are you about the future?", 'max_score' => 6},
+	{'content' => "How often do you find things in your life amusing?", 'max_score' => 6},
+	{'content' => "How committed and involved are you?", 'max_score' => 6},
+	{'content' => "How much would you say life is good?", 'max_score' => 6},
+	{'content' => "How much do you feel that the world is a good place?", 'max_score' => 6},
+	{'content' => "How often do you laugh?", 'max_score' => 6},
+	{'content' => "How satisfied are you with everything in your life?", 'max_score' => 6},
+	{'content' => "How attractive do you think you look?", 'max_score' => 6},
+	{'content' => "How much of what you would like to do have you done?", 'max_score' => 6},
+	{'content' => "How happy are you?", 'max_score' => 6},
+	{'content' => "How often do you find beauty in things?", 'max_score' => 6},
+	{'content' => "How cheerful of an effect do you have on others?", 'max_score' => 6},
+	{'content' => "Can you find time for everything you want to do?", 'max_score' => 6},
+	{'content' => "How much control do you feel you have in your life?", 'max_score' => 6},
+	{'content' => "How much do you feel that you can take anything on?", 'max_score' => 6},
+	{'content' => "How much do you feel fully mentally alert?", 'max_score' => 6},
+	{'content' => "How often do you experience joy and elation?", 'max_score' => 6},
+	{'content' => "How easy do you find it to make decisions?", 'max_score' => 6},
+	{'content' => "How much of a sense of meaning and purpose do you have in your life?", 'max_score' => 6},
+	{'content' => "How much do you feel that you have a great deal of energy?", 'max_score' => 6},
+	{'content' => "How often do you have a positive influence on events?", 'max_score' => 6},
+	{'content' => "How much fun do you have with other people?", 'max_score' => 6},
+	{'content' => "How healthy do you feel?", 'max_score' => 6},
+	{'content' => "How many happy memories do you have of the past?", 'max_score' => 6},
+]
+
+for steffee in happiness_question_data do
+	puts "Happiness Question: " + steffee['content']
+	q = HappinessQuestion.new
+	q.content = steffee['content']
+	q.max_score = steffee['max_score']
+	q.save
+end
+
+hc_general = HappinessCategory.new
+hc_general.name = "General"
+hc_general.save
+hc_general.happiness_questions << HappinessQuestion.find(1)
+hc_general.happiness_questions << HappinessQuestion.find(2)
+hc_general.happiness_questions << HappinessQuestion.find(3)
+hc_general.happiness_questions << HappinessQuestion.find(18)
+hc_general.happiness_questions << HappinessQuestion.find(25)
+
+hc_social = HappinessCategory.new
+hc_social.name = "Social"
+hc_social.save
+hc_social.happiness_questions << HappinessQuestion.find(5)
+hc_social.happiness_questions << HappinessQuestion.find(7)
+hc_social.happiness_questions << HappinessQuestion.find(20)
+hc_social.happiness_questions << HappinessQuestion.find(30)
+
+hc_oxford = HappinessCategory.new
+hc_oxford.name = "Oxford Happiness Questionnaire"
+hc_oxford.save
+(4..32).each do |q|
+	hc_oxford.happiness_questions << HappinessQuestion.find(q)
+end
+
+hc_esteem = HappinessCategory.new
+hc_esteem.name = "Self Esteem"
+hc_esteem.save
+hc_esteem.happiness_questions << HappinessQuestion.find(4)
+hc_esteem.happiness_questions << HappinessQuestion.find(16)
+hc_esteem.happiness_questions << HappinessQuestion.find(20)
+hc_esteem.happiness_questions << HappinessQuestion.find(29)
+
+hc_health = HappinessCategory.new
+hc_health.name = "Health and Energy"
+hc_health.save
+hc_health.happiness_questions << HappinessQuestion.find(8)
+hc_health.happiness_questions << HappinessQuestion.find(24)
+hc_health.happiness_questions << HappinessQuestion.find(28)
+hc_health.happiness_questions << HappinessQuestion.find(31)
+
+hc_opt = HappinessCategory.new
+hc_opt.name = "Optimism"
+hc_opt.save
+hc_opt.happiness_questions << HappinessQuestion.find(6)
+hc_opt.happiness_questions << HappinessQuestion.find(9)
+hc_opt.happiness_questions << HappinessQuestion.find(12)
+hc_opt.happiness_questions << HappinessQuestion.find(13)
+hc_opt.happiness_questions << HappinessQuestion.find(19)
+hc_opt.happiness_questions << HappinessQuestion.find(27)
+hc_opt.happiness_questions << HappinessQuestion.find(32)
+
+hc_humor = HappinessCategory.new
+hc_humor.name = "Humor"
+hc_humor.save
+hc_humor.happiness_questions << HappinessQuestion.find(10)
+hc_humor.happiness_questions << HappinessQuestion.find(14)
