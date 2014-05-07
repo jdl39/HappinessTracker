@@ -247,6 +247,17 @@ happiness_question_data = [
 	{'content' => "How many happy memories do you have of the past?", 'max_score' => 6},
 ]
 
+frienddata = [
+	{'user_id' => 1, 'friend_id' => 2},
+	{'user_id' => 1, 'friend_id' => 3},
+	{'user_id' => 2, 'friend_id' => 3},
+]
+
+for friend in frienddata do
+    puts "Friends: " + User.find(friend['user_id']).username + "+" + User.find(friend['friend_id']).username
+    Friend.create(friend)
+end
+
 for steffee in happiness_question_data do
 	puts "Happiness Question: " + steffee['content']
 	q = HappinessQuestion.new
