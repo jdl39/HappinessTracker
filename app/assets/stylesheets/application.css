@@ -62,3 +62,25 @@ a img {
 input, textarea	{
 	outline:none;
 }
+
+section {
+	margin-bottom: 20px;
+}
+
+article {
+	margin-bottom: 10px;
+}
+
+nav {
+	float: left;
+	margin-right: 60px;
+}
+
+.logo {
+	float: left;
+}
+
+.nav li {
+	float: left;
+	margin-right: 60px;
+}
