@@ -258,6 +258,17 @@ for friend in frienddata do
     Friend.create(friend)
 end
 
+messagedata = [ 
+	    {'sender_id' => 1, 'receiver_id' => 2}, 
+		{'sender_id' => 1, 'receiver_id' => 3}, 
+	    {'sender_id' => 2, 'receiver_id' => 3}, 
+]
+
+for message in messagedata do
+    puts "Message: " + User.find(message['sender_id']).username + " to " + User.find(message['receiver_id']).username
+    Message.create(message)
+end
+
 for steffee in happiness_question_data do
 	puts "Happiness Question: " + steffee['content']
 	q = HappinessQuestion.new
