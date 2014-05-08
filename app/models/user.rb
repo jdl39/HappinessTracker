@@ -26,6 +26,43 @@ class User < ActiveRecord::Base
     	Digest::SHA1.hexdigest(token.to_s)
   	end
 
+  	def happiness_score
+  		return happiness_score_for_category_at_time(nil, Time.now)
+  	end
+
+  	def happiness_score_at_time(time)
+  		return happiness_score_for_category_at_time(nil, time)
+  	end
+
+  	def happiness_score_for_category(category)
+  		return self.happiness_score_for_category_at_time(category, Time.now)
+  	end
+
+  	def happiness_score_for_category_at_time(category, time)
+  		happiness_questions = []
+  		if category.nil?
+  			happiness_questions = HappinessQuestion.all
+  		else
+  			happiness_questions = category.happiness_questions
+  		end
+
+  		total_score = 0.0
+  		total_num_questions_answered = 0
+  		happiness_questions.each { |q|
+  			new_score = q.most_recent_score_before(self, time)
+  			unless new_score.nil?
+  				total_score += new_score
+  				total_num_questions_answered += 1
+  			end
+  		}
+
+  		if total_num_questions_answered == 0
+  			return 0.0
+  		end
+
+  		return total_score * 1.0 / total_num_questions_answered
+  	end
+
 	private
 		def create_remember_token
 			self.remember_token = User.digest(User.new_remember_token)

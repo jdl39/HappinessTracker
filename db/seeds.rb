@@ -333,3 +333,12 @@ hc_humor.name = "Humor"
 hc_humor.save
 hc_humor.happiness_questions << HappinessQuestion.find(10)
 hc_humor.happiness_questions << HappinessQuestion.find(14)
+
+(1..20).each { |num|
+	hr = HappinessResponse.new
+	hr.user = User.find(1)
+	hr.happiness_question = HappinessQuestion.find(num)
+	hr.value = 1 + rand(6)
+	puts hr.user.username + " answered Q" + num.to_s + " with " + hr.value.to_s
+	hr.save
+}
