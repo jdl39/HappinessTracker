@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
+    t.boolean  "accepted",   default: false
+    t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
