@@ -155,11 +155,12 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   add_index "measurements", ["measurement_type_id"], name: "index_measurements_on_measurement_type_id"
 
   create_table "messages", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "challenge_id"
     t.integer  "sender_id"
     t.integer  "receiver_id"
-    t.integer  "challenge_id"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "messages", ["challenge_id"], name: "index_messages_on_challenge_id"

@@ -27,6 +27,10 @@ HappinessApp::Application.routes.draw do
   get '/friend_request/:user_id/sent', to: 'friends#requests_sent'
   get '/friend_request/:user_id/received', to: 'friends#requests_received'
 
+  # MESSAGES
+  get '/messages/new/:sender_id/:receiver_id/:content', to: 'messages#new'
+  get '/messages/:user_id', to: 'messages#inbox'
+
   # TEST FOR RECOMMENDATIONS
   get '/recommendations', to: 'activities#recommendations'
 
