@@ -31,6 +31,12 @@ HappinessApp::Application.routes.draw do
   get '/messages/new/:sender_id/:receiver_id/:content', to: 'messages#new'
   get '/messages/:user_id', to: 'messages#inbox'
 
+  # CHALLENGES
+  get '/challenges/new', to: 'challenges#new'
+  get '/challenges/:user_id/accepted', to: 'challenges#retrieve_accepted'
+  get '/challenges/:user_id/declined', to: 'challenges#retrieve_declined'
+  get '/challenges/get/:message_id', to: 'challenges#get_challenge'
+
   # TEST FOR RECOMMENDATIONS
   get '/recommendations', to: 'activities#recommendations'
 
