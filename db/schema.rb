@@ -16,16 +16,12 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   create_table "activities", force: true do |t|
     t.integer  "user_id"
     t.integer  "activity_type_id"
-    t.integer  "measurement_type_id"
     t.datetime "last_accessed"
-    t.integer  "num_measured"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
-  add_index "activities", ["measurement_type_id"], name: "index_activities_on_measurement_type_id"
-  add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
   create_table "activities_measurement_types", id: false, force: true do |t|
@@ -104,21 +100,21 @@ ActiveRecord::Schema.define(version: 20140506053313) do
     t.datetime "updated_at"
   end
 
-  create_table "happiness_categories_happiness_questions", force: true do |t|
+  create_table "happiness_categories_questions", force: true do |t|
     t.integer "happiness_category_id"
     t.integer "happiness_question_id"
   end
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
-    t.float    "max_score"
+    t.integer  "max_score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
-    t.float    "value"
+    t.integer  "value"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -10,82 +10,85 @@
   });
 </script>
 
+
+
 <div class="wrapper">
   
   <header>
-    <div class="logo">
-      <a href="#">
-        <img src="" alt="Title">
-      </a>
-    </div><!-- /.logo -->
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Challenge</a></li>
-        <li><a href="#">Inbox</a></li>
-        <li><a href="#">Settings</a></li>
-        <li><a href="" id="logout">Log Out</a></li>
-      </ul>
-    </nav><!-- /nav -->
+    <div class="container clearfix">
+      <div class="logo">
+        <a href="#">
+          <img src="" alt="HapApp">
+        </a>
+      </div><!-- /.logo -->
+      <nav class="primary-nav">
+        <ul>
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Challenge</a></li>
+          <li><a href="#">Inbox</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Log Out</a></li>
+        </ul>
+      </nav><!-- /nav -->
+    </div><!-- /.container -->
   </header>
 
   <main>
-    <section>
-      <h1>Welcome Home, <%= @user.first_name %></h1>
-      <hr>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, facere, rem, nihil, nemo voluptatum laborum dolores id tempora veniam in consequatur fuga minima dignissimos! Quam, repudiandae dolore laudantium ex nam.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor, dignissimos, sint soluta architecto ea neque repellat nihil perspiciatis fugiat. Ducimus consequuntur eius quis enim sapiente non reiciendis illum molestiae possimus.</p>
-    </section><!-- /section -->
-    
-    <section>
-      <h2>Happiness Question</h2>
-      <hr>
-      <p>Question Here</p>
-    </section>
-    
-    <section>
-      <h2>News Feed</h2>
-      <hr>
-      <article>
-        <h3>Story 1</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-      </article><!-- /article -->
-      <article>
-        <h3>Story 2</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-      </article><!-- /article -->
-      <article>
-        <h3>Story 3</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-      </article><!-- /article -->
+    <div class="container">
+      <h1>Welcome, Justin!</h1>
+      
+      <section>
+        <h2>Happiness Question</h2>
+        <hr>
+        <p>Question Here</p>
+      </section><!-- section -->
+      
+      <section>
+        <h2>News Feed</h2>
+        <hr>
+        <article>
+          <h3>Story 1</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+        </article><!-- /article -->
+        <article>
+          <h3>Story 2</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+        </article><!-- /article -->
+        <article>
+          <h3>Story 3</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+        </article><!-- /article -->
 
-      <button>Load More News</button>
-    </section><!-- /section -->
+        <button>Load More News</button>
+      </section><!-- /section -->
+    </div><!-- /.container -->
   </main><!-- /main -->
 
   <footer>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Challenge</a></li>
-        <li><a href="#">Inbox</a></li>
-        <li><a href="#">Settings</a></li>
-        <li><a href="#">Log Out</a></li>
-      </ul>
-    </nav><!-- /nav -->
-    <nav>
-      <ul>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Other Info?</a></li>
-        <li><a href="#">Terms</a></li>
-        <li><a href="#">Privacy</a></li>
-      </ul>
-    </nav><!-- /nav -->
-    <div class="copyright">
-      <small>&copy; 2014, HapApp</small>
-    </div>
+    <div class="container">
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Challenge</a></li>
+          <li><a href="#">Inbox</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Log Out</a></li>
+        </ul>
+      </nav><!-- /nav -->
+      <nav>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Other Info?</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </nav><!-- /nav -->
+      <div class="copyright">
+        <small>&copy; 2014, HapApp</small>
+      </div>
+    </div><!-- /.container -->
   </footer><!-- /footer -->
 
 </div><!-- /.wrapper -->
