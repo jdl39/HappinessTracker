@@ -56,6 +56,38 @@ user_id - the id of the user we wish to search for.
 This method returns JSON representing the data associated with the user-activity_type pair. Useful for querying how well friends perform on activities you are doing.
 # TODO: Sepcify the format of the returned JSON.
 
+-----------------------------
+MODELS
+-----------------------------
+
+HappinessQuestion
+-----------------
+most_recent_response(user):
+Gets the most recent response for this question and the given user.
+
+most_recent_response_before(user, time):
+Similar to the above, but can get the most recent answer before a certain time.
+
+most_recent_score(user):
+Gets the normalized recent score (between 0 and 1)
+
+most_recent_score_before(user, time):
+Similar to above, but before the given time.
+
+User
+----
+happiness_score:
+Returns the normalized (between 0 and 1) happiness score of the user.
+
+happiness_score_for_category(category):
+Similar to above, but for a given HappinessCategory
+
+happiness_score_at_time(time):
+Similar to above, but for a given time.
+
+happiness_score_for_category_at_time(category, time):
+Combination of above.
+
 
 -----------------------------
 VIEWS

@@ -247,6 +247,28 @@ happiness_question_data = [
 	{'content' => "How many happy memories do you have of the past?", 'max_score' => 6},
 ]
 
+frienddata = [
+	{'user_id' => 1, 'friend_id' => 2},
+	{'user_id' => 1, 'friend_id' => 3},
+	{'user_id' => 2, 'friend_id' => 3},
+]
+
+for friend in frienddata do
+    puts "Friends: " + User.find(friend['user_id']).username + "+" + User.find(friend['friend_id']).username
+    Friend.create(friend)
+end
+
+messagedata = [ 
+	    {'sender_id' => 1, 'receiver_id' => 2}, 
+		{'sender_id' => 1, 'receiver_id' => 3}, 
+	    {'sender_id' => 2, 'receiver_id' => 3}, 
+]
+
+for message in messagedata do
+    puts "Message: " + User.find(message['sender_id']).username + " to " + User.find(message['receiver_id']).username
+    Message.create(message)
+end
+
 for steffee in happiness_question_data do
 	puts "Happiness Question: " + steffee['content']
 	q = HappinessQuestion.new
@@ -311,3 +333,12 @@ hc_humor.name = "Humor"
 hc_humor.save
 hc_humor.happiness_questions << HappinessQuestion.find(10)
 hc_humor.happiness_questions << HappinessQuestion.find(14)
+
+(1..20).each { |num|
+	hr = HappinessResponse.new
+	hr.user = User.find(1)
+	hr.happiness_question = HappinessQuestion.find(num)
+	hr.value = 1 + rand(6)
+	puts hr.user.username + " answered Q" + num.to_s + " with " + hr.value.to_s
+	hr.save
+}
