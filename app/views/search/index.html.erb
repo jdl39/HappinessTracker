@@ -4,9 +4,9 @@
         <div id="friends-panel" class="hidden">
             <h4>Friends who also <span id="friends-header">""</span></h4>
             <ul id="friends-list">
-                <li><a href="#">Friend 1</a></li>
+<!--                 <li><a href="#">Friend 1</a></li>
                 <li><a href="#">Friend 2</a></li>
-                <li><a href="#">Friend 3</a></li>
+                <li><a href="#">Friend 3</a></li> -->
             </ul>
         </div>
     </div>
@@ -16,18 +16,18 @@
             <h3 id="graph-header"><b>""</b></h3>
         </div>
         <div>
-            <form class="activity-form">
+            <form class="activity-form" id="new-activity">
                 <h3>Form 1</h3>
                 <p>How do you want to record this activity?</p>
                 <p>Users most commonly stroe it by: lbs.</p>
                 <input class="measurements" type="text" name="measure1" value="lbs."><br>
+                <button type="button" >Add Another Measurement</button>
             </form>
 
-            <form class="activity-form">
+            <form class="activity-form" id="add-activity">
                 <h3>Form 2</h3>
                 Measurement 1: <input class="measurements" type="text" name="measure1" placeholder="125lbs."><br>
                 Measurement 2: <input class="measurements" type="text" name="measure2" placeholder="300pgs"><br>
-                <input type="submit" value="Add +">
             </form>
         </div>
     </div>
