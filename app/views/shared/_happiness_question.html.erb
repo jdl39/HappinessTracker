@@ -1,0 +1,24 @@
+<div class="happiness-question"></div>
+
+<script>
+getNextQuestion = function() {
+	var data = {}
+	if ($('.happiness-question').html() != "") {
+		data.question_id = question.id
+		data.value = $("input:radio[name='happiness-question']:checked").val()
+	}
+	$('.happiness-question').html("")
+	$.post('/happiness_response', data, function(returned_data) {
+		question = returned_data
+		console.log(question)
+		$('.happiness-question').append($("<p>" + question.content + "</p>").hide().fadeIn())
+		for (var i = 1; i <= question.max_score; i++) {
+			$('.happiness-question').append($('<input id="happiness-question_' + i + '" name="happiness-question" type="radio" value="' + i + '">').hide().fadeIn())
+			$('.happiness-question').append($('<label for="happiness-question" value="' + i + '">' + i + '</label>').hide().fadeIn())
+		}
+		$('.happiness-question input').click(getNextQuestion)
+	})
+}
+
+getNextQuestion()
+</script>
