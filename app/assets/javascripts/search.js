@@ -1,26 +1,49 @@
-// function search() {
-//     console.log("Hey");
-//     console.log(document.getElementById('friends-list'));
-//     console.log(document.getElementById('activity-title'));
 function search() {
     xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var str = document.getElementById('search').value;
     console.log(str);
-    var friends_header = document.getElementById('friends-header');
-    friends_header.innerHTML = str;
-    var graph_header = document.getElementById('graph-header');
-    graph_header.innerHTML = str;    
-    // xhr.open("GET", url+encodeURIComponent(str), true);
-    // xhr.send();
-    // function xhrHandler() {
-    //   if (this.readyState != 4) {
-    //       return;
-    //   }
-    //   if (this.status != 200) {
-
-    //       return;
-    //   }
-    //   document.getElementById(resultID).innerHTML= this.responseText;
-    // }
+    if(str) {
+        document.getElementById('friends-panel').style.visibility="visible";;   
+        document.getElementById('right-panel').style.visibility="visible";;   
+    } else {
+        document.getElementById('friends-panel').style.visibility="hidden";;   
+        document.getElementById('right-panel').style.visibility="hidden";;   
+    }
+    document.getElementById('friends-header').innerHTML = str;
+    var graph_header = document.getElementById('graph-header').innerHTML = str;
+    var url = '/searchjson?str=';    
+    xhr.open("GET", url+encodeURIComponent(str), true);
+    xhr.send();
+    function xhrHandler() {
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        // console.log(this.responseText);
+        json  = this.responseText;
+        if(json['user_does_activity']) {
+            if(json['friends']) {
+                for (friend in json['friends']) {
+                    document.getElementById("friends-header").append(friend);
+                    document.getElementById("new-activity").style.visibility = "hidden";
+                    document.getElementById("add-activity").style.visibility = "visible";
+                }
+            }
+        } else if (json['query_activity_exists']) {
+            if(json['friends']) {
+                for (friend in json['friends']) {
+                    document.getElementById("friends-header").append(friend);
+                    document.getElementById("add-activity").style.visibility = "hidden";
+                    document.getElementById("new-activity").style.visibility = "visible";
+                }
+            }
+        } else {
+                    document.getElementById("add-activity").style.visibility = "hidden";
+                    document.getElementById("new-activity").style.visibility = "visible";
+        }
+        // document.getElementById("friends-header").innerHTML = this.responseText;
+    }
 }
