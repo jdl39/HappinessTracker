@@ -18,7 +18,23 @@ before_action :require_login, :except=>[:index, :create]
     redirect_to action: 'home'
   end
 
-  def profile
+  def feed
+  end
+
+  def challenges
+
+  end
+
+  def messages
+
+  end
+
+  def friends
+
+  end
+
+  def activities
+
   end
 
   def home
