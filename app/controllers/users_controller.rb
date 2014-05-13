@@ -19,22 +19,23 @@ before_action :require_login, :except=>[:index, :create]
   end
 
   def feed
+     @user = current_user
   end
 
   def challenges
-
+     @user = current_user
   end
 
   def messages
-
+     @user = current_user
   end
 
   def friends
-
+     @user = current_user
   end
 
   def activities
-
+     @user = current_user
   end
 
   def home

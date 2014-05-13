@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>HappinessApp</title>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+	<!-- meta and title -->
+	<meta charset="utf-8" />
+  <title><%= @title %></title>
+
+  <!-- css -->
+  <link href='http://fonts.googleapis.com/css?family=Oswald:300' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:300,700' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+
+  <!-- js -->
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "jquery" %>
+  
+
   <%= csrf_meta_tags %>
 </head>
+
 <body>
 
 <%= yield %>
 
 </body>
+
 </html>
