@@ -19,6 +19,7 @@ before_action :require_login, :except=>[:index, :create]
   end
 
   def profile
+    @user = current_user
   end
 
   def home

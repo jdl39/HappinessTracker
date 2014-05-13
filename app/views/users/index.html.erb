@@ -41,7 +41,7 @@
 	<p>Login to HapApp</p>
 	<%= form_for @user, :url => { :action => "login" } do |f| %>
 		<ul>
-			<li><label for="username">Username</label></li>
+		  <li><label for="username">Username</label></li>
 			<li><input type="text" id="username" name="username" required /></li>
 			<li><label for="password">Password</label></li>
 			<li><input type="password" id="password" name="password" required /></li>
@@ -54,80 +54,99 @@
 </div>
 -->
 
-<h1>Sign in</h1>
+<div class="wrapper">
 
-<div>
-<%= form_for(:session, url: sessions_path) do |f| %>
-	<%= render 'shared/error_messages' %>
+  <header>
+    <div class="container clearfix">
+      <div class="logo">
+        <a href="#">
+          <img src="" alt="HapApp">
+        </a>
+      </div><!-- /.logo -->
+    </div><!-- ./container -->
+  </header>
 
-	<%= f.label :username %>
-    <%= f.text_field :username, :required => true %>
+  <main>
+    <div class="container">
+      <h1>Sign in</h1>
 
-    <%= f.label :password %>
-    <%= f.password_field :password, :required => true  %>
+      <div>
+      <%= form_for(:session, url: sessions_path) do |f| %>
+      	<%= render 'shared/error_messages' %>
 
-    <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
-<% end %>
-<div>
-<!-- <p>Not a member? <a href="" id="create">Get happy now!</a></p> -->
-<br><br><br><br>
+      	<%= f.label :username %>
+          <%= f.text_field :username, :required => true %>
 
-	
-<!--Create account stuff-->
-<div class="row">
-  <div class="span6 offset3">
-	  <%= form_for(@user) do |f| %>
-	  	<%= render 'shared/error_messages' %>
+          <%= f.label :password %>
+          <%= f.password_field :password, :required => true  %>
+
+          <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
+      <% end %>
+      <div>
+      <!-- <p>Not a member? <a href="" id="create">Get happy now!</a></p> -->
+      <br><br><br><br>
+
+      	
+      <!--Create account stuff-->
+      <div class="row">
+        <div class="span6 offset3">
+      	  <%= form_for(@user) do |f| %>
+      	  	<%= render 'shared/error_messages' %>
+              <ul>
+      		  <li>
+      		     <%= f.label :first_name %>
+      		     <%= f.text_field :first_name, :required => true %>
+      	      </li>
+
+      		  <li>
+      		     <%= f.label :last_name %>
+      		     <%= f.text_field :last_name, :required => true %>
+                </li>
+
+      		  <li>
+      	         <%= f.label :username %>
+      		     <%= f.text_field :username, :required => true %>
+                </li>
+
+      		  <li>
+      		     <%= f.label :email %>
+      	         <%= f.text_field :email, :required => true %>
+                </li>
+
+      		  <li>
+      		     <%= f.label :password %>
+      		     <%= f.password_field :password, :required => true %>
+                </li>
+
+      		  <li>
+      		     <%= f.label :password_confirmation, "Confirmation" %>
+      		     <%= f.password_field :password_confirmation, :required => true %>
+                </li>
+
+      		  <li>
+      		     <%= f.submit "Get Happy!", class: "btn btn-large btn-primary" %>
+      	      </li>	 
+      	  </ul>
+      	<% end %>
+        </div>
+      </div>
+    </div><!-- /.container -->
+  </main><!-- /main -->
+
+  <footer>
+    <div class="container">
+      <nav>
         <ul>
-		  <li>
-		     <%= f.label :first_name %>
-		     <%= f.text_field :first_name, :required => true %>
-	      </li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Other Info?</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </nav><!-- /nav -->
+      <div class="copyright">
+        <small>&copy; 2014, HapApp</small>
+      </div>
+    </div><!-- /.container -->
+  </footer><!-- /footer -->
 
-		  <li>
-		     <%= f.label :last_name %>
-		     <%= f.text_field :last_name, :required => true %>
-          </li>
-
-		  <li>
-	         <%= f.label :username %>
-		     <%= f.text_field :username, :required => true %>
-          </li>
-
-		  <li>
-		     <%= f.label :email %>
-	         <%= f.text_field :email, :required => true %>
-          </li>
-
-		  <li>
-		     <%= f.label :password %>
-		     <%= f.password_field :password, :required => true %>
-          </li>
-
-		  <li>
-		     <%= f.label :password_confirmation, "Confirmation" %>
-		     <%= f.password_field :password_confirmation, :required => true %>
-          </li>
-
-		  <li>
-		     <%= f.submit "Get Happy!", class: "btn btn-large btn-primary" %>
-	      </li>	 
-	  </ul>
-	<% end %>
-  </div>
-</div>
-
-<!--<form method="post">
-	<ul>
-		<li><label for="firstname">First Name</label></li>
-		<li><input type"text" id="firstname" name="firstname" required /></li>
-		<li><label for="lastname">Last name</label></li>
-		<li><input type="text" name="lastname" required></li>
-		<li><label for="username">Username</label></li>
-		<li><input type="text" name="username" required></li>
-		<li><label for="password">Password</label></li>
-		<li><input type="password" name="password" required></li>
-		<li><input type="submit" value="Get Happy!"></li>
-	</ul>
-</form>
-
+</div><!-- /.wrapper -->
