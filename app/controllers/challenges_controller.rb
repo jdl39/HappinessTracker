@@ -14,6 +14,19 @@ class ChallengesController < ApplicationController
        render text:''
     end
 
+	# Parameters: Challenge ID
+	# TODO: Validate that challenge is one that current user has received
+    def accept
+       render text: ''
+    end
+
+	# Parameters: Challenge ID
+	# TODO: Validate that challenge is one that current user has received
+	# TODO: Delete the request?
+	def decline
+	   render text: ''
+	end
+
 	# Parameters: None
 	def new
        challenge = Challenge.new(:sender_id => params[:sender_id],
