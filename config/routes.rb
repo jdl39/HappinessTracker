@@ -1,5 +1,7 @@
 HappinessApp::Application.routes.draw do
 
+  post 'happiness_response', to: 'happiness#post_happiness_response'
+
   root 'users#index'
   post 'users/login' => 'users#login'
   get 'new' => 'users#new'
