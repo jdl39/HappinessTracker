@@ -18,12 +18,13 @@ before_action :require_login, :except=>[:index, :create]
     redirect_to action: 'home'
   end
 
-  # TODO: Check if friends or if user
   def feed
-     @user = current_user
-	 if (params[:username] == @user.username)
-
+	 viewed_user = User.find_by_username(params[:username]) 
+	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
+        #TODO: Set the logs 
      else
+        #TODO: Render blank page
+		render text: 'Permission denied'
      end
   end
 
@@ -37,6 +38,7 @@ before_action :require_login, :except=>[:index, :create]
 		     @challenges.sort! {|a,b| a.created_at <=> b.created_at }
 		  else
 			 #TODO: Render blank page
+			  render text: 'Permission denied'
 		  end	 
 	 else
 	 end 
@@ -52,23 +54,25 @@ before_action :require_login, :except=>[:index, :create]
 			@messages.sort! {|a,b| a.created_at <=> b.created_at }
 		else
 			#TODO: Render blank page
+			render text: 'Permission denied'
 		end
 	 end 
   end
 
   def friends
      viewed_user = User.find_by_username(params[:username])
-	 if (is_current_user(viewed_user.id) || are_friends(current_user.id, viewed_user.id))
+	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
 	     @friends = Friend.where(user_id:viewed_user.id)
 	     @friends += Friend.where(friend_id:viewed_user.id)
 	 else
 	     #TODO: Render blank page
+		 render text:'Permission denied'
 	 end
   end
 
   def activities
 	 viewed_user = User.find_by_username(params[:username])
-	 if (is_current_user(viewed_user.id) || are_friends(current_user.id, viewed_user.id))
+	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
 		 @activity_types = []
 		 activities = Activity.where(user_id:viewed_user.id)
 		 activities.each do |activity|
@@ -76,6 +80,7 @@ before_action :require_login, :except=>[:index, :create]
 	     end
 	 else
 	     #TODO: Render blank page
+		 render text:'Permission denied'
 	 end 
   end
 
@@ -117,6 +122,6 @@ before_action :require_login, :except=>[:index, :create]
 		end
 
 		def is_current_user(username)
-            params[:username] == current_user.username
+            username == current_user.username
 		end	
 end
