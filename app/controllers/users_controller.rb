@@ -91,6 +91,8 @@ before_action :require_login, :except=>[:index, :create]
 			unless signed_in?
 				redirect_to action: 'index'
 			end
-	    end
+	  end
 
+    def settings
+    end
 end

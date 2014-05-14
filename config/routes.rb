@@ -17,9 +17,10 @@ HappinessApp::Application.routes.draw do
   get '/goals', to: 'goals#index'
   get '/guides', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
-  get '/challenges', to: 'challenges#index'
+  get '/challenges', to: 'users#challenges'
   get '/home', to: 'users#home'
   get '/searchjson', to: 'activities#search'
+  get '/settings', to: 'users#settings'
 
   # PROFILE PAGE
   get '/profile/:username/messages', to: 'users#messages'
