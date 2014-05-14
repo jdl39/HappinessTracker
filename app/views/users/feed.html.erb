@@ -1,8 +1,4 @@
-<ul class="tabs">
-  <li><a href="/profile/<%= @user.username %>">Feed</a></li>
-  <li><a href="/profile/<%= @user.username %>/friends">Friends</a></li>
-  <li><a href="/profile/<%= @user.username %>/activities">Activities</a></li>
-  <li><a href="/profile/<%= @user.username %>/challenges">Challenges</a></li>
-  <li><a href="/profile/<%= @user.username %>/messages">Messages</a></li>
-</ul>
+<%= render :partial => "tabs",
+    :locals => {:username => current_user.username} %>
+
     

@@ -1,15 +1,9 @@
+<%= render :partial => "tabs",
+    :locals => {:username => current_user.username} %>
 
-  <ul class="tabs">
-    <li><a href="/profile/<%= @user.username %>">Feed</a></li>
-    <li><a href="/profile/<%= @user.username %>/friends">Friends</a></li>
-    <li><a href="/profile/<%= @user.username %>/activities">Activities</a></li>
-    <li><a href="/profile/<%= @user.username %>/challenges">Challenges</a></li>
-    <li><a href="/profile/<%= @user.username %>/messages">Messages</a></li>
-  </ul>
-
-  Friends for <%= @user.first_name %>
-  <ul>
-  	<% @friends.each do |f| %>
-  	<li><%= f %></li>
-  	<% end %>
-  </ul>
+Friends for <%= @user.first_name %>
+<ul>
+	<% @friends.each do |f| %>
+	<li><%= f %></li>
+	<% end %>
+</ul>
