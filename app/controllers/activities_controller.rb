@@ -150,9 +150,9 @@ class ActivitiesController < ApplicationController
         search_results = []
         type = ActivityType.where(name: searchString)
         query_activity_exists = !type.empty?
-        search_results.concat type.to_a unless type.nil?
+        search_results |= type.to_a unless type.nil?
         types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC')
-        search_results.concat types.to_a
+        search_results |= types.to_a
 
         lex = WordNet::Lexicon.new
 
@@ -181,7 +181,7 @@ class ActivitiesController < ApplicationController
             
             # get actual words out
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]] : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
-            search_results.concat getTypesForWords(searchWords)
+            search_results |= getTypesForWords(searchWords)
 
             puts "SEARCH RESULTS 2"
             p search_results.size
@@ -195,7 +195,7 @@ class ActivitiesController < ApplicationController
             end
 
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)}}
-            search_results.concat getTypesForWords(searchWords)
+            search_results |= getTypesForWords(searchWords)
 
             puts "SEARCH RESULTS 3"
             p search_results.size
@@ -209,7 +209,7 @@ class ActivitiesController < ApplicationController
                 # could also do the same for words spelled incorrectly, but passing for now
             end
             searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:cousins].reduce([]){|sum, n| sum | n.words.map(&:lemma)}} 
-            search_results.concat getTypesForWords(searchWords)
+            search_results |= getTypesForWords(searchWords)
             
             puts "SEARCH RESULTS 4"
             p search_results.size
