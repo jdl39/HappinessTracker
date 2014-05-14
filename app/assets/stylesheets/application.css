@@ -136,6 +136,9 @@ a {
   text-decoration: none;
 }
 
+.hidden {
+	visibility: hidden;
+}
 
 /* ============================================================
   TEMPLATE
