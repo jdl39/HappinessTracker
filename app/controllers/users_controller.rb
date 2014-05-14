@@ -11,9 +11,9 @@ before_action :require_login, :except=>[:index, :create]
     end
   end
 
-	def new
+  def new
 		@user = User.new
-	end
+  end
 
   def login
     redirect_to action: 'home'
@@ -29,40 +29,43 @@ before_action :require_login, :except=>[:index, :create]
      end
   end
 
+  
   def challenges
-	 if (!is_current_user(params[:username]))
-       friend = User.where(username:current_user.username)
-	      if (are_friends(current_user.id, friend.id))
-	         #Renders messages page
-		     @challenges = Challenge.where(sender_id:current_user.id, receiver_id:friend.id)
-		     @challenges += Challenge.where(sender_id:friend.id, receiver_id:current_user.id)
-		     @challenges.sort! {|a,b| a.created_at <=> b.created_at }
-		  else
-			 #TODO: Render blank page
-			  render text: 'Permission denied'
-		  end	 
-	 else
-	 end 
+	 viewed_user = User.where(params[:username]) 
+	 if (!is_current_user(viewed_user.username))
+		 #TODO: Redirect to user's personal challenges page
+	 elsif (are_friends(current_user.id, viewed_user.id))
+	     #Renders friend-view of challenges page
+		 @challenges = Challenge.where(sender_id:current_user.id, receiver_id:viewed_user.id)
+		 @challenges += Challenge.where(sender_id:viewed_user.id, receiver_id:current_user.id)
+		 @challenges.sort! {|a,b| a.created_at <=> b.created_at }
+     else
+	     #TODO: Render blank page
+	     render text: 'Permission denied'
+	 end	 
   end
 
   def messages
-	 if (!is_current_user(params[:username]))
-	    friend = User.where(username:current_user.username)
-		if (are_friends(current_user.id, friend.id))
-			# Renders messages page
-	        @messages = Message.where(sender_id:current_user.id, receiver_id:friend.id)
-		    @messages += Message.where(sender_id:friend.id, receiver_id:current_user.id)
-			@messages.sort! {|a,b| a.created_at <=> b.created_at }
-		else
-			#TODO: Render blank page
-			render text: 'Permission denied'
-		end
-	 end 
+	viewed_user = User.find_by_username(params[:username]) 
+    if (is_current_user(viewed_user.username))
+		 #TODO: Redirect to user's personal messages page
+	elsif (are_friends(current_user.id, viewed_user.id))
+		 # Renders friend-view of messages page
+	     @messages = Message.where(sender_id:current_user.id, receiver_id:friend.id)
+		 @messages += Message.where(sender_id:friend.id, receiver_id:current_user.id)
+	     @messages.sort! {|a,b| a.created_at <=> b.created_at }
+    else
+	     #TODO: Render blank page
+		 render text: 'Permission denied'
+	end
   end
 
   def friends
      viewed_user = User.find_by_username(params[:username])
-	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
+	 if (is_current_user(viewed_user.username)) 
+	     #TODO: Redirect to user's personal activities page 	
+	 elsif (are_friends(current_user.id, viewed_user.id))
+		 # Show friend-view of friends page
 	     @friends = Friend.where(user_id:viewed_user.id)
 	     @friends += Friend.where(friend_id:viewed_user.id)
 	 else
@@ -73,13 +76,16 @@ before_action :require_login, :except=>[:index, :create]
 
   def activities
 	 viewed_user = User.find_by_username(params[:username])
-	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
+	 if (is_current_user(viewed_user.username))
+         #TODO: Redirect to user's personal activities page	
+	 elsif (are_friends(current_user.id, viewed_user.id))
+		 # Show friend-permissable view
 		 @activity_types = []
 		 activities = Activity.where(user_id:viewed_user.id)
 		 activities.each do |activity|
             @activity_types << ActivityType.where(id:activity.activity_type_id)
 	     end
-	 else
+     else
 	     #TODO: Render blank page
 		 render text:'Permission denied'
 	 end 
@@ -88,9 +94,9 @@ before_action :require_login, :except=>[:index, :create]
   def home
     @user = current_user
     # Render landing page
-	end
+  end
 
-	def create
+  def create
       # names of fields:
       # firstname
       # lastname
@@ -105,7 +111,7 @@ before_action :require_login, :except=>[:index, :create]
     end
   end
 
-    private
+  private
     	def user_params
      		return params.require(:user).permit(:first_name, :last_name, :username, :email, :password,
                                    :password_confirmation)
@@ -115,7 +121,7 @@ before_action :require_login, :except=>[:index, :create]
 			unless signed_in?
 				redirect_to action: 'index'
 			end
-	  end
+	    end
 
 		def are_friends(user_id_1, user_id_2)
             (!Friend.where(user_id:user_id_1, friend_id:user_id_2).blank? ||
@@ -128,4 +134,4 @@ before_action :require_login, :except=>[:index, :create]
 
 		def settings
         end
-end
+  end
