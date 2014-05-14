@@ -23,7 +23,7 @@ class HappinessQuestion < ActiveRecord::Base
 	end
 
 	def HappinessQuestion.question_with_most_stale_response(user)
-		allQuestions = HappinessQuestion.all
+		allQuestions = Array.new(HappinessQuestion.all)
 		HappinessResponse.where("user_id = ?", user.id).order(created_at: :desc).find_each do |response|
 			allQuestions.delete(response.happiness_question)
 			if allQuestions.size == 1
