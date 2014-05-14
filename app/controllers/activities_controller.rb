@@ -295,6 +295,7 @@ class ActivitiesController < ApplicationController
     end
 
     vote_threshold = -3
+    spread_amount = 5
 
     # honestly don't know if I should've combined comment and response into single class
 
@@ -304,7 +305,9 @@ class ActivitiesController < ApplicationController
         # do nothing if user already voted
         return unless Comment.where(id: comment.id, up_voter: current_user).empty?
         comment.votes = comment.votes + 1
-        # TODO: make new random readers (not including downvoters)
+        new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
+        # TODO: how to actually add?
+        #new_readers.each{|reader| reader.readable_comment
     end
 
     # params: comment_index

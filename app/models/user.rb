@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
 
     has_and_belongs_to_many :readable_comments, class_name: "Comment"
     has_and_belongs_to_many :readable_responses, class_name: "Response"
+    has_and_belongs_to_many :down_comments, class_name: "Comment"
+    has_and_belongs_to_many :up_comments, class_name: "Comment"
+    has_and_belongs_to_many :down_responses, class_name: "Response"
+    has_and_belongs_to_many :up_responses, class_name: "Response"
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
