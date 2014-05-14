@@ -21,10 +21,11 @@
                 <p>How do you want to record this activity?</p>
                 <p>Users most commonly stroe it by: lbs.</p>
                 <input class="measurements" type="text" name="measure1" value="lbs."><br>
-                <button type="button" >Add Another Measurement</button>
+                <input class="measurements hidden" type="text" name="measure2" value="lbs." id="second_measurement"><br>
+                <button type="button" id="add_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
             </form>
 
-            <form class="activity-form" id="add-activity">
+            <form class="activity-form hidden" id="add-activity">
                 <h3>Form 2</h3>
                 Measurement 1: <input class="measurements" type="text" name="measure1" placeholder="125lbs."><br>
                 Measurement 2: <input class="measurements" type="text" name="measure2" placeholder="300pgs"><br>
