@@ -4,6 +4,9 @@ class MessagesController < ApplicationController
 	def inbox
        messages = Message.where(sender_id: params[:user_id])
 	   messages << Message.where(receiver_id: params[:user_id])
+
+       # TODO: (for Steffee) if friends, show usernames, if not, show signatures
+
 	   render json:messages 
     end
 
@@ -22,5 +25,5 @@ class MessagesController < ApplicationController
 
     # TODO: NEED TO HAVE A METHOD FOR THE INBOX THAT WILL RENDER A TEMPLATE, NOT JSON
 
-
+    # TODO: need some sort of reporting function for abusive messages
 end
