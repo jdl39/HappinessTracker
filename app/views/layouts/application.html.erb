@@ -96,4 +96,16 @@
 
 </body>
 
+<script>
+  $(document).ready(function() {
+    $('#logout').click(function(e) {
+      //alert('logging out');
+      //window.location.replace("/signout");
+      $.ajax({
+        url: "signout"
+      });
+    });
+  });
+</script>
+
 </html>
