@@ -20,4 +20,7 @@ class MessagesController < ApplicationController
 	   end	   
 	end
 
+    # TODO: NEED TO HAVE A METHOD FOR THE INBOX THAT WILL RENDER A TEMPLATE, NOT JSON
+
+
 end

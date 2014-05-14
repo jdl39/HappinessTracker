@@ -29,6 +29,14 @@ class UsersController < ApplicationController
      end
   end
 
+  def profile
+    # case 1: if no username in params = /profile
+    # case 2: if param and not current_user.username and friend
+    # case 3: if param and not current_user.username and not friend
+  end
+
+
+# this challenge function needs to be moved to challenge controller, index method
   def challenges
 	 if (!is_current_user(params[:username]))
        friend = User.where(username:current_user.username)
@@ -45,6 +53,8 @@ class UsersController < ApplicationController
 	 end 
   end
 
+
+# this messages function needs to be moved to challenge messages, index/inbox method
   def messages
 	 if (!is_current_user(params[:username]))
 	    friend = User.where(username:current_user.username)
@@ -60,6 +70,7 @@ class UsersController < ApplicationController
 	 end 
   end
 
+# this friends function needs to be moved to friends controller, index method
   def friends
      viewed_user = User.find_by_username(params[:username])
 	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
@@ -71,6 +82,7 @@ class UsersController < ApplicationController
 	 end
   end
 
+# this activities function needs to be moved to activities controller
   def activities
 	 viewed_user = User.find_by_username(params[:username])
 	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
