@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-before_action :require_login, :except=>[:index, :create]
+  skip_before_action :require_login, only: [:index, :create]
 
   def index
     # see if there's an existing, user logged in
@@ -86,11 +86,5 @@ before_action :require_login, :except=>[:index, :create]
      		return params.require(:user).permit(:first_name, :last_name, :username, :email, :password,
                                    :password_confirmation)
     	end
-
-		def require_login
-			unless signed_in?
-				redirect_to action: 'index'
-			end
-	    end
 
 end
