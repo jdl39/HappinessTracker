@@ -258,6 +258,92 @@ class ActivitiesController < ApplicationController
         }
     end
 
+    # Takes in an activity_type id and a user id and returns all data associated with them.
+    # TODO: Consider how privacy concerns may affect how this should be handled.
+    def data_for_user
+    	# Return data_for_user_helper
+    end
+
+        # TODO: in general, how do I access stuff I know must exist?
+        #       e.g., no point in making another call to database to upvote a comment
+
+    def getComments
+        comments = Comment.where(reader: current_user)
+        upvoted_comments = Comment.where(up_voter: current_user)
+        # get whether or not they've been upvoted by this user
+        upvoted = comments.map{|comment| upvoted_comments.include? comment}
+    end
+
+    # params: comment_id
+    def getResponses
+        responses = Response.where(author: current_user, comment_id: params[:comment_id])
+    end
+
+    # params: activity, content, signature
+    def addComment
+        comment = Comment.new
+        comment.activity = params[:activity] 
+        comment.content = params[:content]
+        comment.signature = params[:signature]
+        # TODO: add to friends + random readers - downvoters
+    end
+
+    # params: comment, content, signature, isPublic
+    def addResponse
+        # create a message to author of comment from user
+        message = Message.new
+        message.content = params[:content]
+        message.sender_sig = params[:signature]
+        #message.receiver_sig = 
+        # TODO: send message
+        if isPublic
+            response = Response.new
+            response.comment = params[:comment]
+            response.content = params[:content]
+            response.signature = params[:signature]
+            response.isPublic = params[:isPublic]
+            # TODO: add to friends + random readers - downvoters
+        end 
+    end
+
+    # honestly don't know if I should've combined comment and response into single class
+
+    # params: comment_id
+    def up_comment
+        # do nothing if user already voted
+        return unless Comment.where(id: params[:comment_id], up_voter: current_user).empty?
+        # make new readers
+        # increase comment's vote by 1
+    end
+
+    # params: comment_id
+    def down_comment
+        # do nothing if user already voted
+        return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        # remove from this user's list of readable comments
+        # decrease comment's vote by 1
+        # delete from users readable table if below threshold
+    end
+
+    # params: response_id
+    def up_response
+        # do nothing if user already voted
+        return unless Response.where(id: params[:response_id], up_voter: current_user).empty?
+        # make new readers
+        # increase comment's vote by 1
+    end
+
+    # params: response_id
+    def down_response
+        # do nothing if user already voted
+        return unless Response.where(id: params[:response_id], down_voter: current_user).empty?
+        # remove from this user's list of readable comments
+        # decrease comment's vote by 1
+        # delete from users readable table if below threshold
+    end
+
+	private
+
     def getTypesForWords(searchWords)
         types = searchWords.map{|wordGroup|
             wordGroup.reduce([]){|sum, searchWord|
@@ -271,15 +357,6 @@ class ActivitiesController < ApplicationController
         end
         return types.map{|type, size| type}
     end
-
-    # Takes in an activity_type id and a user id and returns all data associated with them.
-    # TODO: Consider how privacy concerns may affect how this should be handled.
-    def data_for_user
-    	# Return data_for_user_helper
-    end
-
-
-	private
 
         def activity_recommendations
             score_hash = {}

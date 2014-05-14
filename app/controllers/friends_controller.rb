@@ -1,4 +1,7 @@
 class FriendsController < ApplicationController
+   def index
+      # Will need to have three different templates to route to based on if same user, friends, non_friends
+   end
 
    # Retrieves a user's accepted friends
    # Params:

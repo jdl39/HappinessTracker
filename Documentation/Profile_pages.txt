@@ -1,0 +1,77 @@
+profile pages functionality
+
+my_profile
+--------------
+their own activities
+-a few recent activities
+-header links to the activities page
+
+challenges they completed
+-a few recent challenges
+-header links to challenges page
+
+recent messages
+-a few recent received messages
+-header links to inbox
+
+their current goals
+-a few recent goals
+-header links to goals page
+
+the popularity of their current guides
+-a few recent guides they wrote/are partaking in
+-header links to guides page
+
+
+friend_profile
+---------------
+their public activities
+-a few recent activities
+-header links to their activities page
+
+public challenges they completed
+-a few recent challenges
+-header links to their challenges page
+
+recent messages with current_user
+-a few recent received messages
+-header links to inbox with all messages betweeen users
+
+friends
+-a few friends
+-header links to page of all friends
+
+their public, current goals
+-a few recent goals
+-header links to their goals page
+
+the popularity of their current guides
+-a few recent guides they wrote/are partaking in
+-header links to their guides page
+
+
+non_friend_profile
+------------------
+MOSTLY THE SAME AS THE FRIEND'S PROFILE PAGE BUT EACH OF THE FOLLOWING HEADERS IS ONLY SHOWN IF THE USER ALLOWS IT IN THE SETTINGS.
+
+their public activities
+-a few recent activities
+-header links to their activities page
+
+public challenges they completed
+-a few recent challenges
+-header links to their challenges page
+
+friends
+-a few friends
+-header links to page of all friends
+
+their public, current goals
+-a few recent goals
+-header links to their goals page
+
+the popularity of their current guides
+-a few recent guides they wrote/are partaking in
+-header links to their guides page
+
+

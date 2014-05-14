@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-before_action :require_login, :except=>[:index, :create]
+  skip_before_action :require_login, only: [:index, :create]
 
   def index
     # see if there's an existing, user logged in
@@ -19,6 +19,7 @@ before_action :require_login, :except=>[:index, :create]
     redirect_to action: 'home'
   end
 
+#TODO: Remove
   def feed
 	 viewed_user = User.find_by_username(params[:username]) 
 	 if (is_current_user(viewed_user.username) || are_friends(current_user.id, viewed_user.id))
@@ -29,7 +30,14 @@ before_action :require_login, :except=>[:index, :create]
      end
   end
 
-  
+  def profile
+    # TODO: case 1: if no username in params = /profile
+    # TODO: case 2: if param and not current_user.username and friend
+    # TODO: case 3: if param and not current_user.username and not friend
+  end
+
+
+# TODO: this challenge function needs to be moved to challenge controller, index method
   def challenges
 	 viewed_user = User.where(params[:username]) 
 	 if (!is_current_user(viewed_user.username))
@@ -45,6 +53,8 @@ before_action :require_login, :except=>[:index, :create]
 	 end	 
   end
 
+
+#TODO: this messages function needs to be moved to challenge messages, index/inbox method
   def messages
 	viewed_user = User.find_by_username(params[:username]) 
     if (is_current_user(viewed_user.username))
@@ -60,6 +70,7 @@ before_action :require_login, :except=>[:index, :create]
 	end
   end
 
+#TODO: this friends function needs to be moved to friends controller, index method
   def friends
      viewed_user = User.find_by_username(params[:username])
 	 if (is_current_user(viewed_user.username)) 
@@ -74,6 +85,7 @@ before_action :require_login, :except=>[:index, :create]
 	 end
   end
 
+#TODO: this activities function needs to be moved to activities controller
   def activities
 	 viewed_user = User.find_by_username(params[:username])
 	 if (is_current_user(viewed_user.username))
@@ -117,11 +129,14 @@ before_action :require_login, :except=>[:index, :create]
                                    :password_confirmation)
     	end
 
+<<<<<<< HEAD
 		def require_login
 			unless signed_in?
 				redirect_to action: 'index'
 			end
 	    end
+=======
+>>>>>>> f6bee582216a09a063369b0d43f8e8e6c94688d1
 
 		def are_friends(user_id_1, user_id_2)
             (!Friend.where(user_id:user_id_1, friend_id:user_id_2).blank? ||

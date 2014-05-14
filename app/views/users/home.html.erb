@@ -1,17 +1,4 @@
-<script>
-  $(document).ready(function() {
-    $('#logout').click(function(e) {
-      alert('logging out');
-      //window.location.replace("/signout");
-      $.ajax({
-        url: "signout"
-      });
-    });
-  });
-</script>
-
-
-<h1>Welcome, <%= @user.first_name %>!</h1>
+<h1>Welcome, <%= current_user.first_name %>!</h1>
 
 <section>
   <h2>Happiness Question</h2>

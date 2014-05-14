@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140506053313) do
+ActiveRecord::Schema.define(version: 20140514061725) do
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
@@ -63,6 +63,17 @@ ActiveRecord::Schema.define(version: 20140506053313) do
 
   add_index "challenges", ["receiver_id"], name: "index_challenges_on_receiver_id"
   add_index "challenges", ["sender_id"], name: "index_challenges_on_sender_id"
+
+  create_table "comments", force: true do |t|
+    t.integer  "activity_type_id"
+    t.integer  "author_id"
+    t.integer  "votes"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["activity_type_id"], name: "index_comments_on_activity_type_id"
 
   create_table "friends", force: true do |t|
     t.integer  "user_id"
@@ -173,6 +184,17 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id"
   add_index "messages", ["sender_id"], name: "index_messages_on_sender_id"
 
+  create_table "responses", force: true do |t|
+    t.integer  "comment_id"
+    t.integer  "author_id"
+    t.integer  "votes"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "responses", ["comment_id"], name: "index_responses_on_comment_id"
+
   create_table "users", force: true do |t|
     t.string   "email"
     t.string   "first_name"
@@ -181,6 +203,8 @@ ActiveRecord::Schema.define(version: 20140506053313) do
     t.integer  "phone"
     t.string   "username"
     t.string   "remember_token"
+    t.integer  "readable_comments_count"
+    t.integer  "readable_responses_count"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
