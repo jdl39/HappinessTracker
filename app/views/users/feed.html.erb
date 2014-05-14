@@ -22,12 +22,12 @@
 
   <main>
     <div class="container">
-      <p>Showing profile for <%= @user.username %></p>
-      <p>These are the friends of <%= @user.username %>:</p>
       <ul class="tabs">
         <li><a href="/profile/<%= @user.username %>">Feed</a></li>
         <li><a href="/profile/<%= @user.username %>/friends">Friends</a></li>
-        <li><a href="/profile/<%= @user.username %>/activities">Activies</a></li>
+        <li><a href="/profile/<%= @user.username %>/activities">Activities</a></li>
+        <li><a href="/profile/<%= @user.username %>/challenges">Challenges</a></li>
+        <li><a href="/profile/<%= @user.username %>/messages">Messages</a></li>
       </ul>
     </div><!-- /.container -->
   </main><!-- /main -->
