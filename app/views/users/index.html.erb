@@ -54,6 +54,29 @@
 </div>
 -->
 
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <!-- meta and title -->
+  <meta charset="utf-8" />
+  <title><%= @title %></title>
+
+  <!-- css -->
+  <link href='http://fonts.googleapis.com/css?family=Oswald:300' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:300,700' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+
+  <!-- js -->
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "jquery" %>
+  
+
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
 <div class="wrapper">
 
   <header>
@@ -150,3 +173,7 @@
   </footer><!-- /footer -->
 
 </div><!-- /.wrapper -->
+
+</body>
+
+</html>
