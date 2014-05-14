@@ -258,6 +258,58 @@ class ActivitiesController < ApplicationController
         }
     end
 
+    # Takes in an activity_type id and a user id and returns all data associated with them.
+    # TODO: Consider how privacy concerns may affect how this should be handled.
+    def data_for_user
+    	# Return data_for_user_helper
+    end
+
+    def getComments
+        # get comments for this activity readable by this user
+        # also get whether or not they've been upvoted by this user
+    end
+
+    def getResponses(comment)
+        # get responses for this comment readable by this user
+    end
+
+    def addComment
+        # create a comment for this activity, add to friends + random readers - downvoters
+    end
+
+    def addResponse(comment, isPublic)
+        # create a message to author of comment from user
+        # if isPublic, create a response, add to friends + random readers - downvoters
+    end
+
+    def upVote(comment)
+        # do nothing if user already voted (is in voters table with this comment)
+        # make new readers
+        # increase comment's vote by 1
+    end
+
+    def downVote(comment)
+        # do nothing if user already voted (is in voters table with this comment)
+        # remove from this user's list of readable comments
+        # decrease comment's vote by 1
+        # delete from users readable table if below threshold
+    end
+
+    def upVote(response)
+        # do nothing if user already voted (is in voters table with this response)
+        # make new readers
+        # increase comment's vote by 1
+    end
+
+    def downVote(response)
+        # do nothing if user already voted (is in voters table with this response)
+        # remove from this user's list of readable comments
+        # decrease comment's vote by 1
+        # delete from users readable table if below threshold
+    end
+
+	private
+
     def getTypesForWords(searchWords)
         types = searchWords.map{|wordGroup|
             wordGroup.reduce([]){|sum, searchWord|
@@ -271,15 +323,6 @@ class ActivitiesController < ApplicationController
         end
         return types.map{|type, size| type}
     end
-
-    # Takes in an activity_type id and a user id and returns all data associated with them.
-    # TODO: Consider how privacy concerns may affect how this should be handled.
-    def data_for_user
-    	# Return data_for_user_helper
-    end
-
-
-	private
 
         def activity_recommendations
             score_hash = {}
