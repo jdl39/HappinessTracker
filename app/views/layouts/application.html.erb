@@ -1,3 +1,15 @@
+<script>
+  $(document).ready(function() {
+    $('#logout').click(function(e) {
+      alert('logging out');
+      //window.location.replace("/signout");
+      $.ajax({
+        url: "signout"
+      });
+    });
+  });
+</script>
+
 <!DOCTYPE html>
 <html>
 
@@ -58,6 +70,8 @@
           <li><a href="/home">Home</a></li>
           <li><a href="/track">Activities</a></li>
           <li><a href="/profile/<%= current_user.username %>">Profile</a></li>
+          <li><a href="/goals">Goals</a></li>
+          <li><a href="/guides">Guides</a></li>
           <li><a href="/challenges">Challenge</a></li>
           <li><a href="/inbox">Inbox</a></li>
           <li><a href="/settings">Settings</a></li>
