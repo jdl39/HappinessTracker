@@ -129,14 +129,11 @@ class UsersController < ApplicationController
                                    :password_confirmation)
     	end
 
-<<<<<<< HEAD
 		def require_login
 			unless signed_in?
 				redirect_to action: 'index'
 			end
 	    end
-=======
->>>>>>> f6bee582216a09a063369b0d43f8e8e6c94688d1
 
 		def are_friends(user_id_1, user_id_2)
             (!Friend.where(user_id:user_id_1, friend_id:user_id_2).blank? ||
