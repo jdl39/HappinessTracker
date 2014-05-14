@@ -2,12 +2,12 @@ class UsersController < ApplicationController
 before_action :require_login, :except=>[:index, :create]
 
   def index
-    render layout: false
     # see if there's an existing, user logged in
     if signed_in?
       redirect_to action: 'home'
     else
       @user = User.new
+      render :layout => false
     end
   end
 
