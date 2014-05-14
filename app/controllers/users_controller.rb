@@ -46,8 +46,8 @@ before_action :require_login, :except=>[:index, :create]
   def friends
      @user = current_user
 	 if (params[:username] == @user.username)
-         @friends = Friend.find(:user_id=>@user.id)
-		 @friends << Friend.find(:friend_id=>@user.id)
+         @friends = Friend.where(:user_id=>@user.id)
+		 @friends << Friend.where(:friend_id=>@user.id)
 	 else
      end 
   end
