@@ -16,16 +16,12 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   create_table "activities", force: true do |t|
     t.integer  "user_id"
     t.integer  "activity_type_id"
-    t.integer  "measurement_type_id"
     t.datetime "last_accessed"
-    t.integer  "num_measured"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
-  add_index "activities", ["measurement_type_id"], name: "index_activities_on_measurement_type_id"
-  add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
   create_table "activities_measurement_types", id: false, force: true do |t|
@@ -52,11 +48,17 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
-    t.boolean  "accepted",   default: false
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.text     "content"
+    t.boolean  "accepted",    default: false
     t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "challenges", ["receiver_id"], name: "index_challenges_on_receiver_id"
+  add_index "challenges", ["sender_id"], name: "index_challenges_on_sender_id"
 
   create_table "friends", force: true do |t|
     t.integer  "user_id"
@@ -157,7 +159,6 @@ ActiveRecord::Schema.define(version: 20140506053313) do
   add_index "measurements", ["measurement_type_id"], name: "index_measurements_on_measurement_type_id"
 
   create_table "messages", force: true do |t|
-    t.integer  "challenge_id"
     t.integer  "sender_id"
     t.integer  "receiver_id"
     t.text     "content"
@@ -165,7 +166,6 @@ ActiveRecord::Schema.define(version: 20140506053313) do
     t.datetime "updated_at"
   end
 
-  add_index "messages", ["challenge_id"], name: "index_messages_on_challenge_id"
   add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id"
   add_index "messages", ["sender_id"], name: "index_messages_on_sender_id"
 

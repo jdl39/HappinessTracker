@@ -17,10 +17,16 @@ HappinessApp::Application.routes.draw do
   get '/goals', to: 'goals#index'
   get '/guides', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
-  get '/profile', to: 'users#profile'
   get '/challenges', to: 'challenges#index'
   get '/home', to: 'users#home'
   get '/searchjson', to: 'activities#search'
+
+  # PROFILE PAGE
+  get '/profile/:username/messages', to: 'users#messages'
+  get '/profile/:username/friends', to: 'users#friends'
+  get '/profile/:username/challenges', to: 'users#challenges'
+  get '/profile/:username/activities', to: 'users#activities'
+  get '/profile/:username', to: 'users#feed' 
 
   # FRIENDSHIP
   get '/friends/:user_id', to: 'friends#get_friends'   
@@ -31,11 +37,13 @@ HappinessApp::Application.routes.draw do
   get '/friend_request/:user_id/received', to: 'friends#requests_received'
 
   # MESSAGES
-  get '/messages/new/:sender_id/:receiver_id/:content', to: 'messages#new'
+  match '/messages/new', to: 'messages#new', via: 'post'
   get '/messages/:user_id', to: 'messages#inbox'
 
   # CHALLENGES
-  get '/challenges/new', to: 'challenges#new'
+  match '/challenges/new', to: 'challenges#new', via: 'post'
+  match '/challenges/:challenge_id/accept', to: 'challenges#accept', via: 'post'
+  match '/challenges/:challenge_id/decline', to: 'challenges#decline', via: 'post'
   get '/challenges/:user_id/accepted', to: 'challenges#retrieve_accepted'
   get '/challenges/:user_id/declined', to: 'challenges#retrieve_declined'
   get '/challenges/get/:message_id', to: 'challenges#get_challenge'

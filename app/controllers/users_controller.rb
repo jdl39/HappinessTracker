@@ -18,7 +18,46 @@ before_action :require_login, :except=>[:index, :create]
     redirect_to action: 'home'
   end
 
-  def profile
+  # TODO: Check if friends or if user
+  def feed
+     @user = current_user
+	 if (params[:username] == @user.username)
+
+     else
+     end
+  end
+
+  def challenges
+     @user = current_user
+	 if (params[:username] == @user.username)
+     
+	 else
+	 end 
+  end
+
+  def messages
+     @user = current_user
+	 if (params[:username] == @user.username)
+
+	 else
+	 end 
+  end
+
+  def friends
+     @user = current_user
+	 if (params[:username] == @user.username)
+         @friends = Friend.where(:user_id=>@user.id)
+		 @friends << Friend.where(:friend_id=>@user.id)
+	 else
+     end 
+  end
+
+  def activities
+     @user = current_user
+	 if (params[:username] == @user.username)
+
+	 else
+	 end 
   end
 
   def home
@@ -52,4 +91,5 @@ before_action :require_login, :except=>[:index, :create]
 				redirect_to action: 'index'
 			end
 	    end
+
 end
