@@ -23,8 +23,9 @@ class HappinessQuestion < ActiveRecord::Base
 	end
 
 	def HappinessQuestion.question_with_most_stale_response(user)
-		allQuestions = HappinessQuestion.all
-		HappinessResponse.where("user_id = ?", user.id).order(created_at: :desc).find_each do |response|
+		allQuestions = Array.new(HappinessQuestion.all)
+		# Trying to find_each for bactching just fails silently (can't order). -.-
+		HappinessResponse.where("user_id = ?", user.id).order(created_at: :desc).each do |response|
 			allQuestions.delete(response.happiness_question)
 			if allQuestions.size == 1
 				break
