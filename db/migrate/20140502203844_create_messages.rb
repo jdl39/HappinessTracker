@@ -4,6 +4,7 @@ class CreateMessages < ActiveRecord::Migration
 	  t.references :sender, references: :users, index: true
 	  t.references :receiver, references: :users, index: true
 	  t.text :content
+          t.text :quote
           t.text :sender_sig
           t.text :receiver_sig
 

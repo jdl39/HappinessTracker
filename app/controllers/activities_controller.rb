@@ -264,82 +264,76 @@ class ActivitiesController < ApplicationController
     	# Return data_for_user_helper
     end
 
-        # TODO: in general, how do I access stuff I know must exist?
-        #       e.g., no point in making another call to database to upvote a comment
-
     def getComments
-        comments = Comment.where(reader: current_user)
+        session[:comments] = Comment.where(reader: current_user).first 3
         upvoted_comments = Comment.where(up_voter: current_user)
-        # get whether or not they've been upvoted by this user
-        upvoted = comments.map{|comment| upvoted_comments.include? comment}
+        # for ith comment in comments, true if upvoted, false if not
+        session[:comments_upvoted] = session[:comments].map{|comment| upvoted_comments.include? comment}
     end
 
     # params: comment_id
     def getResponses
-        responses = Response.where(author: current_user, comment_id: params[:comment_id])
+        session[:responses] = Response.where(author: current_user, comment_id: params[:comment_id])
     end
 
     # params: activity, content, signature
     def addComment
-        comment = Comment.new
-        comment.activity = params[:activity] 
-        comment.content = params[:content]
-        comment.signature = params[:signature]
+        comment = Comment.create(activity: params[:activity], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters
     end
 
-    # params: comment, content, signature, isPublic
+    # params: comment_index, content, signature, isPublic
     def addResponse
+        comment = session[:comments][params[:comment_index]]
         # create a message to author of comment from user
-        message = Message.new
-        message.content = params[:content]
-        message.sender_sig = params[:signature]
-        #message.receiver_sig = 
+        message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
         # TODO: send message
         if isPublic
-            response = Response.new
-            response.comment = params[:comment]
-            response.content = params[:content]
-            response.signature = params[:signature]
-            response.isPublic = params[:isPublic]
+            response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
             # TODO: add to friends + random readers - downvoters
         end 
     end
 
+    vote_threshold = -3
+
     # honestly don't know if I should've combined comment and response into single class
 
-    # params: comment_id
+    # params: comment_index
     def up_comment
+        comment = session[:comments][params[:comment_index]]
         # do nothing if user already voted
-        return unless Comment.where(id: params[:comment_id], up_voter: current_user).empty?
-        # make new readers
-        # increase comment's vote by 1
+        return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        comment.votes = comment.votes + 1
+        # TODO: make new random readers (not including downvoters)
     end
 
-    # params: comment_id
+    # params: comment_index
     def down_comment
+        comment = session[:comments][params[:comment_index]]
         # do nothing if user already voted
         return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
-        # remove from this user's list of readable comments
-        # decrease comment's vote by 1
-        # delete from users readable table if below threshold
+        comment.votes = comment.votes - 1
+        comment.readers.delete(:current_user)#:current_user.id???
+        comment.readers.delete_all if comment.votes < vote_threshold
     end
 
-    # params: response_id
+    # params: response_index
     def up_response
+        response = session[:responses][params[:response_index]]
         # do nothing if user already voted
         return unless Response.where(id: params[:response_id], up_voter: current_user).empty?
-        # make new readers
-        # increase comment's vote by 1
+        response.votes = response.votes + 1
+        # TODO: make new random readers besides downvoters
     end
 
     # params: response_id
     def down_response
+        response = session[:responses][params[:response_index]]
         # do nothing if user already voted
         return unless Response.where(id: params[:response_id], down_voter: current_user).empty?
-        # remove from this user's list of readable comments
-        # decrease comment's vote by 1
-        # delete from users readable table if below threshold
+        response.votes = response.votes - 1
+        response.readers.delete(:current_user)#:current_user.id???
+        response.readers.delete_all if response.votes < vote_threshold
     end
 
 	private
