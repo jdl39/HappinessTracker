@@ -33,11 +33,12 @@
       </div><!-- /.logo -->
       <nav class="primary-nav">
         <ul>
-          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/track">Activities</a></li>
           <li><a href="/profile/<%= current_user.username %>">Profile</a></li>
-          <li><a href="#">Challenge</a></li>
-          <li><a href="#">Inbox</a></li>
-          <li><a href="#">Settings</a></li>
+          <li><a href="/challenges">Challenge</a></li>
+          <li><a href="/inbox">Inbox</a></li>
+          <li><a href="/settings">Settings</a></li>
           <li><a href="" id="logout">Log Out</a></li>
         </ul>
       </nav><!-- /nav -->
@@ -54,12 +55,13 @@
     <div class="container">
       <nav>
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Challenge</a></li>
-          <li><a href="#">Inbox</a></li>
-          <li><a href="#">Settings</a></li>
-          <li><a href="#">Log Out</a></li>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/track">Activities</a></li>
+          <li><a href="/profile/<%= current_user.username %>">Profile</a></li>
+          <li><a href="/challenges">Challenge</a></li>
+          <li><a href="/inbox">Inbox</a></li>
+          <li><a href="/settings">Settings</a></li>
+          <li><a href="" id="logout">Log Out</a></li>
         </ul>
       </nav><!-- /nav -->
       <nav>
