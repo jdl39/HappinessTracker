@@ -5,7 +5,7 @@ class CreateComments < ActiveRecord::Migration
       t.references :author, references: :users
       t.integer :votes
       t.text :content
-      t.text :signature
+      t.string :signature
 
       t.timestamps
     end
