@@ -14,6 +14,7 @@ HappinessApp::Application.routes.draw do
   get '/track', to: 'search#index'
   get '/happiness', to: 'happiness#index'
   get '/quiz', to: 'happiness#quiz'
+  post '/quiz_handler', to: 'happiness#post_happiness_quiz'
   get '/goals', to: 'goals#index'
   get '/guides', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'

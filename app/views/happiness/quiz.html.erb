@@ -2,7 +2,7 @@
 <!-- Put top potion in title -->
 <h3>Let's Gauge Your Current Happiness</h3>
 <h4>Instructions:</h4>
-<p>Please fill in the quiz below by answering as many questions as you want.<br>
+<p>Please fill in the quiz below by answering the questions.<br>
 Below are a number of statements about happiness.<br>
 Please indicate how much you agree or disagree with each statement by placing the slider at a position on the scale.
 </p>
@@ -19,7 +19,7 @@ Please indicate how much you agree or disagree with each statement by placing th
     <% count = 1 %>
     <% for question in @questions do %>
         <%= count %>) <%= question %> <br>
-        1<%= range_field(:question1, in: 1..6) %>6<br>
+        1<%= range_field(:question, count, in: 1..6) %>6<br><br>
         <!-- may not want to use this form because it does not store as integer, but better becaus eit is a continuous scale. -->
         <% count += 1 %>
     <% end %>

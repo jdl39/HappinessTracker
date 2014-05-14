@@ -7,8 +7,10 @@ getNextQuestion = function() {
 		data.question_id = question.id
 		data.value = $("input:radio[name='happiness-question']:checked").val()
 	}
-	$('.happiness-question').html("")
+	$('.happiness-question').css('visibility', 'hidden')
 	$.post('/happiness_response', data, function(returned_data) {
+		$('.happiness-question').css('visibility', 'visible')
+		$('.happiness-question').html("")
 		question = returned_data
 		console.log(question)
 		$('.happiness-question').append($("<p>" + question.content + "</p>").hide().fadeIn())

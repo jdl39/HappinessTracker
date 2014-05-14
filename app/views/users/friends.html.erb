@@ -1,1 +1,9 @@
-<h1>Friends</h1>
+<%= render :partial => "tabs",
+    :locals => {:username => current_user.username} %>
+
+Friends for <%= @user.first_name %>
+<ul>
+	<% @friends.each do |f| %>
+	<li><%= f %></li>
+	<% end %>
+</ul>

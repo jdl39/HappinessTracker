@@ -213,9 +213,9 @@ for datum in activity_data do
 end
 
 happiness_question_data = [
-	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 7},
-	{'content' => "How happy are you compared to your peers?", 'max_score' => 7},
-	{'content' => "Some people are generally very happy. They enjoy life regardless of their circumstances. How much do you feel this describes you?", 'max_score' => 7},
+	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 6},
+	{'content' => "How happy are you compared to your peers?", 'max_score' => 6},
+	{'content' => "Some people are generally very happy. They enjoy life regardless of their circumstances. How much do you feel this describes you?", 'max_score' => 6},
 	{'content' => "How pleased are you with yourself?", 'max_score' => 6},
 	{'content' => "How intensely interested are you in other people?", 'max_score' => 6},
 	{'content' => "How much do you feel that life is rewarding?", 'max_score' => 6},
