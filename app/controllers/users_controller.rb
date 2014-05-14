@@ -7,6 +7,7 @@ before_action :require_login, :except=>[:index, :create]
       redirect_to action: 'home'
     else
       @user = User.new
+      render :layout => false
     end
   end
 
