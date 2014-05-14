@@ -1,1 +1,61 @@
-<h1>Activities</h1>
+<div class="wrapper">
+  
+  <header>
+    <div class="container clearfix">
+      <div class="logo">
+        <a href="#">
+          <img src="" alt="HapApp">
+        </a>
+      </div><!-- /.logo -->
+      <nav class="primary-nav">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/profile/<%= @user.username %>">Profile</a></li>
+          <li><a href="#">Challenge</a></li>
+          <li><a href="#">Inbox</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="" id="logout">Log Out</a></li>
+        </ul>
+      </nav><!-- /nav -->
+    </div><!-- /.container -->
+  </header>
+
+  <main>
+    <div class="container">
+      <ul class="tabs">
+        <li><a href="/profile/<%= @user.username %>">Feed</a></li>
+        <li><a href="/profile/<%= @user.username %>/friends">Friends</a></li>
+        <li><a href="/profile/<%= @user.username %>/activities">Activities</a></li>
+        <li><a href="/profile/<%= @user.username %>/challenges">Challenges</a></li>
+        <li><a href="/profile/<%= @user.username %>/messages">Messages</a></li>
+      </ul>
+    </div><!-- /.container -->
+  </main><!-- /main -->
+
+  <footer>
+    <div class="container">
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Challenge</a></li>
+          <li><a href="#">Inbox</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Log Out</a></li>
+        </ul>
+      </nav><!-- /nav -->
+      <nav>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Other Info?</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </nav><!-- /nav -->
+      <div class="copyright">
+        <small>&copy; 2014, HapApp</small>
+      </div>
+    </div><!-- /.container -->
+  </footer><!-- /footer -->
+
+</div><!-- /.wrapper -->
