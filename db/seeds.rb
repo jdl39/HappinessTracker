@@ -347,15 +347,28 @@ hc_humor.happiness_questions << HappinessQuestion.find(14)
 
 comment_data = [
 	{'activity_type_id' => 0, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 1},
+	{'activity_type_id' => 0, 'content' => 'I love running!!! <3', 'signature' => 'excited', 'author_id' => 2},
+	{'activity_type_id' => 0, 'content' => 'Is running bad for someone with flat feet?', 'signature' => 'Xandra', 'author_id' => 0},
+	{'activity_type_id' => 1, 'content' => 'What\'s your favorite book?', 'signature' => 'Xandra', 'author_id' => 0},
+	{'activity_type_id' => 1, 'content' => 'Reading is stupid', 'signature' => 'coolkid92', 'author_id' => 7},
+	{'activity_type_id' => 1, 'content' => 'I never realized how fulfilling reading could be until my friend showed me the wonderful novel Twilight! Respond if you want to talk about this amazing series!!!', 'signature' => 'happy', 'author_id' => 3},
+	{'activity_type_id' => 1, 'content' => 'Reading is super stupid', 'signature' => 'stillcool', 'author_id' => 7},
 ]
 
 response_data = [
+	{'comment_id' => 0, 'content' => 'Nah, it\'s not really necessary', 'signature' => 'Alec', 'author_id' => 2},
+	{'comment_id' => 0, 'content' => 'Good tennis shoes are a must!', 'signature' => 'happy', 'author_id' => 3},
+	{'comment_id' => 2, 'content' => 'I dunno go ask a doctor', 'signature' => 'duh', 'author_id' => 7},
+	{'comment_id' => 3, 'content' => 'Game of Thrones!', 'signature' => 'happy', 'author_id' => 4},
+	{'comment_id' => 3, 'content' => 'Wait, no, Storm of Swords!', 'signature' => 'happy', 'author_id' => 4},
+	{'comment_id' => 3, 'content' => 'Kiterunner!', 'signature' => 'happy', 'author_id' => 5},
+	{'comment_id' => 3, 'content' => 'Prey by Michael Chrichton', 'signature' => 'may he RIP', 'author_id' => 6},
 ]
 
 for datum in comment_data do
-	#Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+	Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
 end
 
 for datum in response_data do
-	#Response.create(content: datum['content'], signature: datum['signature'], comment_id: datum['comment_id'], author_id: datum['author_id'])
+	Response.create(content: datum['content'], signature: datum['signature'], comment_id: datum['comment_id'], author_id: datum['author_id'])
 end

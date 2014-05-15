@@ -263,16 +263,31 @@ class ActivitiesController < ApplicationController
     	# Return data_for_user_helper
     end
 
+    # call repeatedly to get more comments
+    # params; num_needed
     def getComments
-        session[:comments] = Comment.where(reader: current_user).first 3
+        new_comments = Comment.limit(params[:num_needed]).where(reader: current_user)
+        if session[:comments].nil?
+            session[:comments] = new_comments
+        else
+            session[:comments] << new_comments
+        end
         upvoted_comments = Comment.where(up_voter: current_user)
         # for ith comment in comments, true if upvoted, false if not
         session[:comments_upvoted] = session[:comments].map{|comment| upvoted_comments.include? comment}
     end
 
-    # params: comment_id
+    # params: comment_id, num_needed
     def getResponses
-        session[:responses] = Response.where(author: current_user, comment_id: params[:comment_id])
+        new_responses = Response.limit(params[:num_needed]).where(author: current_user, comment_id: params[:comment_id])
+        if session[:responses].nil?
+            session[:responses] = new_responses
+        else
+            session[:responses] << new_responses
+        end
+        upvoted_responses = Response.where(up_voter: current_user)
+        # for ith comment in comments, true if upvoted, false if not
+        session[:responses_upvoted] = session[:responses].map{|response| upvoted_responses.include? response}
     end
 
     # params: activity, content, signature
