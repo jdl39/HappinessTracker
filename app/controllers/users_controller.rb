@@ -36,40 +36,6 @@ class UsersController < ApplicationController
     # TODO: case 3: if param and not current_user.username and not friend
   end
 
-
-# TODO: this challenge function needs to be moved to challenge controller, index method
-  def challenges
-	 viewed_user = User.where(params[:username]) 
-	 if (!is_current_user(viewed_user.username))
-		 #TODO: Redirect to user's personal challenges page
-	 elsif (are_friends(current_user.id, viewed_user.id))
-	     #Renders friend-view of challenges page
-		 @challenges = Challenge.where(sender_id:current_user.id, receiver_id:viewed_user.id)
-		 @challenges += Challenge.where(sender_id:viewed_user.id, receiver_id:current_user.id)
-		 @challenges.sort! {|a,b| a.created_at <=> b.created_at }
-     else
-	     #TODO: Render blank page
-	     render text: 'Permission denied'
-	 end	 
-  end
-
-
-#TODO: this messages function needs to be moved to challenge messages, index/inbox method
-  def messages
-	viewed_user = User.find_by_username(params[:username]) 
-    if (is_current_user(viewed_user.username))
-		 #TODO: Redirect to user's personal messages page
-	elsif (are_friends(current_user.id, viewed_user.id))
-		 # Renders friend-view of messages page
-	     @messages = Message.where(sender_id:current_user.id, receiver_id:friend.id)
-		 @messages += Message.where(sender_id:friend.id, receiver_id:current_user.id)
-	     @messages.sort! {|a,b| a.created_at <=> b.created_at }
-    else
-	     #TODO: Render blank page
-		 render text: 'Permission denied'
-	end
-  end
-
 #TODO: this friends function needs to be moved to friends controller, index method
   def friends
      viewed_user = User.find_by_username(params[:username])
@@ -134,15 +100,6 @@ class UsersController < ApplicationController
 				redirect_to action: 'index'
 			end
 	    end
-
-		def are_friends(user_id_1, user_id_2)
-            (!Friend.where(user_id:user_id_1, friend_id:user_id_2).blank? ||
-	        !Friend.where(user_id:user_id_2, friend_id:user_id_1).blank?)			
-		end
-
-		def is_current_user(username)
-            username == current_user.username
-		end	
 
 		def settings
         end
