@@ -36,9 +36,11 @@ class UsersController < ApplicationController
 		      # Render user's personal profile page
 			  render 'my_profile' 
 		  elsif (are_friends(current_user.id, viewed_user.id))
+			  @other_user_username = viewed_user.username
 			  # Show friend-permissable view
 			  render 'friend_profile'
 		  else
+			  @other_user_username = viewed_user.username
 			  # Render non-friend page
 		      render 'non_friend_profile'
 	      end

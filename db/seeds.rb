@@ -259,14 +259,26 @@ for friend in frienddata do
 end
 
 messagedata = [ 
-	    {'sender_id' => 1, 'receiver_id' => 2}, 
-		{'sender_id' => 1, 'receiver_id' => 3}, 
-	    {'sender_id' => 2, 'receiver_id' => 3}, 
+	    {'sender_id' => 1, 'receiver_id' => 2, 'content'=> 'hi'}, 
+		{'sender_id' => 1, 'receiver_id' => 3, 'content'=> 'yo'}, 
+	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'bye'}, 
 ]
 
 for message in messagedata do
     puts "Message: " + User.find(message['sender_id']).username + " to " + User.find(message['receiver_id']).username
     Message.create(message)
+end
+
+
+challengedata = [ 
+	    {'sender_id' => 1, 'receiver_id' => 2, 'content'=> 'Eat a banana!'}, 
+		{'sender_id' => 1, 'receiver_id' => 3, 'content'=> 'Buy food!'}, 
+	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'Play the guitar!'}, 
+]
+
+for challenge in challengedata do
+    puts "Challenge: " + User.find(message['sender_id']).username + " to " + User.find(message['receiver_id']).username
+    Challenge.create(challenge)
 end
 
 for steffee in happiness_question_data do
