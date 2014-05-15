@@ -31,24 +31,17 @@ class UsersController < ApplicationController
   end
 
   def profile
-    # TODO: case 1: if no username in params = /profile
-    # TODO: case 2: if param and not current_user.username and friend
-    # TODO: case 3: if param and not current_user.username and not friend
-  end
-
-#TODO: this friends function needs to be moved to friends controller, index method
-  def friends
      viewed_user = User.find_by_username(params[:username])
-	 if (is_current_user(viewed_user.username)) 
-	     #TODO: Redirect to user's personal activities page 	
-	 elsif (are_friends(current_user.id, viewed_user.id))
-		 # Show friend-view of friends page
-	     @friends = Friend.where(user_id:viewed_user.id)
-	     @friends += Friend.where(friend_id:viewed_user.id)
-	 else
-	     #TODO: Render blank page
-		 render text:'Permission denied'
-	 end
+	      if (params[:username] == nil || is_current_user(viewed_user.username))
+		      # Render user's personal profile page
+			  render 'my_profile' 
+		  elsif (are_friends(current_user.id, viewed_user.id))
+			  # Show friend-permissable view
+			  render 'friend_profile'
+		  else
+			  # Render non-friend page
+		      render 'non_friend_profile'
+	      end
   end
 
 #TODO: this activities function needs to be moved to activities controller

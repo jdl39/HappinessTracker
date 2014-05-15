@@ -1,6 +1,20 @@
 class FriendsController < ApplicationController
    def index
-      # Will need to have three different templates to route to based on if same user, friends, non_friends
+      viewed_user = User.find_by_username(params[:username])
+	  if (params[:username] == nil || is_current_user(viewed_user.username))
+	     # Render user's personal friends page     
+	     @friends = Friend.where(user_id:current_user.id)
+		 @friends += Friend.where(friend_id:current_user.id)
+		 render 'my_friends'
+	  elsif (are_friends(current_user.id, viewed_user.id))
+	     # Show friend-view of friends page
+	     @friends = Friend.where(user_id:viewed_user.id)
+	     @friends += Friend.where(friend_id:viewed_user.id)
+		 render 'friend_friends'
+	  else
+	     #Render non-friend friends' page
+	     render 'non_friend_friends'
+	  end
    end
 
    # Retrieves a user's accepted friends

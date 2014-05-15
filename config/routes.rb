@@ -22,18 +22,21 @@ HappinessApp::Application.routes.draw do
   get '/guides/:username', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
   get '/inbox/:username', to: 'messages#inbox'
-  get '/challenges', to: 'users#challenges'
-  get '/challenges/:username', to: 'users#challenges'
+  get '/challenges', to: 'challenges#index'
+  get '/challenges/:username', to: 'challenges#index'
+  get '/friends/', to: 'friends#index'
+  get '/friends/:username', to: 'friends#index'
+  
   get '/home', to: 'users#home'
   get '/searchjson', to: 'activities#search'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE
   get '/profile/:username', to: 'users#profile' 
-  get '/profile/:username', to: 'users#profile' 
+  get '/profile', to: 'users#profile'
 
   # FRIENDSHIP
-  get '/friends/:user_id', to: 'friends#get_friends'   
+  get '/friends/json/:user_id', to: 'friends#get_friends'   
   get '/friend_request/:request_id/decline', to: 'friends#decline_request'
   get '/friend_request/:request_id/accept', to: 'friends#accept_request'
   get '/friend_request/:user_id/:friend_id/create', to: 'friends#create_request'
