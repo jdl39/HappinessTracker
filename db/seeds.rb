@@ -342,3 +342,20 @@ hc_humor.happiness_questions << HappinessQuestion.find(14)
 	puts hr.user.username + " answered Q" + num.to_s + " with " + hr.value.to_s
 	hr.save
 }
+
+# need readables, upvotes, downvotes
+
+comment_data = [
+	{'activity_type_id' => 0, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 1},
+]
+
+response_data = [
+]
+
+for datum in comment_data do
+	#Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+end
+
+for datum in response_data do
+	#Response.create(content: datum['content'], signature: datum['signature'], comment_id: datum['comment_id'], author_id: datum['author_id'])
+end

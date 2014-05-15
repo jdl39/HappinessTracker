@@ -219,14 +219,14 @@ class ActivitiesController < ApplicationController
         # that's all the search results!
 
         friends = []
-        measurement_type = nil
+        measurement_types = nil
         recent_measurements = []
         puts "CURRENT USER"
         p current_user
         unless search_results.empty? || current_user.nil?
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
-            friends = User.where(friend: current_user)
+            friends = current_user.friends
             top_activities = Activity.where(activity_type_id: top_type)
             user_activity = top_activities.select{|activity| activity.user = current_user}.first
             user_does_activity = !user_activity.nil?
@@ -236,12 +236,11 @@ class ActivitiesController < ApplicationController
 
             if user_does_activity
                 # get user's personal data for the activity
-                measurement_type = user_activity.measurement_type
+                measurement_types = user_activity.measurement_types
                 recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
-                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last
-                measurement_type = measurement_type.nil? ? nil : measurement_type.first
+                measurement_types = top_activities.group_by{|activity| activity.measurement_types}.to_a.sort{|measurement, activities| activities.size}.last.first
             end
         end
 
@@ -252,7 +251,7 @@ class ActivitiesController < ApplicationController
             user_does_activity: user_does_activity,
             search_results: search_results,
             friends: friends,
-            measurement_type: measurement_type,
+            measurement_types: measurement_types,
             recent_measurements: recent_measurements,
             spellings_sugs: spelling_sugs
         }
@@ -306,7 +305,8 @@ class ActivitiesController < ApplicationController
         return unless Comment.where(id: comment.id, up_voter: current_user).empty?
         comment.votes = comment.votes + 1
         new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
-        # TODO: how to actually add?
+        # is this adding correctly???
+        comment.readers << new_readers
         #new_readers.each{|reader| reader.readable_comment
     end
 
