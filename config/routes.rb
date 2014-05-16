@@ -37,8 +37,8 @@ HappinessApp::Application.routes.draw do
 
   # FRIENDSHIP
   get '/friends/json/:user_id', to: 'friends#get_friends'   
-  get '/friend_request/:request_id/decline', to: 'friends#decline_request'
-  get '/friend_request/:request_id/accept', to: 'friends#accept_request'
+  match '/friend_request/decline', to: 'friends#decline_request', via: 'post' #request_id
+  match '/friend_request/accept', to: 'friends#accept_request', via: 'post' #request_id
   match '/friend_request/create', to: 'friends#create_request', via: 'post' #Params: user_id, friend_id
   get '/friend_request/:user_id/sent', to: 'friends#requests_sent'
   get '/friend_request/:user_id/received', to: 'friends#requests_received'
