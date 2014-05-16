@@ -4,11 +4,15 @@ module FriendsHelper
         friends = []
 		friend_relationships = Friend.where(user_id: user_id, accepted: accepted)
 	    friend_relationships.each do |friend_relationship|
-            friends << User.find(friend_relationship.friend_id)
+            friend_found = User.find(friend_relationship.friend_id)
+			friend_found.request_id = friend_relationship.id
+			friends << friend_found
 		end
 		friend_relationships = Friend.where(friend_id: user_id, accepted: accepted)
 	    friend_relationships.each do |friend_relationship|
-		    friends << User.find(friend_relationship.user_id)
+		    friend_found = User.find(friend_relationship.user_id)
+			friend_found.request_id = friend_relationship.id
+			friends << friend_found
         end
 	    return friends	
 	end 

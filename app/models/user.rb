@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
 	# When authenticating a user, call user.authenticate(password), which will ensure that the password corresponds to the hash.
 	has_secure_password
 
+	attr_accessor :request_id
+
 	def User.new_remember_token
     	SecureRandom.urlsafe_base64
   	end
