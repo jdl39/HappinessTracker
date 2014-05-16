@@ -30,9 +30,14 @@ module SessionsHelper
   end
 
   def are_friends(user_id_1, user_id_2)
+    (!Friend.where(user_id:user_id_1, friend_id:user_id_2, accepted:true).blank? ||
+     !Friend.where(user_id:user_id_2, friend_id:user_id_1, accepted:true).blank?)
+  end
+
+  def friend_request_exists(user_id_1, user_id_2)
     (!Friend.where(user_id:user_id_1, friend_id:user_id_2).blank? ||
      !Friend.where(user_id:user_id_2, friend_id:user_id_1).blank?)
-  end
+  end	
 
   def is_current_user(username)
     username == current_user.username

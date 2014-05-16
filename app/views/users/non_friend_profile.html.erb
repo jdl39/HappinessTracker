@@ -9,7 +9,11 @@
   });
 </script>
 
-<button id="add-friend">Add Friend</button>
+<% if !@friend_request_exists %>
+	<button id="add-friend">Add Friend</button>
+<% else %>
+	<label> ======================> Friend Request Pending </label>
+<% end %>
 
 <h3><a href="/activities/<%= @viewed_user.username %>">Recent Activities</a></h3>
 <ul>

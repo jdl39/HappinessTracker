@@ -40,7 +40,8 @@ class UsersController < ApplicationController
 			  render 'friend_profile'
 		  else
 			  # Render non-friend page
-		      render 'non_friend_profile'
+		      @friend_request_exists = friend_request_exists(current_user.id, @viewed_user.id)
+			  render 'non_friend_profile'
 	      end
   end
 
