@@ -2,9 +2,13 @@
   $(document).ready(function() {
     $("#add-friend").click(function(e) {
       alert("friend being added");
-      $.post( {
-        
+      $.post("/friend_request/create", {
+        user_id: "<%= current_user.id %>",
+        friend_id: "<%= @viewed_user.id %>"
       });
+      e.preventDefault();
+      document.getElementById("add-friend").innerHTML = "Friend added!";
+      document.getElementById("add-friend").disabled = true;
     });
   });
 </script>

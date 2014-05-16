@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html>
-	<body>
-		<h1>My Challenges</h1>
-		<% @challenges.each do |challenge| %>
-			<p>Challenge</p>
-			<p>ID1: <%= challenge.sender_id %></p>
-			<p>ID2: <%= challenge.receiver_id%></p>
-			<p>Content: <%= challenge.content %></p>
-			<p>Accepted?: <%= challenge.accepted%></p>
-		<% end %>
-	</body>
-</html>
-
+<h1>My Challenges</h1>
+<% @challenges.each do |challenge| %>
+	<p>Challenge</p>
+	<p>ID1: <%= challenge.sender_id %></p>
+	<p>ID2: <%= challenge.receiver_id%></p>
+	<p>Content: <%= challenge.content %></p>
+	<p>Accepted?: <%= challenge.accepted%></p>
+<% end %>
