@@ -1,6 +1,36 @@
-<h1> My Friends </h1>
+<h1>Accepted Friends</h1>
 <ul>
-	<% @friends.each do |friend| %>
-	<li><%= friend.username %></li>
-	<% end %>
+  <% @accepted_friends.each do |friend| %>
+  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></li>
+  <% end %>
+</ul>
+<h1>Unaccepted Friends</h1>
+<ul>
+  <% @unaccepted_friends.each do |friend| %>
+  <script>
+    $(document).ready(function() {
+      $("#accept-friend<%= friend.id %>").click(function(e) {
+        _this = this;
+        alert(this.value);
+        $.ajax({
+          url: "/friend_request/accept",
+          type: "post",
+          async: false;
+          data: {
+            request_id: "<%= friend.request_id %>"
+          }
+        });
+        //e.prevetDefault();
+        //$("#friend-requests_"+"<%=i %>").html("");
+        //$("#friend-requests_"+"<%=i %>").html('You are now friends!');
+        location.reload();
+      });
+    });
+  </script>
+  <li>
+    <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %>
+    <button id="accept-friend<%= friend.id %>">Accept</button>
+    <button id="decline-friend<%= friend.id %>">Decline</button>
+  </li>
+  <% end %>
 </ul>
