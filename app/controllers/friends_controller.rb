@@ -5,11 +5,13 @@ class FriendsController < ApplicationController
       viewed_user = User.find_by_username(params[:username])
 	  if (params[:username] == nil || is_current_user(viewed_user.username))
 	     # Render user's personal friends page     
-	     @friends = get_friend_info(current_user.id)
+	     @accepted_friends = get_friend_info(current_user.id, true)
+		 @unaccepted_friends = get_friend_info(current_user.id, false)
 		 render 'my_friends'
 	  elsif (are_friends(current_user.id, viewed_user.id))
 	     # Show friend-view of friends page
-	     @friends = get_friend_info(viewed_user.id)
+		 @accepted_friends = get_friend_info(current_user.id, true)
+	     @unaccepted_friends = get_friend_info(viewed_user.id, false)
 		 render 'friend_friends'
 	  else
 	     #Render non-friend friends' page
