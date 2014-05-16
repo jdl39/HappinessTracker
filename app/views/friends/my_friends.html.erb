@@ -1,7 +1,7 @@
 <h1>Accepted Friends</h1>
 <ul>
   <% @accepted_friends.each do |friend| %>
-  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></li>
+  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
   <% end %>
 </ul>
 <h1>Unaccepted Friends</h1>
@@ -39,7 +39,7 @@
     });
   </script>
   <li>
-    <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %>
+    <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a>
     <button id="accept-friend<%= friend.id %>">Accept</button>
     <button id="decline-friend<%= friend.id %>">Decline</button>
   </li>
