@@ -15,15 +15,26 @@
         $.ajax({
           url: "/friend_request/accept",
           type: "post",
-          async: false;
+          async: false,
           data: {
             request_id: "<%= friend.request_id %>"
           }
         });
-        //e.prevetDefault();
-        //$("#friend-requests_"+"<%=i %>").html("");
-        //$("#friend-requests_"+"<%=i %>").html('You are now friends!');
+        e.preventDefault();
         location.reload();
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+      $("#decline-friend<%= friend.id %>").click(function(e) {
+        $.ajax({
+          url: "/friend_request/decline",
+          type: "post",
+          data: {
+            request_id: "<%= friend.request_id %>"
+          }
+        });
       });
     });
   </script>
