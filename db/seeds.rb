@@ -179,27 +179,48 @@ for datum in activity_type_data do
     datum['name'].split.each{|word| ActivityWord.create(word: lemmatizer.lemma(word), activity_type: type)}
 end
 
+measurement_type_data = [
+    {'is_quantifiable' => false, 'name' => ''},
+    {'is_quantifiable' => true, 'name' => 'miles'},
+    {'is_quantifiable' => true, 'name' => 'kilometers'},
+    {'is_quantifiable' => true, 'name' => 'reps'},
+    {'is_quantifiable' => true, 'name' => 'sets'},
+    {'is_quantifiable' => true, 'name' => 'seconds'},
+    {'is_quantifiable' => true, 'name' => 'minutes'},
+    {'is_quantifiable' => true, 'name' => 'hours'},
+    {'is_quantifiable' => true, 'name' => 'pages'},
+    {'is_quantifiable' => true, 'name' => 'songs'},
+    {'is_quantifiable' => true, 'name' => 'calories'},
+    {'is_quantifiable' => true, 'name' => 'matches'},
+    {'is_quantifiable' => true, 'name' => 'rounds'},
+    {'is_quantifiable' => true, 'name' => 'issues'},
+]
+
+for datum in measurement_type_data do
+    MeasurementType.create(name: datum['name'].downcase, is_quantifiable: datum['is_quantifiable']) 
+end
+
 activity_data = [
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'running')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'weight lifting')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends')},
-	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'reading')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'meditation')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'mindful eating')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
-	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'reading')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'singing')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for theater')},
-	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for film')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing video games')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'reading comic books')},
-	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing guitar')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'meditation')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'running')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'reading')},
-	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'singing')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'running'), 'measurement_types' => MeasurementType.where(name: ['miles','minutes'])},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'weight lifting'), 'measurement_types' => MeasurementType.where(name: 'sets')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'reading'), 'measurement_types' => MeasurementType.where(name: 'pages')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'meditation'), 'measurement_types' => MeasurementType.where(name: 'minutes')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'mindful eating'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'playing guitar'), 'measurement_types' => MeasurementType.where(name: 'songs')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'reading'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'playing guitar'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'singing'), 'measurement_types' => MeasurementType.where(name: 'minutes')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for theater'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for film'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing video games'), 'measurement_types' => MeasurementType.where(name: 'matches')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'reading comic books'), 'measurement_types' => MeasurementType.where(name: 'issues')},
+	{'user' => User.find(4), 'activity_type' => ActivityType.find_by(name: 'playing guitar'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'meditation'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'running'), 'measurement_types' => MeasurementType.where(name: ['kilometers', 'minutes'])},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'reading'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(5), 'activity_type' => ActivityType.find_by(name: 'singing'), 'measurement_types' => MeasurementType.where(name: 'songs')},
 ]
 
 for datum in activity_data do
@@ -208,9 +229,13 @@ for datum in activity_data do
 	act = Activity.new
 	act.user = datum['user']
 	act.activity_type = datum['activity_type']
+    act.measurement_types = datum['measurement_types']
 	datum['activity_type'].update_attribute(:num_users, datum['activity_type'].num_users + 1)
 	act.save
 end
+
+measure_data = {
+}
 
 happiness_question_data = [
 	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 6},
