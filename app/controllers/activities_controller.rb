@@ -129,6 +129,9 @@ class ActivitiesController < ApplicationController
         render json: {:recommendation_array => activity_recommendations}
     end
 
+    $max_result_size = 6
+    $recent_measurements_size = 30
+
     # Intelligent search for activities
     # Must include:
     # BOOLEAN: query_activity_exists (do we need to present the "add new" option)
@@ -141,29 +144,72 @@ class ActivitiesController < ApplicationController
     #
     # for now, I'm assuming everything is lower case
     def search
-        max_result_size = 6
-        recent_measurements_size = 30
-
-        searchString = params['str']
+        search_str = params['str']
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
-        type = ActivityType.where(name: searchString).pluck(:id, :name)
+        type = ActivityType.where(name: search_str).pluck(:id, :name)
         query_activity_exists = !type.empty?
         search_results |= type.to_a unless type.nil?
-        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC').pluck(:id, :name)
+        types = ActivityType.where('name LIKE ?', search_str + '%').order('num_users DESC').pluck(:id, :name)
         search_results |= types.to_a
 
-        lex = WordNet::Lexicon.new
-
-        # (2) get activities by how many words they have in common with the query, spelling fixed or not
-        spellCheckedWords = nil
         puts "SEARCH RESULTS 1"
         p search_results.size
         p search_results
-        if search_results.size < max_result_size
-            spellCheckedWords = Spellchecker.check(searchString)
-            # lemmatize words
+
+        friends = []
+        measurement_types = nil
+        recent_measurements = []
+        puts "CURRENT USER"
+        p current_user
+        unless search_results.empty? || current_user.nil?
+            # get the friends who do the topmost activity sorted by who does it the most
+            top_type = search_results.first 
+            friends = current_user.friends
+            top_activities = Activity.where(activity_type_id: top_type[0])
+            user_activity = top_activities.select{|activity| activity.user = current_user}.first
+            user_does_activity = !user_activity.nil?
+            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
+            friends = []
+            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
+
+            if user_does_activity
+                # get user's personal data for the activity
+                measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
+                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+                #recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
+            else
+                # get the most common measurement for the topmost activity
+                measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
+            end
+        end
+
+        spellCheckedWords = nil
+        spelling_sugs = []
+        if(search_str.length > 3)
+            spellCheckedWords = Spellchecker.check(search_str)
+            spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first}
+        end
+
+        render json:  {
+            query_activity_exists: query_activity_exists,
+            user_does_activity: user_does_activity,
+            search_results: search_results,
+            friends: friends,
+            measurement_types: measurement_types,
+            recent_measurements: recent_measurements,
+            spellings_sugs: spelling_sugs
+        }
+    end
+
+    def search_more
+        search_str = params['str']
+        search_results = []
+        lex = WordNet::Lexicon.new
+
+        # (2) get activities by how many words they have in common with the query, spelling fixed or not
+            spellCheckedWords = Spellchecker.check(search_str)
             lemmatizer = Lemmatizer.new
             spellCheckedWords.each do |wordCheck|
                 if wordCheck[:correct]
@@ -186,10 +232,9 @@ class ActivitiesController < ApplicationController
             puts "SEARCH RESULTS 2"
             p search_results.size
             p search_results
-        end
 
         # (3) get activities by how many words they have in common with synonyms of correctly spelled words
-        if search_results.size < max_result_size
+        if search_results.size < $max_result_size
             spellCheckedWords.each do |wordCheck|
                 wordCheck[:synsets] = wordCheck[:correct] ? lex.lookup_synsets(wordCheck[:lemma]) : []
             end
@@ -202,8 +247,10 @@ class ActivitiesController < ApplicationController
             p search_results
         end
 
+        # FOR SPEED UP, NOT DOING FINAL TIER FOR NOW
+
         # (4) same as (3) except for cousins, where I'm defining cousins as hyponyms of hypernyms
-        if search_results.size < max_result_size
+        if false && search_results.size < $max_result_size
             spellCheckedWords.each do |wordCheck|
                 wordCheck[:cousins] = wordCheck[:correct] ? wordCheck[:synsets].map{|synset| synset.hypernyms.map{|x| x.hyponyms}}.flatten : []
                 # could also do the same for words spelled incorrectly, but passing for now
@@ -216,45 +263,8 @@ class ActivitiesController < ApplicationController
             p search_results
         end
 
-        # that's all the search results!
-
-        friends = []
-        measurement_types = nil
-        recent_measurements = []
-        puts "CURRENT USER"
-        p current_user
-        unless search_results.empty? || current_user.nil?
-            # get the friends who do the topmost activity sorted by who does it the most
-            top_type = search_results.first 
-            friends = current_user.friends
-            top_activities = Activity.where(activity_type_id: top_type[0])
-            user_activity = top_activities.select{|activity| activity.user = current_user}.first
-            user_does_activity = !user_activity.nil?
-            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
-            friends = []
-            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
-
-            if user_does_activity
-                # get user's personal data for the activity
-                measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
-                #recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
-            else
-                # get the most common measurement for the topmost activity
-                measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
-            end
-        end
-
-        spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first} unless spellCheckedWords.nil?
-
         render json:  {
-            query_activity_exists: query_activity_exists,
-            user_does_activity: user_does_activity,
-            search_results: search_results,
-            friends: friends,
-            measurement_types: measurement_types,
-            recent_measurements: recent_measurements,
-            spellings_sugs: spelling_sugs
+            search_results: search_results
         }
     end
 
