@@ -148,10 +148,10 @@ class ActivitiesController < ApplicationController
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
-        type = ActivityType.where(name: searchString)
+        type = ActivityType.where(name: searchString).pluck(:id, :name)
         query_activity_exists = !type.empty?
         search_results |= type.to_a unless type.nil?
-        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC')
+        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC').pluck(:id, :name)
         search_results |= types.to_a
 
         lex = WordNet::Lexicon.new
@@ -180,7 +180,7 @@ class ActivitiesController < ApplicationController
             end
             
             # get actual words out
-            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]] : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]].uniq : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
             search_results |= getTypesForWords(searchWords)
 
             puts "SEARCH RESULTS 2"
@@ -227,7 +227,7 @@ class ActivitiesController < ApplicationController
             # get the friends who do the topmost activity sorted by who does it the most
             top_type = search_results.first 
             friends = current_user.friends
-            top_activities = Activity.where(activity_type_id: top_type)
+            top_activities = Activity.where(activity_type_id: top_type[0])
             user_activity = top_activities.select{|activity| activity.user = current_user}.first
             user_does_activity = !user_activity.nil?
             friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
@@ -236,11 +236,12 @@ class ActivitiesController < ApplicationController
 
             if user_does_activity
                 # get user's personal data for the activity
-                measurement_types = user_activity.measurement_types
+                measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
                 recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
+                #recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
             else
                 # get the most common measurement for the topmost activity
-                measurement_types = top_activities.group_by{|activity| activity.measurement_types}.to_a.sort{|measurement, activities| activities.size}.last.first
+                measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
             end
         end
 
@@ -357,17 +358,17 @@ class ActivitiesController < ApplicationController
 	private
 
     def getTypesForWords(searchWords)
+        puts "searchwords"
+        p searchWords
         types = searchWords.map{|wordGroup|
-            wordGroup.reduce([]){|sum, searchWord|
-                sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
-            }
+            ActivityWord.where(word: searchWords).map(&:activity_type).uniq
         }
         types = types.flatten.group_by{|type| type}.to_a.map{|type, group| [type, group.size]}
         types.sort! do |a, b|
             comp = a[1] <=> b[1]
-            comp == 0 ? a[0] <=> b[0] : comp
+            comp == 0 ? a[0].num_users <=> b[0].num_users : comp
         end
-        return types.map{|type, size| type}
+        return types.map{|type, size| [type.id, type.name]}
     end
 
         def activity_recommendations
