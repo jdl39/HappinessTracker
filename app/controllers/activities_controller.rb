@@ -158,33 +158,6 @@ class ActivitiesController < ApplicationController
         p search_results.size
         p search_results
 
-        friends = []
-        measurement_types = nil
-        recent_measurements = []
-        puts "CURRENT USER"
-        p current_user
-        unless search_results.empty? || current_user.nil?
-            # get the friends who do the topmost activity sorted by who does it the most
-            top_type = search_results.first 
-            friends = current_user.friends
-            top_activities = Activity.where(activity_type_id: top_type[0])
-            user_activity = top_activities.select{|activity| activity.user = current_user}.first
-            user_does_activity = !user_activity.nil?
-            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
-            friends = []
-            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
-
-            if user_does_activity
-                # get user's personal data for the activity
-                measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
-                #recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
-            else
-                # get the most common measurement for the topmost activity
-                measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
-            end
-        end
-
         spellCheckedWords = nil
         spelling_sugs = []
         if(search_str.length > 3)
@@ -194,12 +167,41 @@ class ActivitiesController < ApplicationController
 
         render json:  {
             query_activity_exists: query_activity_exists,
-            user_does_activity: user_does_activity,
             search_results: search_results,
+            spelling_sugs: spelling_sugs
+        }
+    end
+
+    def get_activity_data
+        friends = []
+        measurement_types = nil
+        recent_measurements = []
+
+        friends = current_user.friends
+        top_activities = Activity.where(activity_type_id: params[:top_result_id])
+        user_activity = top_activities.select{|activity| activity.user = current_user}.first
+        user_does_activity = !user_activity.nil?
+        friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
+        friends = []
+        friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
+
+        if user_does_activity
+            # get user's personal data for the activity
+            measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
+            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            #oldest_time = recent_measurements.map(&:created_at).sort.first
+            #recent_measurement_notes = MeasurementNote.where(activity: user_activity).where('? > ?', :created_at, oldest_time).order('created_at DESC')
+        else
+            # get the most common measurement for the topmost activity
+            measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
+        end
+
+        render json:  {
+            user_does_activity: user_does_activity,
             friends: friends,
             measurement_types: measurement_types,
             recent_measurements: recent_measurements,
-            spellings_sugs: spelling_sugs
+            #recent_measurement_notes: recent_measurement_notes
         }
     end
 
