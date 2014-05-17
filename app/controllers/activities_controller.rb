@@ -244,7 +244,7 @@ class ActivitiesController < ApplicationController
             end
         end
 
-        spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first}
+        spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first} unless spellCheckedWords.nil?
 
         render json:  {
             query_activity_exists: query_activity_exists,
