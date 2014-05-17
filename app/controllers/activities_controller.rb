@@ -189,8 +189,7 @@ class ActivitiesController < ApplicationController
             # get user's personal data for the activity
             measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
             recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
-            #oldest_time = recent_measurements.map(&:created_at).sort.first
-            #recent_measurement_notes = MeasurementNote.where(activity: user_activity).where('? > ?', :created_at, oldest_time).order('created_at DESC')
+            recent_measurement_notes = recent_measurements.map(&:measurement_note)
         else
             # get the most common measurement for the topmost activity
             measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
@@ -201,7 +200,7 @@ class ActivitiesController < ApplicationController
             friends: friends,
             measurement_types: measurement_types,
             recent_measurements: recent_measurements,
-            #recent_measurement_notes: recent_measurement_notes
+            recent_measurement_notes: recent_measurement_notes
         }
     end
 
