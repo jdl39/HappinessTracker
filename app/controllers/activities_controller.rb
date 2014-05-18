@@ -107,17 +107,8 @@ class ActivitiesController < ApplicationController
                 to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                 next
             end
-            measurement = Measurement.new
-            measurement.measurement_type = measurement_type
-            measurement.activity = activity
-            measurement.value = json[:measurements][measurement_name]
-            if not measurement.save
-                to_return["hapapp_error"] = "Could not save all measurements."
-                if to_return["errors"].nil?
-                    to_return["errors"] = []
-                end
-                to_return["errors"].concat(measurement.errors.full_messages)
-            end
+
+            activity.user.log_new_measurement(activity, measurement_type, measurement.value = json[:measurements][measurement_name])
         end
 
         # TODO: Do we need more to return in the json?
