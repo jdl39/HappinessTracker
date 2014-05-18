@@ -3,6 +3,14 @@ class User < ActiveRecord::Base
     has_many :friends
     has_many :users, :source => :friend, :through => :friends
     has_many :happiness_responses
+    has_many :comments
+
+    has_and_belongs_to_many :readable_comments, class_name: "Comment"
+    has_and_belongs_to_many :readable_responses, class_name: "Response"
+    has_and_belongs_to_many :down_comments, class_name: "Comment"
+    has_and_belongs_to_many :up_comments, class_name: "Comment"
+    has_and_belongs_to_many :down_responses, class_name: "Response"
+    has_and_belongs_to_many :up_responses, class_name: "Response"
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -17,6 +25,8 @@ class User < ActiveRecord::Base
 	# When saving a user, include a password and password_confirmation field (must be equal). They are automatically hashed.
 	# When authenticating a user, call user.authenticate(password), which will ensure that the password corresponds to the hash.
 	has_secure_password
+
+	attr_accessor :request_id
 
 	def User.new_remember_token
     	SecureRandom.urlsafe_base64

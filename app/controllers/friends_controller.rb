@@ -1,4 +1,23 @@
 class FriendsController < ApplicationController
+   include FriendsHelper
+
+   def index
+      viewed_user = User.find_by_username(params[:username])
+	  if (params[:username] == nil || is_current_user(viewed_user.username))
+	     # Render user's personal friends page     
+	     @accepted_friends = get_friend_info(current_user.id, true)
+		 @unaccepted_friends = get_friend_info(current_user.id, false)
+		 render 'my_friends'
+	  elsif (are_friends(current_user.id, viewed_user.id))
+	     # Show friend-view of friends page
+		 @accepted_friends = get_friend_info(current_user.id, true)
+	     @unaccepted_friends = get_friend_info(viewed_user.id, false)
+		 render 'friend_friends'
+	  else
+	     #Render non-friend friends' page
+	     render 'non_friend_friends'
+	  end
+   end
 
    # Retrieves a user's accepted friends
    # Params:

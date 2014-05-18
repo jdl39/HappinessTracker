@@ -13,28 +13,35 @@ HappinessApp::Application.routes.draw do
   match '/signout', to: 'sessions#destroy',     via: 'get'
   get '/track', to: 'search#index'
   get '/happiness', to: 'happiness#index'
+  get '/happiness/:username', to: 'happiness#index'
   get '/quiz', to: 'happiness#quiz'
   post '/quiz_handler', to: 'happiness#post_happiness_quiz'
   get '/goals', to: 'goals#index'
+  get '/goals/:username', to: 'goals#index'
   get '/guides', to: 'guides#index'
+  get '/guides/:username', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
-  get '/challenges', to: 'users#challenges'
+  get '/inbox/:username', to: 'messages#inbox'
+  get '/challenges', to: 'challenges#index'
+  get '/challenges/:username', to: 'challenges#index'
+  get '/friends/', to: 'friends#index'
+  get '/friends/:username', to: 'friends#index'
+  
   get '/home', to: 'users#home'
-  get '/searchjson', to: 'activities#search'
+  get '/search', to: 'activities#search'
+  get '/search_more', to: 'activities#search_more'
+  get '/get_activity_data', to: 'activities#get_activity_data'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE
-  get '/profile/:username/messages', to: 'users#messages'
-  get '/profile/:username/friends', to: 'users#friends'
-  get '/profile/:username/challenges', to: 'users#challenges'
-  get '/profile/:username/activities', to: 'users#activities'
-  get '/profile/:username', to: 'users#feed' 
+  get '/profile/:username', to: 'users#profile' 
+  get '/profile', to: 'users#profile'
 
   # FRIENDSHIP
-  get '/friends/:user_id', to: 'friends#get_friends'   
-  get '/friend_request/:request_id/decline', to: 'friends#decline_request'
-  get '/friend_request/:request_id/accept', to: 'friends#accept_request'
-  get '/friend_request/:user_id/:friend_id/create', to: 'friends#create_request'
+  get '/friends/json/:user_id', to: 'friends#get_friends'   
+  match '/friend_request/decline', to: 'friends#decline_request', via: 'post' #request_id
+  match '/friend_request/accept', to: 'friends#accept_request', via: 'post' #request_id
+  match '/friend_request/create', to: 'friends#create_request', via: 'post' #Params: user_id, friend_id
   get '/friend_request/:user_id/sent', to: 'friends#requests_sent'
   get '/friend_request/:user_id/received', to: 'friends#requests_received'
 

@@ -129,6 +129,9 @@ class ActivitiesController < ApplicationController
         render json: {:recommendation_array => activity_recommendations}
     end
 
+    $max_result_size = 6
+    $recent_measurements_size = 30
+
     # Intelligent search for activities
     # Must include:
     # BOOLEAN: query_activity_exists (do we need to present the "add new" option)
@@ -141,29 +144,73 @@ class ActivitiesController < ApplicationController
     #
     # for now, I'm assuming everything is lower case
     def search
-        max_result_size = 6
-        recent_measurements_size = 30
-
-        searchString = params['str']
+        search_str = params['str']
 
         # (1) do prefix search on activity db (not activity words) for exact matching
         search_results = []
-        type = ActivityType.where(name: searchString)
+        type = ActivityType.where(name: search_str).pluck(:id, :name)
         query_activity_exists = !type.empty?
         search_results |= type.to_a unless type.nil?
-        types = ActivityType.where('name LIKE ?', searchString + '%').order('num_users DESC')
+        types = ActivityType.where('name LIKE ?', search_str + '%').order('num_users DESC').pluck(:id, :name)
         search_results |= types.to_a
 
-        lex = WordNet::Lexicon.new
-
-        # (2) get activities by how many words they have in common with the query, spelling fixed or not
-        spellCheckedWords = nil
         puts "SEARCH RESULTS 1"
         p search_results.size
         p search_results
-        if search_results.size < max_result_size
-            spellCheckedWords = Spellchecker.check(searchString)
-            # lemmatize words
+
+        spellCheckedWords = nil
+        spelling_sugs = []
+        if(search_str.length > 3)
+            spellCheckedWords = Spellchecker.check(search_str)
+            spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first}
+        end
+
+        render json:  {
+            query_activity_exists: query_activity_exists,
+            search_results: search_results,
+            spelling_sugs: spelling_sugs
+        }
+    end
+
+    def get_activity_data
+        friends = []
+        measurement_types = nil
+        recent_measurements = []
+
+        friends = current_user.friends
+        top_activities = Activity.where(activity_type_id: params[:top_result_id])
+        user_activity = top_activities.select{|activity| activity.user = current_user}.first
+        user_does_activity = !user_activity.nil?
+        friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
+        friends = []
+        friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
+
+        if user_does_activity
+            # get user's personal data for the activity
+            measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
+            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            recent_measurement_notes = recent_measurements.map(&:measurement_note)
+        else
+            # get the most common measurement for the topmost activity
+            measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
+        end
+
+        render json:  {
+            user_does_activity: user_does_activity,
+            friends: friends,
+            measurement_types: measurement_types,
+            recent_measurements: recent_measurements,
+            recent_measurement_notes: recent_measurement_notes
+        }
+    end
+
+    def search_more
+        search_str = params['str']
+        search_results = []
+        lex = WordNet::Lexicon.new
+
+        # (2) get activities by how many words they have in common with the query, spelling fixed or not
+            spellCheckedWords = Spellchecker.check(search_str)
             lemmatizer = Lemmatizer.new
             spellCheckedWords.each do |wordCheck|
                 if wordCheck[:correct]
@@ -180,16 +227,15 @@ class ActivitiesController < ApplicationController
             end
             
             # get actual words out
-            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]] : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? [wordCheck[:original], wordCheck[:lemma]].uniq : wordCheck[:suggestions].map{|sug| lemmatizer.lemma(sug)}}
             search_results |= getTypesForWords(searchWords)
 
             puts "SEARCH RESULTS 2"
             p search_results.size
             p search_results
-        end
 
         # (3) get activities by how many words they have in common with synonyms of correctly spelled words
-        if search_results.size < max_result_size
+        if search_results.size < $max_result_size
             spellCheckedWords.each do |wordCheck|
                 wordCheck[:synsets] = wordCheck[:correct] ? lex.lookup_synsets(wordCheck[:lemma]) : []
             end
@@ -202,8 +248,10 @@ class ActivitiesController < ApplicationController
             p search_results
         end
 
+        # FOR SPEED UP, NOT DOING FINAL TIER FOR NOW
+
         # (4) same as (3) except for cousins, where I'm defining cousins as hyponyms of hypernyms
-        if search_results.size < max_result_size
+        if false && search_results.size < $max_result_size
             spellCheckedWords.each do |wordCheck|
                 wordCheck[:cousins] = wordCheck[:correct] ? wordCheck[:synsets].map{|synset| synset.hypernyms.map{|x| x.hyponyms}}.flatten : []
                 # could also do the same for words spelled incorrectly, but passing for now
@@ -216,60 +264,9 @@ class ActivitiesController < ApplicationController
             p search_results
         end
 
-        # that's all the search results!
-
-        friends = []
-        measurement_type = nil
-        recent_measurements = []
-        puts "CURRENT USER"
-        p current_user
-        unless search_results.empty? || current_user.nil?
-            # get the friends who do the topmost activity sorted by who does it the most
-            top_type = search_results.first 
-            friends = User.where(friend: current_user)
-            top_activities = Activity.where(activity_type_id: top_type)
-            user_activity = top_activities.select{|activity| activity.user = current_user}.first
-            user_does_activity = !user_activity.nil?
-            friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
-            friends = []
-            friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
-
-            if user_does_activity
-                # get user's personal data for the activity
-                measurement_type = user_activity.measurement_type
-                recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first recent_measurements_size
-            else
-                # get the most common measurement for the topmost activity
-                measurement_type = top_activities.group_by{|activity| activity.measurement_type}.to_a.sort{|measurement, activities| activities.size}.last
-                measurement_type = measurement_type.nil? ? nil : measurement_type.first
-            end
-        end
-
-        spelling_sugs = spellCheckedWords.map{|wordCheck| wordCheck[:correct] ? nil : wordCheck[:suggestions].first}
-
         render json:  {
-            query_activity_exists: query_activity_exists,
-            user_does_activity: user_does_activity,
-            search_results: search_results,
-            friends: friends,
-            measurement_type: measurement_type,
-            recent_measurements: recent_measurements,
-            spellings_sugs: spelling_sugs
+            search_results: search_results
         }
-    end
-
-    def getTypesForWords(searchWords)
-        types = searchWords.map{|wordGroup|
-            wordGroup.reduce([]){|sum, searchWord|
-                sum | ActivityWord.where(word: searchWord).map{|a_word| a_word.activity_type}
-            }
-        }
-        types = types.flatten.group_by{|type| type}.to_a.map{|type, group| [type, group.size]}
-        types.sort! do |a, b|
-            comp = a[1] <=> b[1]
-            comp == 0 ? a[0] <=> b[0] : comp
-        end
-        return types.map{|type, size| type}
     end
 
     # Takes in an activity_type id and a user id and returns all data associated with them.
@@ -278,8 +275,112 @@ class ActivitiesController < ApplicationController
     	# Return data_for_user_helper
     end
 
+    # call repeatedly to get more comments
+    # params; num_needed
+    def getComments
+        new_comments = Comment.limit(params[:num_needed]).where(reader: current_user)
+        if session[:comments].nil?
+            session[:comments] = new_comments
+        else
+            session[:comments] << new_comments
+        end
+        upvoted_comments = Comment.where(up_voter: current_user)
+        # for ith comment in comments, true if upvoted, false if not
+        session[:comments_upvoted] = session[:comments].map{|comment| upvoted_comments.include? comment}
+    end
+
+    # params: comment_id, num_needed
+    def getResponses
+        new_responses = Response.limit(params[:num_needed]).where(author: current_user, comment_id: params[:comment_id])
+        if session[:responses].nil?
+            session[:responses] = new_responses
+        else
+            session[:responses] << new_responses
+        end
+        upvoted_responses = Response.where(up_voter: current_user)
+        # for ith comment in comments, true if upvoted, false if not
+        session[:responses_upvoted] = session[:responses].map{|response| upvoted_responses.include? response}
+    end
+
+    # params: activity, content, signature
+    def addComment
+        comment = Comment.create(activity: params[:activity], content: params[:content], signature: params[:signature])
+        # TODO: add to friends + random readers - downvoters
+    end
+
+    # params: comment_index, content, signature, isPublic
+    def addResponse
+        comment = session[:comments][params[:comment_index]]
+        # create a message to author of comment from user
+        message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
+        # TODO: send message
+        if isPublic
+            response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
+            # TODO: add to friends + random readers - downvoters
+        end 
+    end
+
+    vote_threshold = -3
+    spread_amount = 5
+
+    # honestly don't know if I should've combined comment and response into single class
+
+    # params: comment_index
+    def up_comment
+        comment = session[:comments][params[:comment_index]]
+        # do nothing if user already voted
+        return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        comment.votes = comment.votes + 1
+        new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
+        # is this adding correctly???
+        comment.readers << new_readers
+        #new_readers.each{|reader| reader.readable_comment
+    end
+
+    # params: comment_index
+    def down_comment
+        comment = session[:comments][params[:comment_index]]
+        # do nothing if user already voted
+        return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        comment.votes = comment.votes - 1
+        comment.readers.delete(:current_user)#:current_user.id???
+        comment.readers.delete_all if comment.votes < vote_threshold
+    end
+
+    # params: response_index
+    def up_response
+        response = session[:responses][params[:response_index]]
+        # do nothing if user already voted
+        return unless Response.where(id: params[:response_id], up_voter: current_user).empty?
+        response.votes = response.votes + 1
+        # TODO: make new random readers besides downvoters
+    end
+
+    # params: response_id
+    def down_response
+        response = session[:responses][params[:response_index]]
+        # do nothing if user already voted
+        return unless Response.where(id: params[:response_id], down_voter: current_user).empty?
+        response.votes = response.votes - 1
+        response.readers.delete(:current_user)#:current_user.id???
+        response.readers.delete_all if response.votes < vote_threshold
+    end
 
 	private
+
+    def getTypesForWords(searchWords)
+        puts "searchwords"
+        p searchWords
+        types = searchWords.map{|wordGroup|
+            ActivityWord.where(word: searchWords).map(&:activity_type).uniq
+        }
+        types = types.flatten.group_by{|type| type}.to_a.map{|type, group| [type, group.size]}
+        types.sort! do |a, b|
+            comp = a[1] <=> b[1]
+            comp == 0 ? a[0].num_users <=> b[0].num_users : comp
+        end
+        return types.map{|type, size| [type.id, type.name]}
+    end
 
         def activity_recommendations
             score_hash = {}

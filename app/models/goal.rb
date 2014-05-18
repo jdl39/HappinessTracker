@@ -7,4 +7,6 @@ class Goal < ActiveRecord::Base
   	days_since_creation = (Time.now - self.created_at).to_i / (60 * 60 * 24)
   	return self.created_at + self.goal_type.days_to_complete.days * ((days_since_creation / self.goal_type.days_to_complete) + 1)
   end
+
+  scope :recent, -> { order('created_at desc').limit(4) }
 end

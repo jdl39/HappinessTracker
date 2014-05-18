@@ -8,6 +8,10 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :phone
       t.string :username
       t.string :remember_token
+      t.string :country
+      t.string :city
+      t.integer :readable_comments_count
+      t.integer :readable_responses_count
 
       t.timestamps
     end
