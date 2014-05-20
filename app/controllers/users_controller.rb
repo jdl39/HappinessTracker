@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include ChallengesHelper
   skip_before_action :require_login, only: [:index, :create]
 
   def index
@@ -34,6 +35,9 @@ class UsersController < ApplicationController
      @viewed_user = User.find_by_username(params[:username])
 	      if (params[:username] == nil || is_current_user(@viewed_user.username))
 		      # Render user's personal profile page
+			  @newsfeed_hashes = recently_sent_challenges(current_user.id)
+			  @newsfeed_hashes += recently_received_challenges(current_user.id)
+			  @newsfeed_hashes.order('created_at desc')
 			  render 'my_profile' 
 		  elsif (are_friends(current_user.id, @viewed_user.id))
 			  # Show friend-permissable view
