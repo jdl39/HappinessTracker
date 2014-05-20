@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   include ChallengesHelper
+  include FriendsHelper
+
   skip_before_action :require_login, only: [:index, :create]
 
   def index
@@ -35,18 +37,25 @@ class UsersController < ApplicationController
      @viewed_user = User.find_by_username(params[:username])
 	      if (params[:username] == nil || is_current_user(@viewed_user.username))
 		      # Render user's personal profile page
-			  @newsfeed_hashes = recently_sent_challenges(current_user.id)
-			  @newsfeed_hashes += recently_received_challenges(current_user.id)
-			  @newsfeed_hashes.sort! {|a,b| a[:created_at] <=> b[:created_at] }
+			  @newsfeed_hashes = gather_newsfeed_entries(current_user.id)
 			  render 'my_profile' 
 		  elsif (are_friends(current_user.id, @viewed_user.id))
 			  # Show friend-permissable view
+			  @newsfeed_hashes = gather_newsfeed_entries(@viewed_user.id)
 			  render 'friend_profile'
 		  else
 			  # Render non-friend page
 		      @friend_request_exists = friend_request_exists(current_user.id, @viewed_user.id)
 			  render 'non_friend_profile'
 	      end
+  end
+
+  def gather_newsfeed_entries(user_id)
+    newsfeed_hashes = recently_sent_challenges(user_id)
+	newsfeed_hashes += recently_received_challenges(user_id)
+	newsfeed_hashes += recent_friendships(user_id)
+    newsfeed_hashes.sort! {|a,b| a[:timestamp] <=> b[:timestamp] }
+	return newsfeed_hashes
   end
 
 #TODO: this activities function needs to be moved to activities controller
