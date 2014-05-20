@@ -18,4 +18,9 @@ module FriendsHelper
         end
 	    return friends	
 	end 
+
+  #TODO: Populate friend information
+  def recent_friendships(user_id)
+    return Friend.where(user_id:user_id).recent
+  end
 end

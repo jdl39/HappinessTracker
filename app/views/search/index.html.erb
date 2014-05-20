@@ -1,28 +1,27 @@
 <div id="content">
     <div id="left-panel">
-        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();">
+        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus>
+        <div id="results"></div>
+
         <div id="friends-panel" class="hidden">
-            <h4>Friends who also <span id="friends-header">""</span></h4>
-            <ul id="friends-list">
-<!--                 <li><a href="#">Friend 1</a></li>
-                <li><a href="#">Friend 2</a></li>
-                <li><a href="#">Friend 3</a></li> -->
-            </ul>
+            <h4>Friends who also <span class="activity_header">""</span></h4>
+            <div id="friends-list"></div>
         </div>
     </div>
     <div id="right-panel" class="hidden">
         <div id="graph">
             <img src="http://www.ebrueggeman.com/sites/www.ebrueggeman.com/files/images/example_graph_1.png" alt="sample-graph">
-            <h3 id="graph-header"><b>""</b></h3>
+            <h3 class="activity_header"><b>""</b></h3>
         </div>
         <div>
             <form class="activity-form" id="new-activity">
-                <h3>Form 1</h3>
-                <p>How do you want to record this activity?</p>
-                <p>Users most commonly stroe it by: lbs.</p>
-                <input class="measurements" type="text" name="measure1" value="lbs."><br>
-                <input class="measurements hidden" type="text" name="measure2" value="lbs." id="second_measurement"><br>
-                <button type="button" id="add_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
+                <h3>Track a new activity!</h3>
+                <p>How do you want to record <span class="activity_header">""</span>?</p>
+                <p>Users most commonly store <span class="activity_header">""</span> by: lbs.</p>
+                <input class="measurements" type="text" name="measure1" placeholder="lbs."><br>
+                <input class="measurements hidden" type="text" name="measure2" placeholder="lbs." id="second_measurement"><br>
+                <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
+                <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
 
             <form class="activity-form hidden" id="add-activity">

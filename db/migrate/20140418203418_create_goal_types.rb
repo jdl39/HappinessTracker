@@ -7,7 +7,7 @@ class CreateGoalTypes < ActiveRecord::Migration
       t.boolean :is_repeated
       t.boolean :requires_greater
       t.float :measure_value
-      t.integer :seconds_to_complete
+      t.integer :days_to_complete
 
       t.timestamps
     end

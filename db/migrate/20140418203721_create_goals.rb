@@ -3,7 +3,10 @@ class CreateGoals < ActiveRecord::Migration
     create_table :goals do |t|
       t.references :goal_type, index: true
       t.references :activity, index: true
-      t.integer :num_times_completed
+      t.references :completing_measurement
+
+      t.datetime :start_time
+      t.boolean :active
 
       t.timestamps
     end

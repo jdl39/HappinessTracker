@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-	has_many :activities
+  has_many :activities
     has_many :friends
     has_many :users, :source => :friend, :through => :friends
     has_many :happiness_responses
@@ -47,6 +47,14 @@ class User < ActiveRecord::Base
   	def happiness_score_for_category(category)
   		return self.happiness_score_for_category_at_time(category, Time.now)
   	end
+
+    def log_new_measurement(activity, measurement_type, value)
+      measurement = Measurement.new
+      measurement.measurement_type = measurement_type
+      measurement.activity = activity
+      measurement.value = value
+      measurement.save
+    end
 
   	def happiness_score_for_category_at_time(category, time)
   		happiness_questions = []
