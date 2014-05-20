@@ -22,4 +22,5 @@ module ChallengesHelper
 	  results << result
 	end 
 	return results
+  end
 end
