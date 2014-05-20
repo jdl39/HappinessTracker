@@ -18,7 +18,12 @@ module ChallengesHelper
 	challenges.each do |challenge|
       sender = User.find(challenge.sender_id) 
 	  receiver = User.find(challenge.receiver_id)
-	  result = {:sender => sender, :receiver => receiver, :challenge =>challenge, :type => 'challenge'}
+	  result = {:sender => sender, 
+		        :receiver => receiver, 
+				:challenge =>challenge, 
+				:type => 'challenge',
+	  			:created_at => challenge.created_at
+	  }
 	  results << result
 	end 
 	return results

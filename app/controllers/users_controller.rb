@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 		      # Render user's personal profile page
 			  @newsfeed_hashes = recently_sent_challenges(current_user.id)
 			  @newsfeed_hashes += recently_received_challenges(current_user.id)
-			  @newsfeed_hashes.order('created_at desc')
+			  @newsfeed_hashes.sort! {|a,b| a[:created_at] <=> b[:created_at] }
 			  render 'my_profile' 
 		  elsif (are_friends(current_user.id, @viewed_user.id))
 			  # Show friend-permissable view
