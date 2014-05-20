@@ -1,17 +1,20 @@
-<h1>Accepted Friends</h1>
+<h1>My Friends</h1>
 <ul>
   <% @accepted_friends.each do |friend| %>
   <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
   <% end %>
 </ul>
+
 <h1>Unaccepted Friends</h1>
 <ul>
   <% @unaccepted_friends.each do |friend| %>
+
   <script>
+    /*
     $(document).ready(function() {
       $("#accept-friend<%= friend.id %>").click(function(e) {
         _this = this;
-        alert(this.value);
+        alert(_this.value);
         $.ajax({
           url: "/friend_request/accept",
           type: "post",
@@ -24,8 +27,7 @@
         location.reload();
       });
     });
-  </script>
-  <script>
+
     $(document).ready(function() {
       $("#decline-friend<%= friend.id %>").click(function(e) {
         $.ajax({
@@ -37,11 +39,48 @@
         });
       });
     });
+    */
   </script>
+
   <li>
     <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a>
-    <button id="accept-friend<%= friend.id %>">Accept</button>
-    <button id="decline-friend<%= friend.id %>">Decline</button>
+    <button id="accept-friend<%= friend.id %>" class="accept-friend-btn" data-friendid="<%= friend.request_id %>">Accept</button>
+    <button id="decline-friend<%= friend.id %>" class="decline-friend-btn" data-friendid="<%= friend.request_id %>">Decline</button>
   </li>
   <% end %>
 </ul>
+
+<script>
+  $(document).ready(function() {
+    $(".accept-friend-btn").click(function(e) {
+      e.preventDefault();                         // prevent default clicking
+
+      var id = $(this).attr("id");                // fetch the id of pressed button
+      var friend_id = $(this).data("friendid");   // fetch the id of the friend
+
+      /* run the ajax */
+      $.ajax({
+        url: "/friend_request/accept",
+        type: "post",
+        async: false,
+        data: {
+          request_id: friend_id
+        }
+      });
+      location.reload();                          // reload location
+    });
+
+    $(".decline-friend-btn").click(function(e) {
+      var id = $(this).attr("id");
+      var friend_id = $(this).data("friendid");
+
+      $.ajax({
+          url: "/friend_request/decline",
+          type: "post",
+          data: {
+            request_id: friend_id
+          }
+      });
+    });
+  });
+</script>
