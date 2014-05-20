@@ -134,6 +134,12 @@ h6 {
 a {
   color: #666;
   text-decoration: none;
+  background:transparent;
+}
+
+a:hover {
+  background:transparent; 
+  text-decoration:underline;
 }
 
 .hidden {
