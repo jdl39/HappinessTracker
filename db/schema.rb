@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20140514061725) do
     t.boolean  "is_repeated"
     t.boolean  "requires_greater"
     t.float    "measure_value"
-    t.integer  "seconds_to_complete"
+    t.integer  "days_to_complete"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -106,7 +106,9 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   create_table "goals", force: true do |t|
     t.integer  "goal_type_id"
     t.integer  "activity_id"
-    t.integer  "num_times_completed"
+    t.integer  "completing_measurement_id"
+    t.datetime "start_time"
+    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
