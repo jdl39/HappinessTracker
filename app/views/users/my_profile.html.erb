@@ -13,10 +13,24 @@
       if sender.id == current_user.id %>
         <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
       <% else %>
-        <p><a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %></a> challeneged you!</p>
+        <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
       <% end%>
       <p><%= challenge.content %></p>
       <p><%= time %></p>
+      
+      <% when 'friendship'
+        user1 = item[:user_1]
+        user2 = item[:user_2]
+
+        if user1.id == current_user.id %>
+          <p>You became friends with <%= user2.first_name %> <%= user2.last_name %></p>
+        <% else %>
+          <p>You became friends with <%= user1.first_name %> <%= user1.last_name %></p>
+        <% end %>
+        <p><%= time %></p>
+
+      <% else %>
+        HI
     <% end %>
   </li>
   <% end %>

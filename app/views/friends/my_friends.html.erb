@@ -10,7 +10,6 @@
   <% @unaccepted_friends.each do |friend| %>
 
   <script>
-    /*
     $(document).ready(function() {
       $("#accept-friend<%= friend.id %>").click(function(e) {
         _this = this;
@@ -30,6 +29,7 @@
 
     $(document).ready(function() {
       $("#decline-friend<%= friend.id %>").click(function(e) {
+        alert();
         $.ajax({
           url: "/friend_request/decline",
           type: "post",
@@ -39,7 +39,7 @@
         });
       });
     });
-    */
+
   </script>
 
   <li>
@@ -51,14 +51,17 @@
 </ul>
 
 <script>
+/*
   $(document).ready(function() {
     $(".accept-friend-btn").click(function(e) {
-      e.preventDefault();                         // prevent default clicking
 
       var id = $(this).attr("id");                // fetch the id of pressed button
       var friend_id = $(this).data("friendid");   // fetch the id of the friend
 
+      alert(friend_id);
+
       /* run the ajax */
+/*
       $.ajax({
         url: "/friend_request/accept",
         type: "post",
@@ -67,6 +70,7 @@
           request_id: friend_id
         }
       });
+      e.preventDefault();                         // prevent default clicking
       location.reload();                          // reload location
     });
 
@@ -83,4 +87,5 @@
       });
     });
   });
+*/
 </script>
