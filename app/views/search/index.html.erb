@@ -2,13 +2,14 @@
     <div id="left-panel">
         <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus>
         <div id="results"></div>
+        <div id="suggested"></div>
 
-        <div id="friends-panel" class="hidden">
+        <div id="friends-panel" class="no_display">
             <h4>Friends who also <span class="activity_header">""</span></h4>
             <div id="friends-list"></div>
         </div>
     </div>
-    <div id="right-panel" class="hidden">
+    <div id="right-panel" class="no_display">
         <div id="graph">
             <img src="http://www.ebrueggeman.com/sites/www.ebrueggeman.com/files/images/example_graph_1.png" alt="sample-graph">
             <h3 class="activity_header"><b>""</b></h3>
@@ -19,13 +20,13 @@
                 <p>How do you want to record <span class="activity_header">""</span>?</p>
                 <p>Users most commonly store <span class="activity_header">""</span> by: lbs.</p>
                 <input class="measurements" type="text" name="measure1" placeholder="lbs."><br>
-                <input class="measurements hidden" type="text" name="measure2" placeholder="lbs." id="second_measurement"><br>
+                <input class="measurements no_display" type="text" name="measure2" placeholder="lbs." id="second_measurement"><br>
                 <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
                 <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
 
-            <form class="activity-form hidden" id="add-activity">
-                <h3>Form 2</h3>
+            <form class="activity-form" id="add-activity">
+                <h3>Track Your Recent Activity</h3>
                 Measurement 1: <input class="measurements" type="text" name="measure1" placeholder="125lbs."><br>
                 Measurement 2: <input class="measurements" type="text" name="measure2" placeholder="300pgs"><br>
             </form>
