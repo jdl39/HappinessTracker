@@ -1,10 +1,31 @@
-<h1>My Challenges</h1>
+<h1><u>My Challenges</u></h1>
 <ul class="my-challenges">
-  <% @challenges.each do |challenge| %>
+  <% @challenges.each do |item| %>
   <li>
-    <p>Challenge</p>
-    <p>Content: <%= challenge.content %></p>
-    <p>Accepted?: <%= challenge.accepted%></p>
+    <% challenge = item[:challenge]
+    sender = item[:sender]
+    receiver = item[:receiver]
+    time = item[:timestamp]
+    status = challenge.status
+
+    if sender.id == current_user.id %>
+      <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
+      <% if accepted %>
+        <p><%= receiver.first_name %> accepted your challenge!</p>
+      <% else %>
+        <p>Challenge pending</p>
+      <% end %>
+    <% else %>
+      <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
+      <% if accepted %>
+        <p>Currently active</p><button id="completed">Completed!</button>
+      <% else %>
+        <button id="accept-challenge">Accept</button>
+        <button id="decline-challenge">Decline</button>
+      <% end %>
+    <% end%>
+    <p><%= challenge.content %></p>
+    <p><%= time %></p>
   </li>
   <% end %>
 </ul>
