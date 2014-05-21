@@ -28,7 +28,9 @@
     <% else %>
       <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
       <% if status == 2 %>
-        <p>Currently active</p><button id="completed<%= challenge.id %>">Completed!</button>
+        <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
+      <% elsif status == 4 %>
+        <p>Completed</p>
       <% else %>
         <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
         <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
@@ -57,12 +59,29 @@
         }
       });
       e.preventDefault();
-      alert();
       location.reload();
     });
 
-    $(".decline-challenge-btn").click(function() {
+    $(".decline-challenge-btn").click(function(e) {
       alert("declining");
+    });
+
+    $(".completed-challenge-btn").click(function(e) {
+      alert("completed");
+      var id = $(this).attr("id");
+      var challenge_id = $(this).data("challengeid");
+      alert(challenge_id);
+
+      $.ajax({
+        url: "/challenges/complete",
+        type: "post",
+        async: false,
+        data: {
+          challenge_id: challenge_id
+        }
+      });
+      e.preventDefault();
+      location.reload();
     });
   });
 </script>
