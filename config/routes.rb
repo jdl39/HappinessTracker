@@ -52,8 +52,8 @@ HappinessApp::Application.routes.draw do
 
   # CHALLENGES
   match '/challenges/new', to: 'challenges#new', via: 'post'
-  match '/challenges/:challenge_id/accept', to: 'challenges#accept', via: 'post'
-  match '/challenges/:challenge_id/decline', to: 'challenges#decline', via: 'post'
+  match '/challenges/accept', to: 'challenges#accept', via: 'post' #challenge_id
+  match '/challenges/decline', to: 'challenges#decline', via: 'post' #challenge_id
   get '/challenges/:user_id/accepted', to: 'challenges#retrieve_accepted'
   get '/challenges/:user_id/declined', to: 'challenges#retrieve_declined'
   get '/challenges/get/:message_id', to: 'challenges#get_challenge'
