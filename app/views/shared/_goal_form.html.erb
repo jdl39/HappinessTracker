@@ -1,0 +1,52 @@
+<h3 id="goalHeader"></h3>
+<%= form_for :goal, url: "/goals/new" do |f| %>
+	<%= hidden_field_tag "goal[activity_name]", "", id: "hiddenActivityNameField" %>
+	<!-- TODO: Possibly make this a real feature at some point... -->
+	<%= hidden_field_tag "goal[requires_greater]", true %>
+	<table class="goalTable">
+		<tr>
+			<td><%= f.label :measurement_type %></td>
+			<td><%= select_tag "goal[measurement_type]", "None", id: "measurementTypeSelect" %></td>
+		</tr>
+		<tr>
+			<td><%= f.label :measurement_value %></td>
+			<td><%= text_field_tag "goal[measurement_value]", "0", :class => "numberValueField" %></td>
+		</tr>
+		<tr>
+			<td><%= f.label :days_to_complete %></td>
+			<td><%= text_field_tag "goal[days_to_complete]", "1", :class => "numberValueField" %></td>
+		</tr>
+		<tr>
+			<td><%= f.label :is_repeated, "Repeated Goal?" %></td>
+			<td><%= f.check_box :is_repeated %></td>
+		</tr>
+		<tr>
+			<td><%= f.submit "Make new goal!" %></td>
+		</tr>
+	</table>
+<% end %>
+
+<script>
+function updateActivityName(newName) {
+	$('#goalHeader').text("Set goal for " + newName)
+	$('#hiddenActivityNameField').val(newName)
+}
+
+function updateMeasurementNames(newNames) {
+	console.log(("measurementTypeSelect"))
+	$("#measurementTypeSelect").html("")
+	for (num in newNames) {
+		$("#measurementTypeSelect").append('<option value="' + newNames[num] + '">' + newNames[num] + '</option>')
+	}
+}
+
+measurementValuePrev = "0"
+$(".numberValueField").on('change keyup paste', function(e) {
+	var str = this.value
+	if (isNaN(str)) {
+		str = measurementValuePrev
+		this.value = str
+	}
+	measurementValuePrev = str
+})
+</script>

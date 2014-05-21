@@ -5,7 +5,7 @@ class GoalType < ActiveRecord::Base
   has_many :goals
 
   def GoalType.goal_type_for(activity_type, measurement_type, is_repeated, requires_greater, measurement_value, days_to_complete)
-  	to_return = GoalType.find_by(activity_type: activity_type, measurement_type: measurement_type, is_repeated: is_repeated, requires_greater: requires_greater, measurement_value: measurement_value, days_to_complete: days_to_complete, guide: nil)
+  	to_return = GoalType.find_by(activity_type: activity_type, measurement_type: measurement_type, is_repeated: is_repeated, requires_greater: requires_greater, measurement_value: measurement_value, days_to_complete: days_to_complete, guide_id: nil)
   	if to_return.nil?
   		to_return = GoalType.new
   		to_return.activity_type = activity_type

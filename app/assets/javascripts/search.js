@@ -3,6 +3,8 @@ prev = '';
 
 function search() {
     str = document.getElementById('search').value;
+    updateActivityName(str);
+    updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     console.log(str);
     if(str) {
         set_headers();
