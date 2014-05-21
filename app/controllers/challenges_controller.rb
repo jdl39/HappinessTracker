@@ -2,6 +2,11 @@ class ChallengesController < ApplicationController
 
 	include ChallengesHelper
 
+	PENDING = 1
+	ACCEPTED = 2
+	DECLINED = 3
+	COMPLETED = 4
+
     def index
 	   viewed_user = User.find_by_username(params[:username])
 	   if (params[:username] == nil || is_current_user(viewed_user.username))
@@ -37,16 +42,31 @@ class ChallengesController < ApplicationController
 	# Parameters: Challenge ID
 	# TODO: Validate that challenge is one that current user has received
     def accept
-       render text: ''
+       challenge = Challenge.find(params[:challenge_id])
+       challenge.status = ACCEPTED
+	   challenge.save
+	   render text:challenge.id
     end
 
 	# Parameters: Challenge ID
 	# TODO: Validate that challenge is one that current user has received
 	# TODO: Delete the request?
 	def decline
-	   render text: ''
+	   challenge = Challenge.find(params[:challenge_id])
+	   challenge.status = DECLINED
+	   challenge.save
+	   render text:challenge.id
 	end
 
+    # Parameters: Challenge ID
+	# TODO: Validate that challenge is one that current user has received
+	# TODO: Set challenges to true
+	def complete
+        challenge = Challenge.find(params[:challenge_id])
+		challenge.status = COMPLETED
+		challenge.save
+		render text:challenge.id
+	end	
 	# Parameters: None
 	def new
        challenge = Challenge.new(:sender_id => params[:sender_id],
