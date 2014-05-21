@@ -18,6 +18,7 @@ HappinessApp::Application.routes.draw do
   post '/quiz_handler', to: 'happiness#post_happiness_quiz'
   get '/goals', to: 'goals#index'
   get '/goals/:username', to: 'goals#index'
+  post '/goals/new', to: 'goals#new_goal'
   get '/guides', to: 'guides#index'
   get '/guides/:username', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
@@ -28,7 +29,9 @@ HappinessApp::Application.routes.draw do
   get '/friends/:username', to: 'friends#index'
   
   get '/home', to: 'users#home'
-  get '/searchjson', to: 'activities#search'
+  get '/search', to: 'activities#search'
+  get '/search_more', to: 'activities#search_more'
+  get '/get_activity_data', to: 'activities#get_activity_data'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE
