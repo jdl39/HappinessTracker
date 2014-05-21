@@ -9,8 +9,8 @@
 
       challenge = item[:challenge]
       sender = item[:sender]
-      receiver = item[:receiver] 
-
+      receiver = item[:receiver]
+      
       if sender.id == current_user.id %>
         <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
       <% else %>
