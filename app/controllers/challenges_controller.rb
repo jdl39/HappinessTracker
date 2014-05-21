@@ -44,8 +44,11 @@ class ChallengesController < ApplicationController
     def accept
        challenge = Challenge.find(params[:challenge_id])
        challenge.status = ACCEPTED
-	   challenge.save
-	   render text:challenge.id
+	   if challenge.save
+	     render json:challenge
+	   else
+		 render text:'-1'
+	   end
     end
 
 	# Parameters: Challenge ID
@@ -54,8 +57,11 @@ class ChallengesController < ApplicationController
 	def decline
 	   challenge = Challenge.find(params[:challenge_id])
 	   challenge.status = DECLINED
-	   challenge.save
-	   render text:challenge.id
+	   if challenge.save
+	     render json:challenge
+	   else
+		 render text:'-1'
+	   end
 	end
 
     # Parameters: Challenge ID
@@ -64,8 +70,11 @@ class ChallengesController < ApplicationController
 	def complete
         challenge = Challenge.find(params[:challenge_id])
 		challenge.status = COMPLETED
-		challenge.save
-		render text:challenge.id
+		if challenge.save
+		  render json:challenge
+		else
+	      render text:'-1'
+		end
 	end	
 	# Parameters: None
 	def new
