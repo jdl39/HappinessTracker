@@ -29,8 +29,8 @@ HappinessApp::Application.routes.draw do
   get '/friends/:username', to: 'friends#index'
   
   get '/home', to: 'users#home'
-  get '/search', to: 'activities#search'
-  get '/search_more', to: 'activities#search_more'
+  get '/search_data', to: 'activities#search'
+  get '/search_more_data', to: 'activities#search_more'
   get '/get_activity_data', to: 'activities#get_activity_data'
   get '/settings', to: 'users#settings'
 
