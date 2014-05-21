@@ -1,15 +1,16 @@
+<h1><u>My PROFILE</u></h1>
 <ul class="my-profile-recent">
   <% @newsfeed_hashes.each do |item| %>
   <li>
-    <% time = item[:created_at] %>
+    <% time = item[:timestamp] %>
 
     <% case item[:type]
       when 'challenge'
 
       challenge = item[:challenge]
       sender = item[:sender]
-      receiver = item[:receiver] 
-
+      receiver = item[:receiver]
+      
       if sender.id == current_user.id %>
         <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
       <% else %>
@@ -23,14 +24,14 @@
         user2 = item[:user_2]
 
         if user1.id == current_user.id %>
-          <p>You became friends with <%= user2.first_name %> <%= user2.last_name %></p>
+          <p>You became friends with <a href="/profile/<%= user2.username %>"><%= user2.first_name %> <%= user2.last_name %></a></p>
         <% else %>
-          <p>You became friends with <%= user1.first_name %> <%= user1.last_name %></p>
+          <p>You became friends with <a href="/profile/<%= user1.username %>"><%= user1.first_name %> <%= user1.last_name %></a></p>
         <% end %>
         <p><%= time %></p>
 
       <% else %>
-        HI
+
     <% end %>
   </li>
   <% end %>
