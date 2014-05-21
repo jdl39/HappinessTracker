@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20140514061725) do
     t.integer  "sender_id"
     t.integer  "receiver_id"
     t.text     "content"
-    t.boolean  "accepted",    default: false
+    t.integer  "status",      default: 1
     t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
