@@ -3,15 +3,19 @@ prev = '';
 
 function search() {
     str = document.getElementById('search').value;
+
+
+
     updateActivityName(str);
-    updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
-    console.log(str);
+    // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
+    // console.log(str);
     if(str) {
         set_headers();
     }
     // hide_panels();
-    show_form('new');
-    ajaxSearch();
+    // show_form('new');
+    searchInitial();
+    // searchMore();
 }
 
 function set_headers() {
@@ -26,12 +30,37 @@ function hide_panels() {
     document.getElementById('right-panel').style.display = "none";;   
 }
 
-function ajaxSearch() {
-    console.log("hey");
+function searchInitial() {
+    console.log("initial search started");
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
-    var url = '/searchjson?str=';
+    var url = '/search_data?str=';
+    xhr.open("GET", url+encodeURIComponent(str), true); 
+    xhr.send();
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        json  = this.responseText;
+        json = JSON.parse(json);
+        update_results(json['search_results']);
+    }
+    console.log("initial search ended");
+}
+
+function searchMore() {
+    console.log("more search started");
+    var cur_str = str;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = xhrHandler;
+    var url = '/search_more_data?str=';
     xhr.open("GET", url+encodeURIComponent(str), true); 
     xhr.send();
     function xhrHandler() {
@@ -63,6 +92,17 @@ function ajaxSearch() {
             show_form('new');
             update_suggested(json["spellings_sugs"][0]);
         }
+    }
+    console.log("more search started");
+}
+
+function update_results(results, initial) {
+    console.log("results",results);
+    document.getElementById('results').innerHTML = '';
+    for (element in results) {
+        console.log("element name", results[element]);
+        results_div = document.getElementById('results');
+        results_div.innerHTML = results_div.innerHTML + '<p>'+results[element][1]+'</p>';
     }
 }
 
