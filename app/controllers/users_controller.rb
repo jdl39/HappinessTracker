@@ -54,7 +54,7 @@ class UsersController < ApplicationController
     newsfeed_hashes = recently_sent_challenges(user_id)
 	newsfeed_hashes += recently_received_challenges(user_id)
 	newsfeed_hashes += recent_friendships(user_id)
-    newsfeed_hashes.sort! {|a,b| a[:timestamp] <=> b[:timestamp] }
+    newsfeed_hashes.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 	return newsfeed_hashes
   end
 
