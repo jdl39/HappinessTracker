@@ -8,20 +8,30 @@
     time = item[:timestamp]
     status = challenge.status
 
+    # status:
+    # 1 = pending
+    # 2 = accepted
+    # 3 = declined
+    # 4 = completed
+
     if sender.id == current_user.id %>
       <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
-      <% if accepted %>
+      <% if status == 2 %>
         <p><%= receiver.first_name %> accepted your challenge!</p>
+      <% elsif status == 3 %>
+        <p><%= receiver.first_name %> declined your challenge.</p>
+      <% elsif status == 4 %>
+        <p><%= receiver.first_name %> completed your challenge!</p>
       <% else %>
         <p>Challenge pending</p>
       <% end %>
     <% else %>
       <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
-      <% if accepted %>
-        <p>Currently active</p><button id="completed">Completed!</button>
+      <% if status == 2 %>
+        <p>Currently active</p><button id="completed<%= challenge.id %>">Completed!</button>
       <% else %>
-        <button id="accept-challenge">Accept</button>
-        <button id="decline-challenge">Decline</button>
+        <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
+        <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
       <% end %>
     <% end%>
     <p><%= challenge.content %></p>
@@ -29,3 +39,30 @@
   </li>
   <% end %>
 </ul>
+
+<script>
+  $(document).ready(function() {
+    $(".accept-challenge-btn").click(function(e) {
+      alert("accepting");
+      var id = $(this).attr("id");  
+      var challenge_id = $(this).data("challengeid");
+      alert(challenge_id);
+
+      $.ajax({
+        url: "/challenges/accept",
+        type: "post",
+        async: false,
+        data: {
+          challenge_id: challenge_id
+        }
+      });
+      e.preventDefault();
+      alert();
+      location.reload();
+    });
+
+    $(".decline-challenge-btn").click(function() {
+      alert("declining");
+    });
+  });
+</script>
