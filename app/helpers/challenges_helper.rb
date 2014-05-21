@@ -22,7 +22,7 @@ module ChallengesHelper
 		        :receiver => receiver, 
 				:challenge =>challenge, 
 				:type => 'challenge',
-	  			:created_at => challenge.created_at
+	  			:timestamp => challenge.created_at
 	  }
 	  results << result
 	end 

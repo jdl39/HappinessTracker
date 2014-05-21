@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(version: 20140514061725) do
     t.integer  "measurement_type_id"
     t.boolean  "is_repeated"
     t.boolean  "requires_greater"
-    t.float    "measure_value"
+    t.float    "measurement_value"
     t.integer  "days_to_complete"
     t.datetime "created_at"
     t.datetime "updated_at"

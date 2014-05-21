@@ -19,8 +19,28 @@ module FriendsHelper
 	    return friends	
 	end 
 
-  #TODO: Populate friend information
+  #Populate friend information
   def recent_friendships(user_id)
-    return Friend.where(user_id:user_id).recent
+    friendships = Friend.where(user_id:user_id, accepted:true).recent
+	friendships += Friend.where(friend_id:user_id, accepted:true).recent
+	return populate_friend_hashes(friendships)
   end
+
+  # Populates friend hashes
+  def populate_friend_hashes(friendships)
+    results = []
+	friendships.each do |friendship|
+      user_1 = User.find(friendship.user_id) 
+	  user_2 = User.find(friendship.friend_id)
+	  result = {:user_1 => user_1,
+	          :user_2 => user_2,	
+			  :type => 'friendship',
+			  :timestamp => friendship.updated_at
+	  }   
+	  results << result
+    end 
+  return results
+  end
+
+
 end

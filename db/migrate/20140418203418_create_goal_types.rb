@@ -6,7 +6,7 @@ class CreateGoalTypes < ActiveRecord::Migration
       t.references :measurement_type, index: true
       t.boolean :is_repeated
       t.boolean :requires_greater
-      t.float :measure_value
+      t.float :measurement_value
       t.integer :days_to_complete
 
       t.timestamps
