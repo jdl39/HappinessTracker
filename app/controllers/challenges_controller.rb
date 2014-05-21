@@ -5,12 +5,13 @@ class ChallengesController < ApplicationController
 	      #Renders user's personal challenges page
 		  @challenges = Challenge.where(sender_id: current_user.id)
 		  @challenges += Challenge.where(receiver_id: current_user.id)
+		  @challenges.sort! {|a,b| b.created_at <=> a.created_at }
 		  render 'my_challenges'
 	   elsif (are_friends(current_user.id, viewed_user.id))
 		  #Renders friend-view of challenges page
 		  @challenges = Challenge.where(sender_id:current_user.id, receiver_id:viewed_user.id)
 		  @challenges += Challenge.where(sender_id:viewed_user.id, receiver_id:current_user.id)
-		  @challenges.sort! {|a,b| a.created_at <=> b.created_at }
+		  @challenges.sort! {|a,b| b.created_at <=> a.created_at }
 		  render 'friend_challenges'
 	   else
 		  #Render non-friend-view
