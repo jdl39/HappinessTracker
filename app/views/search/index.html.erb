@@ -1,6 +1,6 @@
 <div id="content">
     <div id="left-panel">
-        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus>
+        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus autocomplete="off">
         <div id="results"></div>
         <div id="suggested"></div>
 
@@ -17,10 +17,10 @@
         <div id="new-activity" class="no_display">
             <form class="activity-form">
                 <h3>Track a new activity!</h3>
-                <p>How do you want to record <span class="activity_header">""</span>?</p>
-                <p>Users most commonly store <span class="activity_header">""</span> by: lbs.</p>
-                <input class="measurements" type="text" name="measure1" placeholder="lbs."><br>
-                <input class="measurements no_display" type="text" name="measure2" placeholder="lbs." id="second_measurement"><br>
+                <p>How do you want to measure <span class="activity_header">""</span>?</p>
+    <!--             <p>Users most commonly store <span class="activity_header">""</span> by: lbs.</p> -->
+                <input class="measurements" type="text" name="measure1"><br>
+                <input class="measurements no_display" type="text" name="measure2" id="second_measurement">
                 <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
                 <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
@@ -30,9 +30,9 @@
                 <h3>Track Your Recent Activity</h3>
                 Measurement 1: <input class="measurements" type="text" name="measure1" placeholder="125lbs."><br>
                 Measurement 2: <input class="measurements" type="text" name="measure2" placeholder="300pgs"><br>
+                <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
-
-            <%= render 'shared/goal_form' %>
+            <!--   render 'shared/goal_form'   -->    
         </div>
     </div>
 </div>
