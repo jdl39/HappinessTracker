@@ -4,7 +4,7 @@ class CreateChallenges < ActiveRecord::Migration
       t.references :sender, references: :users, index: true
 	  t.references :receiver, references: :users, index: true
 	  t.text :content
-      t.boolean :accepted, :default => false
+      t.integer :status, :default => 1
 	  t.datetime :end_time
       t.timestamps
     end
