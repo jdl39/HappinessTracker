@@ -4,12 +4,13 @@ displayed_results = [];
 
 function search() {
     str = document.getElementById('search').value;
-    set_headers(str);
+    // updateActivityName(str);
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     // console.log(str);
     if(str) {
         set_headers();
     }
+    show_form('');
     // hide_panels();
     // show_form('new');
     searchInitial();
@@ -123,7 +124,7 @@ function update_results(results, initial) {
     for (element in displayed_results) {
         if(displayed_results[element] == str) elem_displayed = true;
     }
-    if(!elem_displayed) {
+    if(!elem_displayed && str) {
         var newDiv = document.createElement('div');
         newDiv.innerHTML = 'Create This Activity!';
         newDiv.className = newDiv.className + ' result createNewActivity';
@@ -141,42 +142,54 @@ function create_new_activity(new_activity_str) {
 }
 
 function get_data_for_activity(selectedStr) {
-    // console.log("hey", selectedStr);
-    // var xhr = new XMLHttpRequest();
-    // xhr.onreadystatechange = xhrHandler;
-    // var url = '/search_get_specific_data?str=';
-    // xhr.open("GET", url+encodeURIComponent(str), true); 
-    // xhr.send();
-    // function xhrHandler() {
-    //     if(str != cur_str) return;
-    //     if (this.readyState != 4) {
-    //         return;
-    //     }
-    //     if (this.status != 200) {
-    //         return;
-    //     }
-    // }
+    console.log("hey", selectedStr);
+    var cur_str = str;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = xhrHandler;
+    var url = '/search_get_specific_data?str=';
+    xhr.open("GET", url+encodeURIComponent(str), true); 
+    xhr.send();
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        json  = this.responseText;
+        json = JSON.parse(json);
+    }
+    show_form('add');
 }
 
 function show_form(option) {
     if(option == "add") {
         console.log('add');
-        document.getElementById("add-activity").style.display = "block";
-        document.getElementById("new-activity").style.display = "none";
-        document.getElementById("add-activity")[0].value = ""
-        document.getElementById("add-activity")[1].value = ""
-        document.getElementById("new-activity")[0].value = ""
-        document.getElementById("new-activity")[1].value = ""
+        document.forms["add_activity"].style.display = "block";
+        document.forms["new_activity"].style.display = "none";
+        clear_form_values();
         document.getElementById('add_new_measurement_button').style.display = 'block';
     } else if(option == "new") {
-        document.getElementById("add-activity").style.display = "none";
-        document.getElementById("new-activity").style.display = "block";
-        document.getElementById("add-activity")[0].value = ""
-        document.getElementById("add-activity")[1].value = ""
-        document.getElementById("new-activity")[0].value = ""
-        document.getElementById("new-activity")[1].value = ""
+        document.forms["add_activity"].style.display = "none";
+        document.forms["new_activity"].style.display = "block";
+        clear_form_values();
         document.getElementById('add_new_measurement_button').style.display = 'block';
+    } else if(option == '') {
+        document.forms["add_activity"].style.display = "none";
+        document.forms["new_activity"].style.display = "none";
+        clear_form_values();
+        document.getElementById('add_new_measurement_button').style.display = 'none';
     }
+}
+
+function clear_form_values() {
+    document.forms["add_activity"][0].value = "";
+    document.forms["add_activity"][1].value = "";
+    document.forms["new_activity"][0].value = "";
+    document.forms["new_activity"][1].value = "";
 }
 
 function update_graph(recent_measurements, measurement_types) {
