@@ -1,0 +1,27 @@
+<h1><% if @user == current_user %>My<% else %><%= @user.username %>'s<% end %> Goals</h1>
+
+<h2>Active</h2>
+
+<table id="activeGoalTable" class="goalTable">
+	<tr>
+		<td>Activity</td><td>Measurement</td><td>Due</td>
+	</tr>
+	<% @active_goal_hashs.each do |hash| %>
+		<tr>
+			<td><%= hash[:activity_name] %></td><td><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></td><td><%= hash[:due] %></td>
+		</tr>
+	<% end %>
+</table>
+
+<h2>Complete</h2>
+
+<table id="activeGoalTable" class="goalTable">
+	<tr>
+		<td>Activity</td><td>Measurement</td><td>Due</td><td>Completed</td>
+	</tr>
+	<% @completed_goal_hashs.each do |hash| %>
+		<tr>
+			<td><%= hash[:activity_name] %></td><td><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></td><td><%= hash[:due] %></td><td><%= hash[:completed_on] %></td>
+		</tr>
+	<% end %>
+</table>
