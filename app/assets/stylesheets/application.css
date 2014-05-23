@@ -226,3 +226,56 @@ nav.primary-nav li.active a {
 footer {
   padding: 20px 0;
 }
+
+
+/* ============================================================
+  MISC
+============================================================ */
+
+.result {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #dddddd));
+  background:-moz-linear-gradient(top, #cccccc 5%, #dddddd 100%);
+  background:-webkit-linear-gradient(top, #cccccc 5%, #dddddd 100%);
+  background:-o-linear-gradient(top, #cccccc 5%, #dddddd 100%);
+  background:-ms-linear-gradient(top, #cccccc 5%, #dddddd 100%);
+  background:linear-gradient(to bottom, #cccccc 5%, #dddddd 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#dddddd',GradientType=0);
+  background-color:#cccccc;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  border:1px solid #bbbbbb;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Arial;
+  font-size:14px;
+  padding: 10px 0px;
+  width: 150px;
+  text-align: center;
+  height: 50px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #3d768a;
+}
+
+.result:hover {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dddddd), color-stop(1, #cccccc));
+  background:-moz-linear-gradient(top, #dddddd 5%, #cccccc 100%);
+  background:-webkit-linear-gradient(top, #dddddd 5%, #cccccc 100%);
+  background:-o-linear-gradient(top, #dddddd 5%, #cccccc 100%);
+  background:-ms-linear-gradient(top, #dddddd 5%, #cccccc 100%);
+  background:linear-gradient(to bottom, #dddddd 5%, #cccccc 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#cccccc',GradientType=0);
+  background-color:#dddddd;
+}
+
+.result:active {
+  position:relative;
+  top:1px;
+}
+
+.goalTable td {
+  padding: 5px;
+}
+
+

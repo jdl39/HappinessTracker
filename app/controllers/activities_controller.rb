@@ -3,8 +3,8 @@
 class ActivitiesController < ApplicationController
     def create_activity
         # Parse json
-        json = JSON.parse(params[:json])
-
+        # json = JSON.parse(params[:json])
+        p "PARAMS", params
         # Create return hash
         to_return = {}
 
@@ -13,8 +13,12 @@ class ActivitiesController < ApplicationController
     	activity.user = current_user
 
         # Normalize activity name; for now, let's just downcase everything
-        activity_name = json[:activity_name].split.map(&:downcase).join(' ')
+        if !params[:activity_name] 
+            return
+        end
+        activity_name = params[:activity_name].split.map(&:downcase).join(' ')
 
+        p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
         create_activity_type(activity_name) if activity_type.nil?
@@ -24,21 +28,24 @@ class ActivitiesController < ApplicationController
     	if activity.save
             activity.activity_type.num_users = activity.activity_type.num_users + 1 # TODO: Could this cause race conditions?
     		# Now, apply the measurement types.
-            for measurement_name in json[:measurements] do
-                measurement_name = measurement_name.split.map(&:capitalize).join(' ')
-                measurement = MeasurementType.find_by(name: measurement_name)
-                if measurement.nil?
-                    measurement = MeasurementType.new
-                    measurement.name = measurement_name
-                    measurement.is_quantifiable = true # TODO: Add the ability to make boolean measurement types.
-                    if not measurement.save
-                        # Measurement save error.
-                        to_return["hapapp_error"] = "Could not save new measurement type " + measurement_name + "."
-                        if to_return["errors"].nil?
-                            to_return["errors"] = []
+            measurements = [params[:measure1], params[:measure2]]
+            for measurement_name in measurements do
+                if(measurement_name)
+                    measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                    measurement = MeasurementType.find_by(name: measurement_name)
+                    if measurement.nil?
+                        measurement = MeasurementType.new
+                        measurement.name = measurement_name
+                        measurement.is_quantifiable = true # TODO: Add the ability to make boolean measurement types.
+                        if not measurement.save
+                            # Measurement save error.
+                            to_return["hapapp_error"] = "Could not save new measurement type " + measurement_name + "."
+                            if to_return["errors"].nil?
+                                to_return["errors"] = []
+                            end
+                            to_return["errors"].concat(measurement.errors.full_messages)
+                            next
                         end
-                        to_return["errors"].concat(measurement.errors.full_messages)
-                        next
                     end
                 end
                 activity.measurement_types << measurement
@@ -61,9 +68,10 @@ class ActivitiesController < ApplicationController
         lemmatizer = Lemmatizer.new
         activity_words = activity_name.split
         activity_words |= activity_words.map{|word| lemmatizer.lemma(word)}
+        # debugger
         activity_words.split.each do |word|
-            activity_word.word = ActivityWord.new
-            activity_word.activity_type = activity_type
+            word = ActivityWord.new
+            activity_type = activity_type
         end
         activity_type.num_users = 0
         unless activity_type.save
@@ -373,47 +381,47 @@ class ActivitiesController < ApplicationController
         return types.map{|type, size| [type.id, type.name]}
     end
 
-        def activity_recommendations
-            score_hash = {}
+    def activity_recommendations
+        score_hash = {}
+        for activity_type in ActivityType.all do
+            prior = activity_type.activities.size * 1.0 / num_users
+            score_hash[activity_type.name] = prior
+        end
+
+        for activity in current_user.activities do
+            count_hash = Hash.new { |hash,key| hash[key] = 1 }
+            this_activity_type = activity.activity_type
+            for other_instance in this_activity_type.activities do
+                for activity_to_count in other_instance.user.activities do
+                    count_hash[activity_to_count.activity_type.name] += 1
+                end
+            end
+
             for activity_type in ActivityType.all do
-                prior = activity_type.activities.size * 1.0 / num_users
-                score_hash[activity_type.name] = prior
+                score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
             end
-
-            for activity in current_user.activities do
-                count_hash = Hash.new { |hash,key| hash[key] = 1 }
-                this_activity_type = activity.activity_type
-                for other_instance in this_activity_type.activities do
-                    for activity_to_count in other_instance.user.activities do
-                        count_hash[activity_to_count.activity_type.name] += 1
-                    end
-                end
-
-                for activity_type in ActivityType.all do
-                    score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
-                end
-            end
-
-            existing_activities = current_user.activities.map{|activity| activity.activity_type.name}
-            recommendations = []
-            score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
-                recommendations << tuple[0] unless existing_activities.include? tuple[0]
-            }
-            return recommendations
         end
 
-        def num_users
-            @num_users ||= User.size
-            return @num_users
-        end
+        existing_activities = current_user.activities.map{|activity| activity.activity_type.name}
+        recommendations = []
+        score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
+            recommendations << tuple[0] unless existing_activities.include? tuple[0]
+        }
+        return recommendations
+    end
 
-       # Use callbacks to share common setup or constraints between actions.	   
-       def set_activity
-		   @activity = Activity.find(params[:id])
-	   end
+    def num_users
+        @num_users ||= User.size
+        return @num_users
+    end
 
-	   # Helper for search and data_for_user
-		def data_for_user_helper(user_id, activity_type_id)
-			# TODO: Implement.
-		end
+    # Use callbacks to share common setup or constraints between actions.	   
+    def set_activity
+       @activity = Activity.find(params[:id])
+    end
+
+    # Helper for search and data_for_user
+    def data_for_user_helper(user_id, activity_type_id)
+    	# TODO: Implement.
+    end
 end
