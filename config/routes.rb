@@ -33,6 +33,7 @@ HappinessApp::Application.routes.draw do
   get '/search_more_data', to: 'activities#search_more'
   get '/search_get_specific_data', to: 'activities#get_activity_data'
   get '/get_activity_data', to: 'activities#get_activity_data'
+  get '/create_activity', to: 'activities#create_activity'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE

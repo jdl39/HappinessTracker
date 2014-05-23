@@ -138,16 +138,18 @@ function update_results(results, initial) {
 
 function create_new_activity(new_activity_str) {
     console.log("hey there once again.", new_activity_str);
+    selectedStr = new_activity_str;
     show_form('new');
 }
 
 function get_data_for_activity(selectedStr) {
     console.log("hey", selectedStr);
+    selectedStr = selectedStr;
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_get_specific_data?str=';
-    xhr.open("GET", url+encodeURIComponent(str), true); 
+    xhr.open("GET", url+encodeURIComponent(selectedStr), true); 
     xhr.send();
     function xhrHandler() {
         if(str != cur_str) return;
@@ -230,7 +232,34 @@ function add_measurement_form() {
 
 // AJAX request that will submit the new activity meanurements for a tracked activity
 function commit_new_measurement_form() {
-    validate_form();
+    var measurements = validate_new_form();
+    var cur_str = str;
+    var xhr = new XMLHttpRequest();
+    var url = "/create_activity?";
+    var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0]) + "&measure2=" + encodeURIComponent(measurements[1]);
+    xhr.open("GET", url + params, true);
+    // console.log("length", params.length, params);
+    // console.log("params", params);
+    
+    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // xhr.setRequestHeader("Content-length", params.length);
+    // xhr.setRequestHeader("Connection", "close");
+    
+    xhr.onreadystatechange = xhrHandler;
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        // json  = this.responseText;
+        // json = JSON.parse(json);
+    }
+    xhr.send(params);
     show_form('add');
 }
 
@@ -240,8 +269,12 @@ function commit_add_measurement_form() {
 }
 
 // method that will check the two measurement forms that are submitted through ajax on this page
-function validate_form() {
-
+function validate_new_form() {
+    if(!document.forms["new_activity"][0].value && document.forms["new_activity"][q].value) {
+       document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
+       document.forms["new_activity"][1].value = '';
+    }
+    return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
 }
 
 
