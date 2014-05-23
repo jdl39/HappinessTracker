@@ -1,15 +1,15 @@
-<h1>My Friends</h1>
-<ul>
-  <% @accepted_friends.each do |friend| %>
-  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
+<h1>
+  <% if @unaccepted_friends.length == 1 %>
+    1 friend has added you
+  <% elsif @unaccepted_friends.length != 0 %>
+    <%= @unaccepted_friends.length %> friends have added you
   <% end %>
-</ul>
-
-<h1>Unaccepted Friends</h1>
+</h1>
 <ul>
   <% @unaccepted_friends.each do |friend| %>
 
   <script>
+  /*
     $(document).ready(function() {
       $("#accept-friend<%= friend.id %>").click(function(e) {
         _this = this;
@@ -39,7 +39,7 @@
         });
       });
     });
-
+*/
   </script>
 
   <li>
@@ -50,8 +50,14 @@
   <% end %>
 </ul>
 
+<h1>My Friends</h1>
+<ul>
+  <% @accepted_friends.each do |friend| %>
+  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
+  <% end %>
+</ul>
+
 <script>
-/*
   $(document).ready(function() {
     $(".accept-friend-btn").click(function(e) {
 
@@ -61,7 +67,7 @@
       alert(friend_id);
 
       /* run the ajax */
-/*
+
       $.ajax({
         url: "/friend_request/accept",
         type: "post",
@@ -78,6 +84,8 @@
       var id = $(this).attr("id");
       var friend_id = $(this).data("friendid");
 
+      alert("declining");
+
       $.ajax({
           url: "/friend_request/decline",
           type: "post",
@@ -87,5 +95,4 @@
       });
     });
   });
-*/
 </script>
