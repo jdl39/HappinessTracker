@@ -265,12 +265,12 @@ function commit_new_measurement_form() {
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
-
+    console.log("HEY! LISTEN!")
 }
 
 // method that will check the two measurement forms that are submitted through ajax on this page
 function validate_new_form() {
-    if(!document.forms["new_activity"][0].value && document.forms["new_activity"][q].value) {
+    if(!document.forms["new_activity"][0].value && document.forms["new_activity"][1].value) {
        document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
        document.forms["new_activity"][1].value = '';
     }
