@@ -21,7 +21,7 @@ class ActivitiesController < ApplicationController
         p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
-        create_activity_type(activity_name) if activity_type.nil?
+        activity_type = create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
@@ -31,7 +31,7 @@ class ActivitiesController < ApplicationController
             measurements = [params[:measure1], params[:measure2]]
             for measurement_name in measurements do
                 if(measurement_name)
-                    measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                    measurement_name = measurement_name.split.map(&:downcase).join(' ')
                     measurement = MeasurementType.find_by(name: measurement_name)
                     if measurement.nil?
                         measurement = MeasurementType.new
@@ -74,13 +74,8 @@ class ActivitiesController < ApplicationController
             activity_type = activity_type
         end
         activity_type.num_users = 0
-        unless activity_type.save
-            # Activity_type save error
-            to_return["hapapp_error"] = "Could not save the activity type."
-            to_return["errors"] = activity_type.errors.full_messages
-            render json: to_return
-            return
-        end
+        activity_type.save
+        return activity_type
     end
 
     # TODO: Allow for measurement notes to be submitted.
