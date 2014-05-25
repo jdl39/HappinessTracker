@@ -161,6 +161,7 @@ a:hover {
 .container {
   margin: 0 auto;
   width: 960px;
+  overflow: hidden;
 }
 main {
 	display: block;

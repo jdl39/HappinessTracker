@@ -1,26 +1,55 @@
+<style type="text/css">
+  #left_col {
+    float:left;
+	  width:450px;
+  }
+
+  #right_col {
+    float:right;
+	width:450px;
+  }
+
+  hr {
+	height:2px;
+	background-color:#7f8381;
+	border:none;
+  }
+</style>
+
 <h1>Welcome, <%= current_user.first_name %>!</h1>
-
+<hr>
 <section>
-  <h2>Happiness Question</h2>
-  <hr>
-  <%= render 'shared/happiness_question' %>
-</section><!-- section -->
+  <div id = "right_col">
+	<h2>Happiness Question</h2>
+	<hr>
+	<%= render 'shared/happiness_question' %>
+	<hr>
+	<h2>Recommended Activities</h2>
+  <ul>
+		<% @recommended_activities.each do |recommended_activity| %>
+			<li><a href = "/track"><%= recommended_activity %></a></li>
+	  <% end %>
+	</ul>
 
-<section>
-  <h2>News Feed</h2>
-  <hr>
-  <article>
-    <h3>Story 1</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-  </article><!-- /article -->
-  <article>
-    <h3>Story 2</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-  </article><!-- /article -->
-  <article>
-    <h3>Story 3</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-  </article><!-- /article -->
+	<hr>
 
-  <button>Load More News</button>
-</section><!-- /section -->
+</div>
+<div id = "left_col">
+	<h2>News Feed</h2>
+	<hr>
+	<article>
+		<h3>Story 1</h3>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+	</article><!-- /article -->
+	<article>
+		<h3>Story 2</h3>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+	</article><!-- /article -->
+	<article>
+		<h3>Story 3</h3>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+	</article><!-- /article -->
+
+	<button>Load More News</button>
+  </div><!-- /section -->
+</section>
