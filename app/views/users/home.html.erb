@@ -25,9 +25,10 @@
 	<%= render 'shared/happiness_question' %>
 	<hr>
 	<h2>Recommended Activities</h2>
-  <ul>
-		<% @recommended_activities.each do |recommended_activity| %>
-			<li><a href = "/track"><%= recommended_activity %></a></li>
+	<hr>
+	<ul>
+	  <% @recommended_activities.each do |recommended_activity| %>
+	    <li><a href = "/track"><%= recommended_activity %></a></li>
 	  <% end %>
 	</ul>
 
