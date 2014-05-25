@@ -14,7 +14,7 @@
 	background-color:#7f8381;
 	border:none;
   }
-
+  
   h1 {
     font-weight:bold;
 	color:#7f8381;
@@ -26,9 +26,72 @@
 	color:#7f8381;
 	text-align:center;
   }
-</style>
 
+  .onoffswitch {
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+  }
+
+  .onoffswitch-checkbox {
+    display: none;
+  }
+
+  .onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+	border: 2px solid #999999; border-radius: 20px;
+  }
+
+  .onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+	-moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+	-o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+  }
+
+  .onoffswitch-inner:before, .onoffswitch-inner:after {
+	display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+	font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+  }
+
+  .onoffswitch-inner:before {
+    content: "HAPPY";
+	padding-left: 10px;
+	background-color: #CC6600; color: #FFFFFF;
+  }
+
+  .onoffswitch-inner:after {
+    content: "SAD";
+	padding-right: 10px;
+	background-color: #7F8381; color: #FCF9F9;
+	text-align: right;
+  }
+
+  .onoffswitch-switch {
+    display: block; width: 18px; margin: 6px;
+	background: #FAFAFA;
+	border: 2px solid #999999; border-radius: 20px;
+	position: absolute; top: 0; bottom: 0; right: 56px;
+	-moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+	-o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+  }
+
+  .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	margin-left: 0;
+  }
+
+  .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+  }
+
+</style>
 <h1>Welcome, <%= current_user.first_name %>!</h1>
+<div class="onoffswitch">
+  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+	  <span class="onoffswitch-inner"></span>
+	  <span class="onoffswitch-switch"></span>
+	</label>
+</div>
 <hr>
 <section>
   <div id = "right_col">
@@ -45,6 +108,25 @@
 	</ul>
 
 	<hr>
+	<h2><a href ="/friends">Friends' Moods</a></h2>
+	<ul>
+	  <li> Joe: Sad </li>
+	  <li> Bob: Happy </li>
+    </ul>
+	<hr>
+	<h2><a href="/inbox">Recent Messages</a></h2>
+	<hr>
+	<ul>
+	  <li> Joe: "Hi!...." <a href="">View more</a></li>
+      <li> Bob: "Yo!...." <a href="">View more</a></li>
+    </ul>
+	<hr>
+	<h2><a href="/challenges"> Recent Challenges</a></h2>
+	<hr>
+	<ul>
+	  <li> Joe challenged you to, "Eat a banana!" Accept, decline, etc.</li>
+	<hr>
+	
 
 </div>
 <div id = "left_col">
