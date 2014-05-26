@@ -82,13 +82,13 @@ class ActivitiesController < ApplicationController
     # TODO: Allow for measurement notes to be submitted.
     def track_new_measurement
         # Parse json
-        json = JSON.parse(params[:json])
+        # json = JSON.parse(params[:json])
 
         # Hash to return
         to_return = {}
 
         # Check to ensure that such an activity type exists.
-        activity_name = json[:activity_name].split.map(&:capitalize).join(' ')
+        activity_name = params[:activity_name].split.map(&:capitalize).join(' ')
         activity_type = ActivityType.find_by(name: activity_name)
         if activity_type.nil?
             to_return["hapapp_error"] = "There is no activity type with that name."
@@ -104,14 +104,16 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        for measurement_name in json[:measurements] do
-            measurement_name = measurement_name.split.map(&:capitalize).join(' ')
-            measurement_type = MeasurementType.find_by(name: measurement_name)
-            if measurement_type.nil?
-                to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
-                next
+        measurements = [params[:measure1], params[:measure2]]
+        for measurement_name in measurements do
+            if measurement_name
+                measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                measurement_type = MeasurementType.find_by(name: measurement_name)
+                if measurement_type.nil?
+                    to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
+                    next
+                end
             end
-
             activity.user.log_new_measurement(activity, measurement_type, measurement.value = json[:measurements][measurement_name])
         end
 
