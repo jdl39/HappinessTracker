@@ -318,7 +318,7 @@ class ActivitiesController < ApplicationController
     # params: activity, content, signature
     def addComment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
-        # TODO: add to friends + random readers - downvoters
+        # TODO: add to friends + random readers - downvoters - yourself
     end
 
     # params: comment_index, content, signature, isPublic
@@ -329,7 +329,7 @@ class ActivitiesController < ApplicationController
         # TODO: send message
         if isPublic
             response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
-            # TODO: add to friends + random readers - downvoters
+            # TODO: add to friends + random readers - downvoters - yourself
         end 
     end
 
