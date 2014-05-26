@@ -173,17 +173,20 @@ function show_form(option) {
         document.forms["add_activity"].style.display = "block";
         document.forms["new_activity"].style.display = "none";
         clear_form_values();
+        document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('add_new_measurement_button').style.display = 'block';
     } else if(option == "new") {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "block";
         clear_form_values();
+        document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('add_new_measurement_button').style.display = 'block';
     } else if(option == '') {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "none";
         clear_form_values();
         document.getElementById('add_new_measurement_button').style.display = 'none';
+        document.getElementById('second_measurement').style.display = 'none';
     }
 }
 
@@ -238,13 +241,6 @@ function commit_new_measurement_form() {
     var url = "/create_activity?";
     var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0]) + "&measure2=" + encodeURIComponent(measurements[1]);
     xhr.open("GET", url + params, true);
-    // console.log("length", params.length, params);
-    // console.log("params", params);
-    
-    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    // xhr.setRequestHeader("Content-length", params.length);
-    // xhr.setRequestHeader("Connection", "close");
-    
     xhr.onreadystatechange = xhrHandler;
     function xhrHandler() {
         if(str != cur_str) return;
@@ -256,8 +252,24 @@ function commit_new_measurement_form() {
         }
         console.log("starting");
         console.log(this.responseText);
-        // json  = this.responseText;
-        // json = JSON.parse(json);
+        json  = this.responseText;
+        json = JSON.parse(json);
+        if(json['measurement_types']) {
+            if(json['measurement_types'][0]) {
+                document.getElementById('input_measure1').innerHTML = json['measurement_types'][0];
+            } else {
+                document.getElementById('measure_input1').style.display = 'none';
+            }
+            if(json['measurement_types'][1]) {
+                document.getElementById('input_measure2').innerHTML = json['measurement_types'][1];
+            } else {
+                document.getElementById('measure_input2').style.display = 'none';
+            }
+        } else {
+            document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
+            document.getElementById('measure_input1').style.display = 'none';
+            document.getElementById('measure_input2').style.display = 'none';
+        }
     }
     xhr.send(params);
     show_form('add');
@@ -265,7 +277,46 @@ function commit_new_measurement_form() {
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
-    console.log("HEY! LISTEN!")
+    console.log("Submitting new measurement");
+
+    var measurements = validate_new_form();
+    var cur_str = str;
+    var xhr = new XMLHttpRequest();
+    var url = "/track_activity?";
+    var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0]) + "&measure2=" + encodeURIComponent(measurements[1]);
+    xhr.open("GET", url + params, true);
+    xhr.onreadystatechange = xhrHandler;
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        json  = this.responseText;
+        json = JSON.parse(json);
+        if(json['measurement_types']) {
+            if(json['measurement_types'][0]) {
+                document.getElementById('input_measure1').innerHTML = json['measurement_types'][0];
+            } else {
+                document.getElementById('measure_input1').style.display = 'none';
+            }
+            if(json['measurement_types'][1]) {
+                document.getElementById('input_measure2').innerHTML = json['measurement_types'][1];
+            } else {
+                document.getElementById('measure_input2').style.display = 'none';
+            }
+        } else {
+            document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
+            document.getElementById('measure_input1').style.display = 'none';
+            document.getElementById('measure_input2').style.display = 'none';
+        }
+    }
+    xhr.send(params);
+    show_form('add');
 }
 
 // method that will check the two measurement forms that are submitted through ajax on this page

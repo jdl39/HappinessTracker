@@ -27,6 +27,7 @@ HappinessApp::Application.routes.draw do
   get '/challenges/:username', to: 'challenges#index'
   get '/friends/', to: 'friends#index'
   get '/friends/:username', to: 'friends#index'
+
   get 'blah', to: 'activities#delete_me'
   get 'get_comments', to: 'activities#getComments'
   post 'add_comment', to: 'activities#addComment'
@@ -43,6 +44,7 @@ HappinessApp::Application.routes.draw do
   get '/search_get_specific_data', to: 'activities#get_activity_data'
   get '/get_activity_data', to: 'activities#get_activity_data'
   get '/create_activity', to: 'activities#create_activity'
+  get '/track_activity', to: 'activities#track_new_measurement'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE
