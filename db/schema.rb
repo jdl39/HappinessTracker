@@ -64,6 +64,21 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   add_index "challenges", ["receiver_id"], name: "index_challenges_on_receiver_id"
   add_index "challenges", ["sender_id"], name: "index_challenges_on_sender_id"
 
+  create_table "comment_down_voters", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
+
+  create_table "comment_readers", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
+
+  create_table "comment_up_voters", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
+
   create_table "comments", force: true do |t|
     t.integer  "activity_type_id"
     t.integer  "author_id"
@@ -189,6 +204,21 @@ ActiveRecord::Schema.define(version: 20140514061725) do
 
   add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id"
   add_index "messages", ["sender_id"], name: "index_messages_on_sender_id"
+
+  create_table "response_down_voters", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
+
+  create_table "response_readers", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
+
+  create_table "response_up_voters", force: true do |t|
+    t.integer "user_id"
+    t.integer "comment_id"
+  end
 
   create_table "responses", force: true do |t|
     t.integer  "comment_id"

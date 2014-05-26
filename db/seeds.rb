@@ -8,6 +8,7 @@
 
 userdata = [
 	{'email' => 'non.enim.Mauris@Suspendisse.edu', 'first_name' => 'Xandra', 'last_name' => 'Martinez', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'XandraMartinez'},
+	{'email' => 'a@gmail.com', 'first_name' => 'a', 'last_name' => 'a', 'password' => 'a', 'password_confirmation' => 'a', 'username' => 'a'},
 	{'email' => 'sit.amet@iaculislacuspede.net', 'first_name' => 'Alec', 'last_name' => 'Donaldson', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'AlecDonaldson'},
 	{'email' => 'tristique.neque.venenatis@semperNamtempor.co.uk', 'first_name' => 'Price', 'last_name' => 'Kelley', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'PriceKelley'},
 	{'email' => 'vitae.aliquam@molestie.org', 'first_name' => 'Slade', 'last_name' => 'Rojas', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'SladeRojas'},
@@ -234,8 +235,9 @@ for datum in activity_data do
 	act.save
 end
 
-measure_data = {
-}
+measure_data = [
+    {'value' => 1, 'measurement_type_id' => 0, 'activity_id' => 0}
+]
 
 happiness_question_data = [
 	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 6},
@@ -403,7 +405,8 @@ response_data = [
 ]
 
 for datum in comment_data do
-	Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+	comment = Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+    comment.readers << User.all
 end
 
 for datum in response_data do

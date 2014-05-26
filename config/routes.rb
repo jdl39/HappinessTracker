@@ -1,5 +1,8 @@
 HappinessApp::Application.routes.draw do
 
+  get 'blah', to: 'activities#delete_me'
+  get 'get_comments', to: 'activities#getComments'
+
   post 'happiness_response', to: 'happiness#post_happiness_response'
 
   root 'users#index'

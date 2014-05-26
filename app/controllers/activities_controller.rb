@@ -269,42 +269,61 @@ class ActivitiesController < ApplicationController
     	# Return data_for_user_helper
     end
 
+    def delete_me
+        session["comments"] = []
+        session["upvoted_comments"] = []
+        session["responses"] = []
+        session["upvoted_responses"] = []
+    end
+
+# TODO: use readable_comments_count and readable_responses_count
+
+# TODO: clear cookies somewhere
+
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
-        new_comments = Comment.limit(params[:num_needed]).where(reader: current_user)
+        new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at')
         if session[:comments].nil?
-            session[:comments] = new_comments
+            session[:comments] = new_comments.map(&:id)
         else
-            session[:comments] << new_comments
+            session[:comments].concat new_comments.map(&:id)
         end
-        upvoted_comments = Comment.where(up_voter: current_user)
+        upvoted_comments = new_comments.select{|comment| comment.up_voters.include? current_user}
         # for ith comment in comments, true if upvoted, false if not
-        session[:comments_upvoted] = session[:comments].map{|comment| upvoted_comments.include? comment}
+        session[:upvoted_comments] = Comment.where(id: session[:comments]).select{|comment| upvoted_comments.include? comment}.map(&:id)
+        render json:  {
+            new_comments: new_comments,
+            upvoted_comments: upvoted_comments
+        }
     end
 
     # params: comment_id, num_needed
     def getResponses
-        new_responses = Response.limit(params[:num_needed]).where(author: current_user, comment_id: params[:comment_id])
+        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC')#.select('responses.id as id, content, created_at')
         if session[:responses].nil?
             session[:responses] = new_responses
         else
-            session[:responses] << new_responses
+            session[:responses].concat new_responses
         end
-        upvoted_responses = Response.where(up_voter: current_user)
+        upvoted_responses = new_responses.select{|response| response.up_voters.include? current_user}
         # for ith comment in comments, true if upvoted, false if not
-        session[:responses_upvoted] = session[:responses].map{|response| upvoted_responses.include? response}
+        session[:upvoted_responses] = Response.where(id: session[:responses]).select{|response| upvoted_responses.include? response}.map(&:id)
+        render json:  {
+            new_responses: new_responses,
+            upvoted_responses: upvoted_responses
+        }
     end
 
     # params: activity, content, signature
     def addComment
-        comment = Comment.create(activity: params[:activity], content: params[:content], signature: params[:signature])
+        comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters
     end
 
     # params: comment_index, content, signature, isPublic
     def addResponse
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: session[:comments][params[:comment_index]])
         # create a message to author of comment from user
         message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
         # TODO: send message

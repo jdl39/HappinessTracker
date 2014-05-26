@@ -5,12 +5,12 @@ class User < ActiveRecord::Base
     has_many :happiness_responses
     has_many :comments
 
-    has_and_belongs_to_many :readable_comments, class_name: "Comment"
-    has_and_belongs_to_many :readable_responses, class_name: "Response"
-    has_and_belongs_to_many :down_comments, class_name: "Comment"
-    has_and_belongs_to_many :up_comments, class_name: "Comment"
-    has_and_belongs_to_many :down_responses, class_name: "Response"
-    has_and_belongs_to_many :up_responses, class_name: "Response"
+    has_and_belongs_to_many :readable_comments, class_name: "Comment", :join_table => :comment_readers
+    has_and_belongs_to_many :readable_responses, class_name: "Response", :join_table => :response_readers
+    has_and_belongs_to_many :down_comments, class_name: "Comment", :join_table => :comment_down_voters
+    has_and_belongs_to_many :up_comments, class_name: "Comment", :join_table => :comment_up_voters
+    has_and_belongs_to_many :down_responses, class_name: "Response", :join_table => :response_down_voters
+    has_and_belongs_to_many :up_responses, class_name: "Response", :join_table => :response_up_voters
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
