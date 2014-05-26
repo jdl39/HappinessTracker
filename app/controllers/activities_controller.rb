@@ -52,6 +52,7 @@ class ActivitiesController < ApplicationController
             end
     	else
     		# Activity couldn't save
+            p "could not save activity"
             to_return["hapapp_error"] = "Could not save activity."
             to_return["errors"] = activity.errors.full_messages
             render json: to_return

@@ -29,8 +29,9 @@
         <div>
             <form class="activity_form no_display" id="add_activity">
                 <h3>Track Your Recent Activity</h3>
-                <span class="input_measure1"></span>: <input class="measurements" type="text" name="measure1"><br>
-                <span class="input_measure2"></span>: <input class="measurements" type="text" name="measure2"><br>
+                <span id="no_measure"></span>
+                <div id="measure_input1"><span id="input_measure1"></span>: <input class="measurements" type="text" name="measure1"></div>
+                <div id="measure_input2"><span id="input_measure2"></span>: <input class="measurements" type="text" name="measure2"></div>
                 <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
             <!--   render 'shared/goal_form'   -->    
