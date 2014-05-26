@@ -207,17 +207,17 @@ ActiveRecord::Schema.define(version: 20140514061725) do
 
   create_table "response_down_voters", force: true do |t|
     t.integer "user_id"
-    t.integer "comment_id"
+    t.integer "response_id"
   end
 
   create_table "response_readers", force: true do |t|
     t.integer "user_id"
-    t.integer "comment_id"
+    t.integer "response_id"
   end
 
   create_table "response_up_voters", force: true do |t|
     t.integer "user_id"
-    t.integer "comment_id"
+    t.integer "response_id"
   end
 
   create_table "responses", force: true do |t|

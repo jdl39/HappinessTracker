@@ -300,11 +300,12 @@ class ActivitiesController < ApplicationController
 
     # params: comment_id, num_needed
     def getResponses
-        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('responses.id as id, content, created_at, signature')
+        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(comment_id: params[:comment_id]).where.not(id: session[:responses]).order('created_at DESC').select('responses.id as id, content, created_at, signature')
+        p new_responses
         if session[:responses].nil?
-            session[:responses] = new_responses
+            session[:responses] = new_responses.map(&:id)
         else
-            session[:responses].concat new_responses
+            session[:responses].concat new_responses.map(&:id)
         end
         upvoted_responses = new_responses.select{|response| response.up_voters.include? current_user}
         # for ith comment in comments, true if upvoted, false if not
