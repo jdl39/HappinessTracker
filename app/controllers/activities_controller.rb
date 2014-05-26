@@ -283,7 +283,7 @@ class ActivitiesController < ApplicationController
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
-        new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at')
+        new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at, signature')
         if session[:comments].nil?
             session[:comments] = new_comments.map(&:id)
         else
@@ -300,7 +300,7 @@ class ActivitiesController < ApplicationController
 
     # params: comment_id, num_needed
     def getResponses
-        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC')#.select('responses.id as id, content, created_at')
+        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('responses.id as id, content, created_at, signature')
         if session[:responses].nil?
             session[:responses] = new_responses
         else
@@ -319,6 +319,7 @@ class ActivitiesController < ApplicationController
     def addComment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters - yourself
+        render nothing: true
     end
 
     # params: comment_index, content, signature, isPublic
@@ -340,24 +341,29 @@ class ActivitiesController < ApplicationController
 
     # params: comment_index
     def up_comment
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: params[:comment_id])
         # do nothing if user already voted
-        return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        return if current_user.up_comments.map(&:id).include? comment.id
+        #return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        comment.up_voters << current_user
         comment.votes = comment.votes + 1
         new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
         # is this adding correctly???
         comment.readers << new_readers
+        comment.save
         #new_readers.each{|reader| reader.readable_comment
     end
 
     # params: comment_index
     def down_comment
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: params[:comment_id])
         # do nothing if user already voted
         return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        comment.down_voters << current_user
         comment.votes = comment.votes - 1
         comment.readers.delete(:current_user)#:current_user.id???
         comment.readers.delete_all if comment.votes < vote_threshold
+        comment.save
     end
 
     # params: response_index
