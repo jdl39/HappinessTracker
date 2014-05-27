@@ -91,7 +91,7 @@ class ActivitiesController < ApplicationController
         to_return = {}
 
         # Check to ensure that such an activity type exists.
-        activity_name = params[:activity_name].split.map(&:capitalize).join(' ')
+        activity_name = params[:activity_name].downcase
         activity_type = ActivityType.find_by(name: activity_name)
         if activity_type.nil?
             to_return["hapapp_error"] = "There is no activity type with that name."

@@ -174,7 +174,14 @@ function get_data_for_activity(selected_str) {
         if(json['user_does_activity']) {
             show_form('add');
             update_graph(json['recent_measurements'], json['measurement_types']);
-            update_add_form_inputs(json['measurement_types']);
+            measurements = [];
+            if(json['measurement_types'][0]) {
+                measurements.push(json['measurement_types'][0][1]);
+            }
+            if(json['measurement_types'][1]) {
+                measurements.push(json['measurement_types'][1][1]);
+            }
+            update_add_form_inputs(measurements);
         } else {
             show_form('new');
         }
@@ -320,7 +327,7 @@ function commit_new_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        update_add_form_inputs(json['measurement_types']);
+        update_add_form_inputs(measurements);
         show_form('add');
     }
     xhr.send();
@@ -357,6 +364,7 @@ function commit_add_measurement_form() {
 
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
+    if(measurements[0])
     if(measurements && measurements.length != 0) {
         if(measurements[0]) {
             document.getElementById('input_measure1').innerHTML = measurements[0];
@@ -390,12 +398,14 @@ function validate_new_form() {
 function validate_add_form() {
     var  error  = false;
     if(document.forms["add_activity"][0].style.display != 'none') {
+        console.log('1 not hidden');
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;
         }
     }
-    if(document.forms["add_activity"][1].style.display != 'none') {
+    if(document.forms["add_activity"][1].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
+        console.log('2 not hidden');
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
             error = true;
@@ -405,7 +415,7 @@ function validate_add_form() {
         return null;
     } else {
         var value_1 = document.forms["add_activity"][0].value;
-        var value_1 = document.forms["add_activity"][1].value;
+        var value_2 = document.forms["add_activity"][1].value;
         document.forms["add_activity"][0].value = '';
         document.forms["add_activity"][1].value = '';
         return [value_1, value_2];    
