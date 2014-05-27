@@ -281,8 +281,6 @@ class ActivitiesController < ApplicationController
 
 # TODO: use readable_comments_count and readable_responses_count
 
-# TODO: clear cookies somewhere
-
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
