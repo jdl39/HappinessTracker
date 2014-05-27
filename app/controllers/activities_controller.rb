@@ -21,7 +21,7 @@ class ActivitiesController < ApplicationController
         p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
-        create_activity_type(activity_name) if activity_type.nil?
+        activity_type = create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
@@ -31,7 +31,7 @@ class ActivitiesController < ApplicationController
             measurements = [params[:measure1], params[:measure2]]
             for measurement_name in measurements do
                 if(measurement_name)
-                    measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                    measurement_name = measurement_name.split.map(&:downcase).join(' ')
                     measurement = MeasurementType.find_by(name: measurement_name)
                     if measurement.nil?
                         measurement = MeasurementType.new
@@ -52,6 +52,7 @@ class ActivitiesController < ApplicationController
             end
     	else
     		# Activity couldn't save
+            p "could not save activity"
             to_return["hapapp_error"] = "Could not save activity."
             to_return["errors"] = activity.errors.full_messages
             render json: to_return
@@ -74,25 +75,20 @@ class ActivitiesController < ApplicationController
             activity_type = activity_type
         end
         activity_type.num_users = 0
-        unless activity_type.save
-            # Activity_type save error
-            to_return["hapapp_error"] = "Could not save the activity type."
-            to_return["errors"] = activity_type.errors.full_messages
-            render json: to_return
-            return
-        end
+        activity_type.save
+        return activity_type
     end
 
     # TODO: Allow for measurement notes to be submitted.
     def track_new_measurement
         # Parse json
-        json = JSON.parse(params[:json])
+        # json = JSON.parse(params[:json])
 
         # Hash to return
         to_return = {}
 
         # Check to ensure that such an activity type exists.
-        activity_name = json[:activity_name].split.map(&:capitalize).join(' ')
+        activity_name = params[:activity_name].split.map(&:capitalize).join(' ')
         activity_type = ActivityType.find_by(name: activity_name)
         if activity_type.nil?
             to_return["hapapp_error"] = "There is no activity type with that name."
@@ -108,14 +104,16 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        for measurement_name in json[:measurements] do
-            measurement_name = measurement_name.split.map(&:capitalize).join(' ')
-            measurement_type = MeasurementType.find_by(name: measurement_name)
-            if measurement_type.nil?
-                to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
-                next
+        measurements = [params[:measure1], params[:measure2]]
+        for measurement_name in measurements do
+            if measurement_name
+                measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                measurement_type = MeasurementType.find_by(name: measurement_name)
+                if measurement_type.nil?
+                    to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
+                    next
+                end
             end
-
             activity.user.log_new_measurement(activity, measurement_type, measurement.value = json[:measurements][measurement_name])
         end
 
@@ -274,48 +272,67 @@ class ActivitiesController < ApplicationController
     	# Return data_for_user_helper
     end
 
+    def delete_me
+        session["comments"] = []
+        session["upvoted_comments"] = []
+        session["responses"] = []
+        session["upvoted_responses"] = []
+    end
+
+# TODO: use readable_comments_count and readable_responses_count
+
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
-        new_comments = Comment.limit(params[:num_needed]).where(reader: current_user)
+        new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at, signature')
         if session[:comments].nil?
-            session[:comments] = new_comments
+            session[:comments] = new_comments.map(&:id)
         else
-            session[:comments] << new_comments
+            session[:comments].concat new_comments.map(&:id)
         end
-        upvoted_comments = Comment.where(up_voter: current_user)
+        upvoted_comments = new_comments.select{|comment| comment.up_voters.include? current_user}
         # for ith comment in comments, true if upvoted, false if not
-        session[:comments_upvoted] = session[:comments].map{|comment| upvoted_comments.include? comment}
+        session[:upvoted_comments] = Comment.where(id: session[:comments]).select{|comment| upvoted_comments.include? comment}.map(&:id)
+        render json:  {
+            new_comments: new_comments,
+            upvoted_comments: upvoted_comments
+        }
     end
 
     # params: comment_id, num_needed
     def getResponses
-        new_responses = Response.limit(params[:num_needed]).where(author: current_user, comment_id: params[:comment_id])
+        new_responses = current_user.readable_responses.limit(params[:num_needed].to_i).where(comment_id: params[:comment_id]).where.not(id: session[:responses]).order('created_at DESC').select('responses.id as id, content, created_at, signature')
+        p new_responses
         if session[:responses].nil?
-            session[:responses] = new_responses
+            session[:responses] = new_responses.map(&:id)
         else
-            session[:responses] << new_responses
+            session[:responses].concat new_responses.map(&:id)
         end
-        upvoted_responses = Response.where(up_voter: current_user)
+        upvoted_responses = new_responses.select{|response| response.up_voters.include? current_user}
         # for ith comment in comments, true if upvoted, false if not
-        session[:responses_upvoted] = session[:responses].map{|response| upvoted_responses.include? response}
+        session[:upvoted_responses] = Response.where(id: session[:responses]).select{|response| upvoted_responses.include? response}.map(&:id)
+        render json:  {
+            new_responses: new_responses,
+            upvoted_responses: upvoted_responses
+        }
     end
 
     # params: activity, content, signature
     def addComment
-        comment = Comment.create(activity: params[:activity], content: params[:content], signature: params[:signature])
-        # TODO: add to friends + random readers - downvoters
+        comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
+        # TODO: add to friends + random readers - downvoters - yourself
+        render nothing: true
     end
 
     # params: comment_index, content, signature, isPublic
     def addResponse
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: session[:comments][params[:comment_index]])
         # create a message to author of comment from user
         message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
         # TODO: send message
         if isPublic
             response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
-            # TODO: add to friends + random readers - downvoters
+            # TODO: add to friends + random readers - downvoters - yourself
         end 
     end
 
@@ -326,24 +343,29 @@ class ActivitiesController < ApplicationController
 
     # params: comment_index
     def up_comment
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: params[:comment_id])
         # do nothing if user already voted
-        return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        return if current_user.up_comments.map(&:id).include? comment.id
+        #return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        comment.up_voters << current_user
         comment.votes = comment.votes + 1
         new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
         # is this adding correctly???
         comment.readers << new_readers
+        comment.save
         #new_readers.each{|reader| reader.readable_comment
     end
 
     # params: comment_index
     def down_comment
-        comment = session[:comments][params[:comment_index]]
+        comment = Comment.where(id: params[:comment_id])
         # do nothing if user already voted
         return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        comment.down_voters << current_user
         comment.votes = comment.votes - 1
         comment.readers.delete(:current_user)#:current_user.id???
         comment.readers.delete_all if comment.votes < vote_threshold
+        comment.save
     end
 
     # params: response_index

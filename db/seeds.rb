@@ -8,6 +8,7 @@
 
 userdata = [
 	{'email' => 'non.enim.Mauris@Suspendisse.edu', 'first_name' => 'Xandra', 'last_name' => 'Martinez', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'XandraMartinez'},
+	{'email' => 'a@gmail.com', 'first_name' => 'a', 'last_name' => 'a', 'password' => 'a', 'password_confirmation' => 'a', 'username' => 'a'},
 	{'email' => 'sit.amet@iaculislacuspede.net', 'first_name' => 'Alec', 'last_name' => 'Donaldson', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'AlecDonaldson'},
 	{'email' => 'tristique.neque.venenatis@semperNamtempor.co.uk', 'first_name' => 'Price', 'last_name' => 'Kelley', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'PriceKelley'},
 	{'email' => 'vitae.aliquam@molestie.org', 'first_name' => 'Slade', 'last_name' => 'Rojas', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'SladeRojas'},
@@ -234,8 +235,9 @@ for datum in activity_data do
 	act.save
 end
 
-measure_data = {
-}
+measure_data = [
+    {'value' => 1, 'measurement_type_id' => 0, 'activity_id' => 0}
+]
 
 happiness_question_data = [
 	{'content' => "In general, how happy do you consider yourself?", 'max_score' => 6},
@@ -383,29 +385,31 @@ hc_humor.happiness_questions << HappinessQuestion.find(14)
 # need readables, upvotes, downvotes
 
 comment_data = [
-	{'activity_type_id' => 0, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 1},
-	{'activity_type_id' => 0, 'content' => 'I love running!!! <3', 'signature' => 'excited', 'author_id' => 2},
-	{'activity_type_id' => 0, 'content' => 'Is running bad for someone with flat feet?', 'signature' => 'Xandra', 'author_id' => 0},
-	{'activity_type_id' => 1, 'content' => 'What\'s your favorite book?', 'signature' => 'Xandra', 'author_id' => 0},
-	{'activity_type_id' => 1, 'content' => 'Reading is stupid', 'signature' => 'coolkid92', 'author_id' => 7},
-	{'activity_type_id' => 1, 'content' => 'I never realized how fulfilling reading could be until my friend showed me the wonderful novel Twilight! Respond if you want to talk about this amazing series!!!', 'signature' => 'happy', 'author_id' => 3},
-	{'activity_type_id' => 1, 'content' => 'Reading is super stupid', 'signature' => 'stillcool', 'author_id' => 7},
+	{'activity_type_id' => 1, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 1},
+	{'activity_type_id' => 1, 'content' => 'I love running!!! <3', 'signature' => 'excited', 'author_id' => 2},
+	{'activity_type_id' => 1, 'content' => 'Is running bad for someone with flat feet?', 'signature' => 'Xandra', 'author_id' => 0},
+	{'activity_type_id' => 2, 'content' => 'Reading is stupid', 'signature' => 'coolkid92', 'author_id' => 7},
+	{'activity_type_id' => 2, 'content' => 'I never realized how fulfilling reading could be until my friend showed me the wonderful novel Twilight! Respond if you want to talk about this amazing series!!!', 'signature' => 'happy', 'author_id' => 3},
+	{'activity_type_id' => 2, 'content' => 'Reading is super stupid', 'signature' => 'stillcool', 'author_id' => 7},
+	{'activity_type_id' => 2, 'content' => 'What\'s your favorite book?', 'signature' => 'Xandra', 'author_id' => 0},
 ]
 
 response_data = [
-	{'comment_id' => 0, 'content' => 'Nah, it\'s not really necessary', 'signature' => 'Alec', 'author_id' => 2},
-	{'comment_id' => 0, 'content' => 'Good tennis shoes are a must!', 'signature' => 'happy', 'author_id' => 3},
-	{'comment_id' => 2, 'content' => 'I dunno go ask a doctor', 'signature' => 'duh', 'author_id' => 7},
-	{'comment_id' => 3, 'content' => 'Game of Thrones!', 'signature' => 'happy', 'author_id' => 4},
-	{'comment_id' => 3, 'content' => 'Wait, no, Storm of Swords!', 'signature' => 'happy', 'author_id' => 4},
-	{'comment_id' => 3, 'content' => 'Kiterunner!', 'signature' => 'happy', 'author_id' => 5},
-	{'comment_id' => 3, 'content' => 'Prey by Michael Chrichton', 'signature' => 'may he RIP', 'author_id' => 6},
+	{'comment_id' => 1, 'content' => 'Nah, it\'s not really necessary', 'signature' => 'Alec', 'author_id' => 2},
+	{'comment_id' => 1, 'content' => 'Good tennis shoes are a must!', 'signature' => 'happy', 'author_id' => 3},
+	{'comment_id' => 3, 'content' => 'I dunno go ask a doctor', 'signature' => 'duh', 'author_id' => 7},
+	{'comment_id' => 7, 'content' => 'Game of Thrones!', 'signature' => 'happy', 'author_id' => 4},
+	{'comment_id' => 7, 'content' => 'Wait, no, Storm of Swords!', 'signature' => 'happy', 'author_id' => 4},
+	{'comment_id' => 7, 'content' => 'Kiterunner!', 'signature' => 'happy', 'author_id' => 5},
+	{'comment_id' => 7, 'content' => 'Prey by Michael Chrichton', 'signature' => 'may he RIP', 'author_id' => 6},
 ]
 
 for datum in comment_data do
-	Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+	comment = Comment.create(content: datum['content'], signature: datum['signature'], activity_type_id: datum['activity_type_id'], author_id: datum['author_id'])
+    comment.readers << User.all
 end
 
 for datum in response_data do
-	Response.create(content: datum['content'], signature: datum['signature'], comment_id: datum['comment_id'], author_id: datum['author_id'])
+	response = Response.create(content: datum['content'], signature: datum['signature'], comment_id: datum['comment_id'], author_id: datum['author_id'])
+    response.readers << User.all
 end

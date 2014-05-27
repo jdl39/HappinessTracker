@@ -9,5 +9,20 @@ class CreateComments < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    create_table :comment_readers do |t|
+      t.references :user
+      t.references :comment
+    end
+
+    create_table :comment_up_voters do |t|
+      t.references :user
+      t.references :comment
+    end
+
+    create_table :comment_down_voters do |t|
+      t.references :user
+      t.references :comment
+    end
   end
 end

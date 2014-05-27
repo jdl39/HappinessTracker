@@ -78,6 +78,8 @@ class UsersController < ApplicationController
 
   def home
     @user = current_user
+	#TODO: Set these recommended_activities
+	@recommended_activities = ['Running', 'Jogging', 'Swimming', 'Hiking']
     # Render landing page
   end
 

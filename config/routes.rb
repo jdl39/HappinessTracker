@@ -6,6 +6,9 @@ HappinessApp::Application.routes.draw do
   post 'users/login' => 'users#login'
   get 'new' => 'users#new'
 
+  match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
+  match 'auth/failure', to: redirect('/'), via: [:get, :post]
+
   resources :users
   resources :sessions, only: [:create, :destroy] # removed "new"
   match '/signup',  to: 'users#new',            via: 'get'
@@ -27,6 +30,16 @@ HappinessApp::Application.routes.draw do
   get '/challenges/:username', to: 'challenges#index'
   get '/friends/', to: 'friends#index'
   get '/friends/:username', to: 'friends#index'
+
+  get 'blah', to: 'activities#delete_me'
+  get 'get_comments', to: 'activities#getComments'
+  post 'add_comment', to: 'activities#addComment'
+  post 'up_comment', to: 'activities#up_comment'
+  post 'down_comment', to: 'activities#down_comment'
+  get 'get_responses', to: 'activities#getResponses'
+  post 'add_response', to: 'activities#addResponse'
+  post 'up_response', to: 'activities#up_response'
+  post 'down_response', to: 'activities#down_response'
   
   get '/home', to: 'users#home'
   get '/search_data', to: 'activities#search'
@@ -34,6 +47,7 @@ HappinessApp::Application.routes.draw do
   get '/search_get_specific_data', to: 'activities#get_activity_data'
   get '/get_activity_data', to: 'activities#get_activity_data'
   get '/create_activity', to: 'activities#create_activity'
+  get '/track_activity', to: 'activities#track_new_measurement'
   get '/settings', to: 'users#settings'
 
   # PROFILE PAGE

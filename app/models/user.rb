@@ -5,18 +5,18 @@ class User < ActiveRecord::Base
     has_many :happiness_responses
     has_many :comments
 
-    has_and_belongs_to_many :readable_comments, class_name: "Comment"
-    has_and_belongs_to_many :readable_responses, class_name: "Response"
-    has_and_belongs_to_many :down_comments, class_name: "Comment"
-    has_and_belongs_to_many :up_comments, class_name: "Comment"
-    has_and_belongs_to_many :down_responses, class_name: "Response"
-    has_and_belongs_to_many :up_responses, class_name: "Response"
+    has_and_belongs_to_many :readable_comments, class_name: "Comment", :join_table => :comment_readers
+    has_and_belongs_to_many :readable_responses, class_name: "Response", :join_table => :response_readers
+    has_and_belongs_to_many :down_comments, class_name: "Comment", :join_table => :comment_down_voters
+    has_and_belongs_to_many :up_comments, class_name: "Comment", :join_table => :comment_up_voters
+    has_and_belongs_to_many :down_responses, class_name: "Response", :join_table => :response_down_voters
+    has_and_belongs_to_many :up_responses, class_name: "Response", :join_table => :response_up_voters
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
-	validates :first_name, presence: true
-	validates :last_name, presence: true
+  	#validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
+	#validates :first_name, presence: true
+	#validates :last_name, presence: true
 
 	before_save { self.email = email.downcase }
 
@@ -80,6 +80,23 @@ class User < ActiveRecord::Base
 
   		return total_score * 1.0 / total_num_questions_answered
   	end
+
+    def self.from_omniauth(auth)
+        where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
+          user.provider = auth.provider
+          user.uid = auth.uid
+          name = auth.info.name
+          user.username = name + user.uid
+          user.first_name = name.split[0]
+          user.last_name = name.split[1]
+          user.oauth_token = auth.credentials.token
+          user.oauth_expires_at = Time.at(auth.credentials.expires_at)
+          user.password = SecureRandom.urlsafe_base64
+          user.password_confirmation = user.password
+          user.email = ""
+          user.save!
+        end
+    end
 
 	private
 		def create_remember_token

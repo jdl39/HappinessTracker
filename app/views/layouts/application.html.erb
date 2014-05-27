@@ -21,7 +21,7 @@
 
   <!-- <%= javascript_include_tag "jquery" %> -->
 
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "highcharts", "data-turbolinks-track" => true %>
 </head>
 
 <body>
@@ -40,11 +40,9 @@
           <li><a href="/track">Activities</a></li>
           <li><a href="/profile/<%= current_user.username %>">Profile</a></li>
           <li><a href="/goals">Goals</a></li>
-          <li><a href="/guides">Guides</a></li>
           <li><a href="/challenges">Challenge</a></li>
-		      <li><a href="/inbox">Inbox</a></li>
-		      <li><a href="/friends">Friends</a></li>
-          <li><a href="/settings">Settings</a></li>
+		  <li><a href="/inbox">Inbox</a></li>
+		  <li><a href="/friends">Friends</a></li>
           <li><a href="" id="logout">Log Out</a></li>
         </ul>
       </nav><!-- /nav -->
@@ -65,12 +63,10 @@
           <li><a href="/track">Activities</a></li>
           <li><a href="/profile/<%= current_user.username %>">Profile</a></li>
           <li><a href="/goals">Goals</a></li>
-          <li><a href="/guides">Guides</a></li>
           <li><a href="/challenges">Challenge</a></li>
-		      <li><a href="/inbox">Inbox</a></li>
-		      <li><a href="/friends">Friends</a><li>
-          <li><a href="/settings">Settings</a></li>
-		      <li><a href="">Log Out</a></li>
+		  <li><a href="/inbox">Inbox</a></li>
+		  <li><a href="/friends">Friends</a><li>
+		  <li><a href="">Log Out</a></li>
         </ul>
       </nav><!-- /nav -->
       <nav>

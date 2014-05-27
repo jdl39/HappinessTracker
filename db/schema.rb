@@ -11,20 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140514061725) do
+ActiveRecord::Schema.define(version: 20140527032552) do
 
   create_table "activities", force: true do |t|
     t.integer  "user_id"
     t.integer  "activity_type_id"
-    t.integer  "measurement_type_id"
     t.datetime "last_accessed"
-    t.integer  "num_measured"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "activities", ["activity_type_id"], name: "index_activities_on_activity_type_id"
-  add_index "activities", ["measurement_type_id"], name: "index_activities_on_measurement_type_id"
   add_index "activities", ["user_id", "activity_type_id"], name: "index_activities_on_user_id_and_activity_type_id", unique: true
   add_index "activities", ["user_id"], name: "index_activities_on_user_id"
 
@@ -44,7 +41,7 @@ ActiveRecord::Schema.define(version: 20140514061725) do
 
   create_table "activity_words", force: true do |t|
     t.integer  "activity_type_id"
-    t.string   "word"
+    t.text     "word"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -52,17 +49,9 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   add_index "activity_words", ["activity_type_id"], name: "index_activity_words_on_activity_type_id"
 
   create_table "challenges", force: true do |t|
-    t.integer  "sender_id"
-    t.integer  "receiver_id"
-    t.text     "content"
-    t.integer  "status",      default: 1
-    t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "challenges", ["receiver_id"], name: "index_challenges_on_receiver_id"
-  add_index "challenges", ["sender_id"], name: "index_challenges_on_sender_id"
 
   create_table "comments", force: true do |t|
     t.integer  "activity_type_id"
@@ -87,14 +76,24 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   add_index "friends", ["friend_id"], name: "index_friends_on_friend_id"
   add_index "friends", ["user_id"], name: "index_friends_on_user_id"
 
+  create_table "friendships", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "first_id"
+    t.integer  "second_id"
+  end
+
+  add_index "friendships", ["first_id"], name: "index_friendships_on_first_id"
+  add_index "friendships", ["second_id"], name: "index_friendships_on_second_id"
+
   create_table "goal_types", force: true do |t|
     t.integer  "guide_id"
     t.integer  "activity_type_id"
     t.integer  "measurement_type_id"
     t.boolean  "is_repeated"
     t.boolean  "requires_greater"
-    t.float    "measurement_value"
-    t.integer  "days_to_complete"
+    t.float    "measure_value"
+    t.integer  "seconds_to_complete"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -106,9 +105,7 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   create_table "goals", force: true do |t|
     t.integer  "goal_type_id"
     t.integer  "activity_id"
-    t.integer  "completing_measurement_id"
-    t.datetime "start_time"
-    t.boolean  "active"
+    t.integer  "num_times_completed"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -127,21 +124,21 @@ ActiveRecord::Schema.define(version: 20140514061725) do
     t.datetime "updated_at"
   end
 
-  create_table "happiness_categories_questions", force: true do |t|
+  create_table "happiness_categories_happiness_questions", force: true do |t|
     t.integer "happiness_category_id"
     t.integer "happiness_question_id"
   end
 
   create_table "happiness_questions", force: true do |t|
     t.text     "content"
-    t.integer  "max_score"
+    t.float    "max_score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "happiness_responses", force: true do |t|
     t.integer  "happiness_question_id"
-    t.integer  "value"
+    t.float    "value"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -177,16 +174,14 @@ ActiveRecord::Schema.define(version: 20140514061725) do
   add_index "measurements", ["measurement_type_id"], name: "index_measurements_on_measurement_type_id"
 
   create_table "messages", force: true do |t|
-    t.integer  "sender_id"
-    t.integer  "receiver_id"
-    t.text     "content"
-    t.text     "quote"
-    t.text     "sender_sig"
-    t.text     "receiver_sig"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.integer  "challenge_id"
   end
 
+  add_index "messages", ["challenge_id"], name: "index_messages_on_challenge_id"
   add_index "messages", ["receiver_id"], name: "index_messages_on_receiver_id"
   add_index "messages", ["sender_id"], name: "index_messages_on_sender_id"
 
@@ -210,12 +205,12 @@ ActiveRecord::Schema.define(version: 20140514061725) do
     t.integer  "phone"
     t.string   "username"
     t.string   "remember_token"
-    t.string   "country"
-    t.string   "city"
-    t.integer  "readable_comments_count"
-    t.integer  "readable_responses_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
