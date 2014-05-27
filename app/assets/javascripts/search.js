@@ -143,6 +143,7 @@ function create_new_activity(new_activity_str) {
     console.log("hey there once again.", new_activity_str);
     selectedStr = new_activity_str;
     show_form('new');
+    document.getElementById('results').innerHTML = '';
 }
 
 function get_data_for_activity(selected_str) {
@@ -169,13 +170,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        var results = document.getElementsByClassName('result');
-        while(results.length > 0) {
-            elem = results[0];
-            next_br = elem.nextSibling;
-            elem.parentNode.removeChild(elem);
-            next_br.parentNode.removeChild(next_br);
-        }
+        document.getElementById('results').innerHTML = '';
         if(json['user_does_activity']) {
             show_form('add');
             update_graph(json['recent_measurements'], json['measurement_types']);
@@ -284,6 +279,7 @@ function update_friends(friends) {
     }
 }
 
+// Update suggested 
 function update_suggested(suggestedName) {
     console.log(suggestedName);
     if(suggestedName) {
@@ -309,6 +305,7 @@ function commit_new_measurement_form() {
     var xhr = new XMLHttpRequest();
     var url = "/create_activity?";
     var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0]) + "&measure2=" + encodeURIComponent(measurements[1]);
+    console.log(url + params);
     xhr.open("GET", url + params, true);
     xhr.onreadystatechange = xhrHandler;
     function xhrHandler() {
