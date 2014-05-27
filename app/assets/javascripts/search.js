@@ -85,22 +85,22 @@ function searchMore() {
         json  = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], false);
-        if(json['user_does_activity']) {
-            update_friends(json['friends']);
-            update_graph(json['recent_measurements'], json['measurement_types']);
-            show_form('add');
-            update_suggested(json['spellings_sugs'][0]);
-        } else if (json['query_activity_exists']) {
-            update_friends(json['friends']);
-            update_graph(json['recent_measurements'], json['measurement_types']);
-            show_form('new');
-            update_suggested(json['spellings_sugs'][0]);
-        } else {
-            update_friends([]);
-            update_graph(json['recent_measurements'], json['measurement_types']);
-            show_form('new');
-            update_suggested(json["spellings_sugs"][0]);
-        }
+        // if(json['user_does_activity']) {
+        //     update_friends(json['friends']);
+        //     update_graph(json['recent_measurements'], json['measurement_types']);
+        //     show_form('add');
+        //     update_suggested(json['spellings_sugs'][0]);
+        // } else if (json['query_activity_exists']) {
+        //     update_friends(json['friends']);
+        //     update_graph(json['recent_measurements'], json['measurement_types']);
+        //     show_form('new');
+        //     update_suggested(json['spellings_sugs'][0]);
+        // } else {
+        //     update_friends([]);
+        //     update_graph(json['recent_measurements'], json['measurement_types']);
+        //     show_form('new');
+        //     update_suggested(json["spellings_sugs"][0]);
+        // }
     }
     console.log("more search started");
 }
@@ -177,29 +177,64 @@ function get_data_for_activity(selected_str) {
         json  = this.responseText;
         json = JSON.parse(json);
         var results = document.getElementsByClassName('result');
-        for(index in results) {
-            elem = results[index];
-            console.log("elem", elem.innerHTML);
-            console.log("selected", selected_str);
-            if(elem.innerHTML != selected_str) {
-                console.log("not a match", elem.innerHTML);
-                elem.style.display = "none";
-                elem.nextSibling.style.display = "none"; // Gets ride of next <br> tag
-            }
+        while(results.length > 0) {
+            elem = results[0];
+            next_br = elem.nextSibling;
+            elem.parentNode.removeChild(elem);
+            next_br.parentNode.removeChild(next_br);
+        }
+        if(json['user_does_activity']) {
+            show_form('add');
+            update_graph(json['recent_measurements'], json['measurement_types']);
+        } else {
+            show_form('new');
         }
     }
+}
+
+function setChart(recent_measurements, measurement_types) {
     new Highcharts.Chart({
-        chart: { renderTo: 'activity_chart' },
-        title: { text: str },
-        xAxis: { type: 'datetime' },
-        yAxis: {
-            title: { text: 'Dollars'}
-        },
+        chart: { renderTo: 'activity_chart' }, // name of div to be filled with content
+        title: { text: str }, // title of current activity
+        xAxis: { type: 'datetime' }, // x axis will be based on time
+        
+
+
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}°C',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'measure2',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            opposite: true
+
+        }, { // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'measure1',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} mm',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            }
+
+        }],
         series: [{
             data: [1, 2, 5, 7, 3]
         }]
     });
-    show_form('add');
 }
 
 function show_form(option) {
@@ -211,7 +246,6 @@ function show_form(option) {
         clear_form_values();
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('add_new_measurement_button').style.display = 'block';
-        document.getElementById('graph_box').style.display = 'block';
     } else if(option == "new") {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "block";
@@ -238,10 +272,11 @@ function clear_form_values() {
 }
 
 function update_graph(recent_measurements, measurement_types) {
-    if(measurement_types) { // doesn't work well on seeds because seeds are set up incorrectly.
-        document.getElementById("graph").style.display = 'block';
+    if(recent_measurements) {
+        document.getElementById("graph_box").style.display = 'block';
+        setChart(recent_measurements, measurement_types);
     } else {
-        document.getElementById("graph").style.display = 'none';
+        document.getElementById("graph_box").style.display = 'none';
     }
 }
 
@@ -369,6 +404,13 @@ function validate_new_form() {
     return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
 }
 
+function validate_add_form() {
+    // if(!document.forms["new_activity"][0].value && document.forms["new_activity"][1].value) {
+    //    document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
+    //    document.forms["new_activity"][1].value = '';
+    // }
+    // return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
+}
 
 // SAMPLE RESPONSE
 
