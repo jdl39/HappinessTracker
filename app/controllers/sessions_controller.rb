@@ -5,13 +5,18 @@ class SessionsController < ApplicationController
 	end
 
 	def create
-		user = User.find_by(username: params[:session][:username])
-		if (user && user.authenticate(params[:session][:password]))
-			sign_in user
-		else
-			flash.now[:error] = "Invalid username/password."
-		end
-		redirect_to controller: 'users', action: 'index'
+        user = User.from_omniauth(env["omniauth.auth"]) if env["omniauth.auth"]
+        if user
+            sign_in user
+        else
+            user = User.find_by(username: params[:session][:username]) if user.nil?
+            if (user && user.authenticate(params[:session][:password]))
+                sign_in user
+            else
+                flash.now[:error] = "Invalid username/password."
+            end
+        end
+        redirect_to controller: 'users', action: 'index'
 	end
 
 	def destroy
