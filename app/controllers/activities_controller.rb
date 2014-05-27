@@ -21,11 +21,13 @@ class ActivitiesController < ApplicationController
         p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
+        p "activity type", activity_type
         activity_type = create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
     	if activity.save
+            p "Save successful!"
             activity.activity_type.num_users = activity.activity_type.num_users + 1 # TODO: Could this cause race conditions?
     		# Now, apply the measurement types.
             measurements = [params[:measure1], params[:measure2]]
@@ -50,9 +52,10 @@ class ActivitiesController < ApplicationController
                 end
                 activity.measurement_types << measurement
             end
+            activity.save
     	else
     		# Activity couldn't save
-            p "could not save activity"
+            p "Could not save activity"
             to_return["hapapp_error"] = "Could not save activity."
             to_return["errors"] = activity.errors.full_messages
             render json: to_return
