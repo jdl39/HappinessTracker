@@ -2,23 +2,23 @@
     <div id="left-panel">
         <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus autocomplete="off">
         <div id="results"></div>
-        <div id="suggested"></div>
+        <!-- <div id="suggested"></div> -->
 
         <div id="friends-panel" class="no_display">
-            <h4>Friends who also <span class="activity_header">""</span></h4>
+            <h4>Friends who also <span class="activity_header"></span></h4>
             <div id="friends-list"></div>
         </div>
     </div>
     <div id="right-panel">
         <div id="graph_box" class="no_display">
             <div id="activity_chart" style="width:560px; height:300px; margin: 0 auto"></div>
-            <h3 class="activity_header"><b>""</b></h3>
+            <!-- <h3 class="activity_header"><b></b></h3> -->
         </div>
         <div>
             <form class="activity_form no_display" id="new_activity">
                 <h3>Track a new activity!</h3>
-                <p>How do you want to measure <span class="activity_header">""</span>?</p>
-    <!--             <p>Users most commonly store <span class="activity_header">""</span> by: lbs.</p> -->
+                <p>How do you want to measure <span class="activity_header"></span>?</p>
+    <!--             <p>Users most commonly store <span class="activity_header"></span> by: lbs.</p> -->
                 <p>If you don't need to track anything specific about <span class="activity_header"></span>, please leave the field blank.</p>
                 <input class="measurements" type="text" name="measure1" placeholder="first measurement"><br>
                 <input class="measurements no_display" type="text" name="measure2" id="second_measurement" placeholder="second measurement">
@@ -28,7 +28,7 @@
         </div>
         <div>
             <form class="activity_form no_display" id="add_activity">
-                <h3>Track Your Recent Activity</h3>
+                <h3>Track <span class="activity_header"></span>!</h3>
                 <span id="no_measure"></span>
                 <div id="measure_input1"><span id="input_measure1"></span>: <input class="measurements" type="text" name="measure1"></div>
                 <div id="measure_input2"><span id="input_measure2"></span>: <input class="measurements" type="text" name="measure2"></div>

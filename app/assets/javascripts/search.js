@@ -1,8 +1,10 @@
 inputs = [];
 prev = '';
 displayed_results = [];
+str = '';
 
 function search() {
+    if(str == document.getElementById('search').value.trim()) return;
     str = document.getElementById('search').value.trim();
     // updateActivityName(str);
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
@@ -17,10 +19,14 @@ function search() {
     // searchMore();
 }
 
-function set_headers() {
+function set_headers(header) {
     var elements = document.getElementsByClassName('activity_header');
     for (var element in elements) {
-        (elements[element]).innerHTML = str;
+        if(header) {
+            (elements[element]).innerHTML = header;
+        } else {
+            (elements[element]).innerHTML = str;            
+        }
     }
 }
 
@@ -146,25 +152,12 @@ function create_new_activity(new_activity_str) {
     show_form('new');
 }
 
-$(function () {
-    // var data = 
-    new Highcharts.Chart({
-        chart: { renderTo: 'activity_chart' },
-        title: { text: 'Activities' },
-        xAxis: { type: 'datetime' },
-        yAxis: {
-            title: { text: 'Dollars'}
-        },
-        series: [{
-            data: [1, 2, 5, 7, 3]
-        }]
-    });
-});
-
-
 function get_data_for_activity(selected_str) {
     console.log("hey", selected_str);
     selectedStr = selected_str;
+    str = selected_str;
+    document.getElementById('search').value = selected_str;
+    set_headers(selected_str);
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
@@ -183,7 +176,6 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        set_headers(selected_str);
         var results = document.getElementsByClassName('result');
         for(index in results) {
             elem = results[index];
@@ -196,6 +188,17 @@ function get_data_for_activity(selected_str) {
             }
         }
     }
+    new Highcharts.Chart({
+        chart: { renderTo: 'activity_chart' },
+        title: { text: str },
+        xAxis: { type: 'datetime' },
+        yAxis: {
+            title: { text: 'Dollars'}
+        },
+        series: [{
+            data: [1, 2, 5, 7, 3]
+        }]
+    });
     show_form('add');
 }
 
@@ -203,6 +206,7 @@ function show_form(option) {
     if(option == "add") {
         console.log('add');
         document.forms["add_activity"].style.display = "block";
+        document.forms["add_activity"][0].focus();
         document.forms["new_activity"].style.display = "none";
         clear_form_values();
         document.getElementById('second_measurement').style.display = 'none';
@@ -211,6 +215,7 @@ function show_form(option) {
     } else if(option == "new") {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "block";
+        document.forms["new_activity"][0].focus();
         clear_form_values();
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('add_new_measurement_button').style.display = 'block';
@@ -265,6 +270,7 @@ function update_suggested(suggestedName) {
 
 function add_measurement_form() {
     document.getElementById('second_measurement').style.display = 'block';
+    document.forms["new_activity"][1].focus();
     document.getElementById('add_new_measurement_button').style.display = 'none';
 }
 
