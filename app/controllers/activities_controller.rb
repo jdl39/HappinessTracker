@@ -21,11 +21,13 @@ class ActivitiesController < ApplicationController
         p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
+        p "activity type", activity_type
         activity_type = create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
     	if activity.save
+            p "Save successful!"
             activity.activity_type.num_users = activity.activity_type.num_users + 1 # TODO: Could this cause race conditions?
     		# Now, apply the measurement types.
             measurements = [params[:measure1], params[:measure2]]
@@ -50,9 +52,10 @@ class ActivitiesController < ApplicationController
                 end
                 activity.measurement_types << measurement
             end
+            activity.save
     	else
     		# Activity couldn't save
-            p "could not save activity"
+            p "Could not save activity"
             to_return["hapapp_error"] = "Could not save activity."
             to_return["errors"] = activity.errors.full_messages
             render json: to_return
@@ -176,7 +179,10 @@ class ActivitiesController < ApplicationController
 
         friends = current_user.friends
         #puts "yo"
-        top_activities = Activity.where(activity_type_id: params[:top_result_id])
+
+        top_result_id = ActivityType.find_by(name: params[:str]).id
+        top_activities = Activity.where(activity_type_id: top_result_id)
+        #top_activities = Activity.where(activity_type_id: params[:top_result_id])
 
         if top_activities.empty?
             render json: {
@@ -189,7 +195,7 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        #p top_activities
+        p "Top: " + top_activities.to_s
         user_activity = top_activities.select{|activity| activity.user = current_user}.first
         #p user_activity
         user_does_activity = !user_activity.nil?
