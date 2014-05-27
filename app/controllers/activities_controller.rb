@@ -107,17 +107,20 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        measurements = [params[:measure1], params[:measure2]]
-        for measurement_name in measurements do
+        measurements = [[params[:measure1], params[:value1]], [params[:measure2], params[:value2]]]
+        for measurement_array in measurements do
+            measurement_name = measurement_array[0]
+            measurement_value = measurement_array[1].to_f
+            p "LOOK AT ME", measurement_value
             if measurement_name
-                measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                measurement_name = measurement_name.downcase
                 measurement_type = MeasurementType.find_by(name: measurement_name)
                 if measurement_type.nil?
                     to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                     next
                 end
+                activity.user.log_new_measurement(activity, measurement_type, measurement_value)
             end
-            activity.user.log_new_measurement(activity, measurement_type, measurement.value = json[:measurements][measurement_name])
         end
 
         # TODO: Do we need more to return in the json?
@@ -207,7 +210,8 @@ class ActivitiesController < ApplicationController
         if user_does_activity
             # get user's personal data for the activity
             measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
-            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            # recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC')
             recent_measurement_notes = recent_measurements.map(&:measurement_note)
         else
             # get the most common measurement for the topmost activity

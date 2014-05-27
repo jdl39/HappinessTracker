@@ -342,8 +342,9 @@ function commit_add_measurement_form() {
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/track_activity?";
-    var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0]) + "&measure2=" + encodeURIComponent(measurements[1]);
+    var params = "activity_name=" + encodeURIComponent(selectedStr) + "&measure1=" + encodeURIComponent(measurements[0][0]) + '&value1=' + encodeURIComponent(measurements[0][1]) + "&measure2=" + encodeURIComponent(measurements[1][0]) + "&value2=" + encodeURIComponent(measurements[1][1]);
     xhr.open("GET", url + params, true);
+    console.log(url + params);
     xhr.onreadystatechange = xhrHandler;
     function xhrHandler() {
         if(str != cur_str) return;
@@ -414,11 +415,13 @@ function validate_add_form() {
     if(error) {
         return null;
     } else {
+        var measure1 = document.getElementById('input_measure1').innerHTML;
+        var measure2 = document.getElementById('input_measure2').innerHTML;
         var value_1 = document.forms["add_activity"][0].value;
         var value_2 = document.forms["add_activity"][1].value;
         document.forms["add_activity"][0].value = '';
         document.forms["add_activity"][1].value = '';
-        return [value_1, value_2];    
+        return [[measure1, value_1], [measure2, value_2]];    
     }
 }
 
