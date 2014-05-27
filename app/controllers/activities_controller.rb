@@ -176,7 +176,10 @@ class ActivitiesController < ApplicationController
 
         friends = current_user.friends
         #puts "yo"
-        top_activities = Activity.where(activity_type_id: params[:top_result_id])
+
+        top_result_id = ActivityType.find_by(name: params[:str]).id
+        top_activities = Activity.where(activity_type_id: top_result_id)
+        #top_activities = Activity.where(activity_type_id: params[:top_result_id])
 
         if top_activities.empty?
             render json: {
@@ -189,7 +192,7 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        #p top_activities
+        p "Top: " + top_activities.to_s
         user_activity = top_activities.select{|activity| activity.user = current_user}.first
         #p user_activity
         user_does_activity = !user_activity.nil?
