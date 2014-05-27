@@ -12,17 +12,17 @@ class CreateResponses < ActiveRecord::Migration
 
     create_table :response_readers do |t|
       t.references :user
-      t.references :comment
+      t.references :response
     end
 
     create_table :response_up_voters do |t|
       t.references :user
-      t.references :comment
+      t.references :response
     end
 
     create_table :response_down_voters do |t|
       t.references :user
-      t.references :comment
+      t.references :response
     end
   end
 end

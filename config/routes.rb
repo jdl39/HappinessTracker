@@ -6,6 +6,9 @@ HappinessApp::Application.routes.draw do
   post 'users/login' => 'users#login'
   get 'new' => 'users#new'
 
+  match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
+  match 'auth/failure', to: redirect('/'), via: [:get, :post]
+
   resources :users
   resources :sessions, only: [:create, :destroy] # removed "new"
   match '/signup',  to: 'users#new',            via: 'get'
