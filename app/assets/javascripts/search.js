@@ -8,13 +8,10 @@ function search() {
     str = document.getElementById('search').value.trim();
     // updateActivityName(str);
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
-    // console.log(str);
     if(str) {
         set_headers();
     }
     show_form('');
-    // hide_panels();
-    // show_form('new');
     searchInitial();
     // searchMore();
 }
@@ -28,11 +25,6 @@ function set_headers(header) {
             (elements[element]).innerHTML = str;            
         }
     }
-}
-
-function hide_panels() {
-    document.getElementById('friends-panel').style.display = "none";;   
-    document.getElementById('right-panel').style.display = "none";;   
 }
 
 function searchInitial() {
@@ -85,6 +77,7 @@ function searchMore() {
         json  = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], false);
+
         // if(json['user_does_activity']) {
         //     update_friends(json['friends']);
         //     update_graph(json['recent_measurements'], json['measurement_types']);
@@ -162,7 +155,7 @@ function get_data_for_activity(selected_str) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_get_specific_data?str=';
-    xhr.open("GET", url+encodeURIComponent(selected_str), true); 
+    xhr.open("GET", url + encodeURIComponent(selected_str), true); 
     xhr.send();
     function xhrHandler() {
         if(str != cur_str) return;
@@ -186,6 +179,7 @@ function get_data_for_activity(selected_str) {
         if(json['user_does_activity']) {
             show_form('add');
             update_graph(json['recent_measurements'], json['measurement_types']);
+            update_add_form_inputs(json['measurement_types']);
         } else {
             show_form('new');
         }
@@ -197,9 +191,6 @@ function setChart(recent_measurements, measurement_types) {
         chart: { renderTo: 'activity_chart' }, // name of div to be filled with content
         title: { text: str }, // title of current activity
         xAxis: { type: 'datetime' }, // x axis will be based on time
-        
-
-
         yAxis: [{ // Primary yAxis
             labels: {
                 format: '{value}°C',
@@ -269,6 +260,8 @@ function clear_form_values() {
     document.forms["add_activity"][1].value = "";
     document.forms["new_activity"][0].value = "";
     document.forms["new_activity"][1].value = "";
+    document.getElementById('measure1_error').style.display = "none";
+    document.getElementById('measure2_error').style.display = "none";
 }
 
 function update_graph(recent_measurements, measurement_types) {
@@ -330,32 +323,18 @@ function commit_new_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        if(json['measurement_types']) {
-            if(json['measurement_types'][0]) {
-                document.getElementById('input_measure1').innerHTML = json['measurement_types'][0];
-            } else {
-                document.getElementById('measure_input1').style.display = 'none';
-            }
-            if(json['measurement_types'][1]) {
-                document.getElementById('input_measure2').innerHTML = json['measurement_types'][1];
-            } else {
-                document.getElementById('measure_input2').style.display = 'none';
-            }
-        } else {
-            document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
-            document.getElementById('measure_input1').style.display = 'none';
-            document.getElementById('measure_input2').style.display = 'none';
-        }
+        update_add_form_inputs(json['measurement_types']);
         show_form('add');
     }
-    xhr.send(params);
+    xhr.send();
 }
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
     console.log("Submitting new measurement");
 
-    var measurements = validate_new_form();
+    var measurements = validate_add_form();
+    if(measurements == null) return; // form was not properly filled out
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/track_activity?";
@@ -374,25 +353,31 @@ function commit_add_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        if(json['measurement_types']) {
-            if(json['measurement_types'][0]) {
-                document.getElementById('input_measure1').innerHTML = json['measurement_types'][0];
-            } else {
-                document.getElementById('measure_input1').style.display = 'none';
-            }
-            if(json['measurement_types'][1]) {
-                document.getElementById('input_measure2').innerHTML = json['measurement_types'][1];
-            } else {
-                document.getElementById('measure_input2').style.display = 'none';
-            }
-        } else {
-            document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
-            document.getElementById('measure_input1').style.display = 'none';
-            document.getElementById('measure_input2').style.display = 'none';
-        }
+        update_graph(json['recent_measurements'], json['measurement_types']);
     }
-    xhr.send(params);
-    show_form('add');
+    xhr.send();
+}
+
+function update_add_form_inputs(measurements) {
+    console.log("measurements to be displayed", measurements);
+    if(measurements && measurements.length != 0) {
+        if(measurements[0]) {
+            document.getElementById('input_measure1').innerHTML = measurements[0];
+        } else {
+            document.getElementById('measure_input1').style.display = 'none';
+            document.getElementById('measure1_error').style.display = 'none';
+        }
+        if(measurements[1]) {
+            document.getElementById('input_measure2').innerHTML = measurements[1];
+        } else {
+            document.getElementById('measure_input2').style.display = 'none';
+            document.getElementById('measure2_error').style.display = 'none';
+        }
+    } else {
+        document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
+        document.getElementById('measure_input1').style.display = 'none';
+        document.getElementById('measure_input2').style.display = 'none';
+    }
 }
 
 // method that will check the two measurement forms that are submitted through ajax on this page
@@ -404,12 +389,30 @@ function validate_new_form() {
     return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
 }
 
+// check if form is properly filled out and returns form data if completed
 function validate_add_form() {
-    // if(!document.forms["new_activity"][0].value && document.forms["new_activity"][1].value) {
-    //    document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
-    //    document.forms["new_activity"][1].value = '';
-    // }
-    // return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
+    var  error  = false;
+    if(document.forms["add_activity"][0].style.display != 'none') {
+        if(document.forms["add_activity"][0].value == '') {
+            document.getElementById('measure1_error').style.display = 'block';
+            error = true;
+        }
+    }
+    if(document.forms["add_activity"][1].style.display != 'none') {
+        if(document.forms["add_activity"][1].value == '') {
+            document.getElementById('measure2_error').style.display = 'block';
+            error = true;
+        }
+    }
+    if(error) {
+        return null;
+    } else {
+        var value_1 = document.forms["add_activity"][0].value;
+        var value_1 = document.forms["add_activity"][1].value;
+        document.forms["add_activity"][0].value = '';
+        document.forms["add_activity"][1].value = '';
+        return [value_1, value_2];    
+    }
 }
 
 // SAMPLE RESPONSE
