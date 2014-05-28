@@ -15,6 +15,8 @@ green             : #9FFF4B
 blue              : #00aadd
 dark blue         : #1A35B2
 
+other green       : rgb(123,214,190)
+
 neutral-lightest  : #ddd
 neutral-light     : #aaa
 neutral-mid       : #999
@@ -233,6 +235,11 @@ footer {
   MISC
 ============================================================ */
 
+.time {
+  font-size: 12px;
+  color: #aaa;
+}
+
 .result {
   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #dddddd));
   background:-moz-linear-gradient(top, #cccccc 5%, #dddddd 100%);
@@ -364,6 +371,31 @@ footer {
 ============================================================ */
 
 .profile-name {
-  
+  text-align: center;
+  /*background-color: rgb(123,214,190);*/
+  border-left-style: solid;
+  border-right-style: solid;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
 }
 
+.profile-name h1 {
+  font-weight: bold;
+}
+
+.profile-recent li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  /*background-color: rgb(123,214,190);*/
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.profile-recent a {
+  color: #00aadd;
+}

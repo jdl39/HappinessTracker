@@ -45,6 +45,7 @@ class UsersController < ApplicationController
 			  render 'friend_profile'
 		  else
 			  # Render non-friend page
+          @newsfeed_hashes = gather_newsfeed_entries(@viewed_user.id)
 		      @friend_request_exists = friend_request_exists(current_user.id, @viewed_user.id)
 			  render 'non_friend_profile'
 	      end
