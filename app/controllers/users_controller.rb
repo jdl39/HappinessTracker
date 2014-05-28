@@ -91,11 +91,13 @@ class UsersController < ApplicationController
       # username
       # password
     @user = User.new(user_params)
-    if @user.save
+    if @user.valid? && @user.save
       sign_in @user
       redirect_to action: 'home'
     else
-      render 'index'
+      p @user.errors.messages
+      flash.now[:error] = @user.errors.messages
+      render 'index', :layout => false
     end
   end
 
