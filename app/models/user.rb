@@ -14,9 +14,9 @@ class User < ActiveRecord::Base
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  	#validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
-	#validates :first_name, presence: true
-	#validates :last_name, presence: true
+  	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
+	validates :first_name, presence: true
+	validates :last_name, presence: true
 
 	before_save { self.email = email.downcase }
 
@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
           name = auth.info.name
           user.username = name + user.uid
           user.first_name = name.split[0]
-          user.last_name = name.split[1]
+          user.last_name = name.split[1].nil? ? "" : name.split[1]
           user.oauth_token = auth.credentials.token
           user.oauth_expires_at = Time.at(auth.credentials.expires_at)
           user.password = SecureRandom.urlsafe_base64
