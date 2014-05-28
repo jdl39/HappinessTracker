@@ -1,3 +1,5 @@
+// TODO: create reply buttons for creating (1) activity comment (2) response to comment (3) response (pm) to a response
+
 function load_new_comments(activity_type_id) {
 // TODO: show upvote
     $.get( "get_comments?activity_type_id=" + activity_type_id + "&num_needed=3", function( data ) {
@@ -31,6 +33,9 @@ function new_comment_box(comment_id) {
     <button class="show_responses">\
         show responses \
     </button>\
+    <button class="add_response">\
+        reply \
+    </button>\
 </div>'))
     $("#new_comment_box").attr("id","comment_box_" + comment_id)
     var box = $("#comment_box_" + comment_id)
@@ -40,7 +45,6 @@ function new_comment_box(comment_id) {
 
 function load_new_responses(comment_id) {
 // TODO: show upvote
-    console.log("NEW RESPONSES!!!")
     $("#comment_box_" + comment_id).find(".show_responses").remove()
     $("#comment_box_" + comment_id).find(".show_more_responses").remove()
     $.get( "get_responses?comment_id=" + comment_id + "&num_needed=3", function( data ) {
@@ -77,6 +81,9 @@ function new_response_box(comment_id, response_id) {
     </div> \
     <div class="signature_box"> \
     </div> \
+    <button class="add_r_response">\
+        reply \
+    </button>\
 </div>'))
     $("#new_response_box").attr("id","response_box_" + response_id)
     var box = $("#response_box_" + response_id)
@@ -84,14 +91,14 @@ function new_response_box(comment_id, response_id) {
     return box
 }
 
-//TODO: use username as default value for signature
-
 $(document).ready(function() {
     load_new_comments(2)
     $("#show_more_comments").click(function() {
         load_new_comments(2)
     })
-    $("#add_new_comment").click(function() {
+    $(".new_comment").click(function() {
+    })
+    $("#submit_new_comment").click(function() {
         var data = {}
         data["activity_type_id"] = 2
         data["content"] = $("#new_comment").val()
@@ -106,7 +113,9 @@ $(document).ready(function() {
         var comment_box = $(this).parentsUntil(".comment_box")
         $.post("down_comment", {"comment_id" : comment_box.find(".comment_id").val()})
     })
-    $("#add_new_response").click(function() {
+    $(".new_response").click(function() {
+    })
+    $("#submit_new_response").click(function() {
         var data = {}
         data["comment_id"] = $(".comment_id").val()
         data["content"] = $("#new_response").val()
@@ -121,4 +130,17 @@ $(document).ready(function() {
         var comment_box = $(this).parentsUntil(".response_box")
         $.post("down_response", {"response_id" : comment_box.find(".response_id").val()})
     })
+    // r_response: a personal message responding to a response; in short, a response response
+    $(".new_r_response").click(function() {
+    })
+    $("#submit_new_resply").click(function() {
+    })
 })
+
+function create_text_box() {
+    html =
+'   <textarea id="new_comment"> \
+    </textarea> \
+    <input type="text" id="signature" value="<%= current_user.username %>"> \
+    </input> '
+}

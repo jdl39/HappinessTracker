@@ -347,6 +347,7 @@ class ActivitiesController < ApplicationController
     def addComment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters - yourself
+        # TODO: if - yourself, then need to flash feedback
         render nothing: true
     end
 
