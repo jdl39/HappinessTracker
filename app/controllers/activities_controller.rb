@@ -21,11 +21,13 @@ class ActivitiesController < ApplicationController
         p "activity name", activity_name
         # Find activity type.
         activity_type = ActivityType.find_by(name: activity_name)
+        p "activity type", activity_type
         activity_type = create_activity_type(activity_name) if activity_type.nil?
 
         # Save the activity.
     	activity.activity_type = activity_type
     	if activity.save
+            p "Save successful!"
             activity.activity_type.num_users = activity.activity_type.num_users + 1 # TODO: Could this cause race conditions?
     		# Now, apply the measurement types.
             measurements = [params[:measure1], params[:measure2]]
@@ -50,9 +52,10 @@ class ActivitiesController < ApplicationController
                 end
                 activity.measurement_types << measurement
             end
+            activity.save
     	else
     		# Activity couldn't save
-            p "could not save activity"
+            p "Could not save activity"
             to_return["hapapp_error"] = "Could not save activity."
             to_return["errors"] = activity.errors.full_messages
             render json: to_return
@@ -88,7 +91,7 @@ class ActivitiesController < ApplicationController
         to_return = {}
 
         # Check to ensure that such an activity type exists.
-        activity_name = params[:activity_name].split.map(&:capitalize).join(' ')
+        activity_name = params[:activity_name].downcase
         activity_type = ActivityType.find_by(name: activity_name)
         if activity_type.nil?
             to_return["hapapp_error"] = "There is no activity type with that name."
@@ -104,17 +107,20 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        measurements = [params[:measure1], params[:measure2]]
-        for measurement_name in measurements do
+        measurements = [[params[:measure1], params[:value1]], [params[:measure2], params[:value2]]]
+        for measurement_array in measurements do
+            measurement_name = measurement_array[0]
+            measurement_value = measurement_array[1].to_f
+            p "LOOK AT ME", measurement_value
             if measurement_name
-                measurement_name = measurement_name.split.map(&:capitalize).join(' ')
+                measurement_name = measurement_name.downcase
                 measurement_type = MeasurementType.find_by(name: measurement_name)
                 if measurement_type.nil?
                     to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                     next
                 end
+                activity.user.log_new_measurement(activity, measurement_type, measurement_value)
             end
-            activity.user.log_new_measurement(activity, measurement_type, measurement.value = json[:measurements][measurement_name])
         end
 
         # TODO: Do we need more to return in the json?
@@ -175,9 +181,28 @@ class ActivitiesController < ApplicationController
         recent_measurements = []
 
         friends = current_user.friends
-        top_activities = Activity.where(activity_type_id: params[:top_result_id])
+        #puts "yo"
+
+        top_result_id = ActivityType.find_by(name: params[:str]).id
+        top_activities = Activity.where(activity_type_id: top_result_id)
+        #top_activities = Activity.where(activity_type_id: params[:top_result_id])
+
+        if top_activities.empty?
+            render json: {
+                user_does_activity: false,
+                friends: [],
+                measurement_types: [],
+                recent_measurements: [],
+                recent_measurement_notes: []
+            }
+            return
+        end
+
+        p "Top: " + top_activities.to_s
         user_activity = top_activities.select{|activity| activity.user = current_user}.first
+        #p user_activity
         user_does_activity = !user_activity.nil?
+        #p user_does_activity
         friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
         friends = []
         friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
@@ -185,7 +210,8 @@ class ActivitiesController < ApplicationController
         if user_does_activity
             # get user's personal data for the activity
             measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
-            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            # recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
+            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC')
             recent_measurement_notes = recent_measurements.map(&:measurement_note)
         else
             # get the most common measurement for the topmost activity
