@@ -1,4 +1,6 @@
-<h1><u>My PROFILE</u></h1>
+<div class="profile-name">
+  <h1><%= current_user.first_name %> <%= current_user.last_name %></h1>
+</div>
 <ul class="my-profile-recent">
   <% @newsfeed_hashes.each do |item| %>
   <li>

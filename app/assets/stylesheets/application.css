@@ -279,4 +279,91 @@ footer {
   padding: 5px;
 }
 
+/* ============================================================
+  LOGIN FORM
+============================================================ */
+
+#login-form {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+  margin-top: 64px;
+  margin-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 56%;
+  padding: 16px;
+  /*background-color: rgb(200,200,200);*/
+}
+
+#login-form h1 {
+  margin-left: auto;
+  margin-right: auto;
+  width: 32%;
+  margin-bottom: 42px;
+}
+
+#login-form ul li {
+  margin-bottom: 8px;
+}
+
+#login-form input[type=text],
+#login-form input[type=password] {
+  height: 24px;
+}
+
+#login-form a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  CREATE ACCOUNT FORM
+============================================================ */
+
+#create-account-form {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+  margin-top: 64px;
+  margin-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 56%;
+  padding: 16px;
+/*  background-color: rgb(220,156,104); */
+  display: none;
+}
+
+#create-account-form h1 {
+  margin-left: auto;
+  margin-right: auto;
+  width: 44%;
+  margin-bottom: 42px;
+}
+
+#create-account-form label {
+  /*background-color: rgb(220,220,220);*/
+  width: 35%;
+  margin-right: 13px;
+  display: inline-block;
+  text-align:right;
+}
+
+#create-account-form input[type=text],
+#create-account-form input[type=password] {
+  height: 24px;
+  width: 193px;
+}
+
+#create-account-form a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  PROFILE STYLES
+============================================================ */
+
+.profile-name {
+  
+}
 
