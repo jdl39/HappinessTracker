@@ -1,6 +1,19 @@
 <div id="content">
     <div id="left-panel">
-        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" onkeyup="search();" autofocus autocomplete="off">
+        <input id="search" type="text" name="activity" placeholder="What activity did you just do?" autofocus autocomplete="off">
+        <script type="text/javascript">
+            document.getElementById('search').onkeyup = function(e){
+                if (!e) e = window.event;
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == '13' && document.getElementById('search').value.trim() != ""){
+                    // Enter pressed
+                    console.log('entered pressed');
+                    pickIfMatching();                  
+                } else {
+                    search(keyCode == '13');
+                }
+            }
+        </script>
         <div id="results"></div>
         <!-- <div id="suggested"></div> -->
 

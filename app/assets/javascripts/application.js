@@ -14,6 +14,10 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//= require highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/themes/gray
+
 
 function toggleCreateAccountForm() {
 	var loginForm = document.getElementById("login-form");
