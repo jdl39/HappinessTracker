@@ -23,7 +23,7 @@ function new_comment_box(comment_id) {
         <button class="up_comment"> \
             up \
         </button> \
-        <button class="down_comment" onclick="hide(' + comment_box_id + ')"> \
+        <button class="down_comment" onclick="down_comment(' + comment_box_id + ')"> \
             down \
         </button> \
     </div> \
@@ -54,8 +54,14 @@ function new_comment_box(comment_id) {
     return box
 }
 
-function hide(box) {
+function down_comment(box) {
     box.style.display = "none"
+    $.post("down_comment", {"comment_id" : $("#" + box.id).find(".comment_id").val()})
+}
+
+function down_response(box) {
+    box.style.display = "none"
+    $.post("down_response", {"response_id" : $("#" + box.id).find(".response_id").val()})
 }
 
 function add_text_area(comment_box_id) {
@@ -98,7 +104,7 @@ function new_response_box(comment_id, response_id) {
         <button class="up_response"> \
             up \
         </button> \
-        <button class="down_response" onclick="hide(' + response_box_id + ')"> \
+        <button class="down_response" onclick="down_response(' + response_box_id + ')"> \
             down \
         </button> \
     </div> \
@@ -140,14 +146,14 @@ $(document).ready(function() {
         data["anonymous"] = $("#anonymous").val()
         $.post("add_comment", data)
     })
-    $(".up_comment").click(function() {
+    /*$(".up_comment").click(function() {
         var comment_box = $(this).parentsUntil(".comment_box")
         $.post("up_comment", {"comment_id" : comment_box.find(".comment_id").val()})
     })
     $(".down_comment").click(function() {
         var comment_box = $(this).parentsUntil(".comment_box")
         $.post("down_comment", {"comment_id" : comment_box.find(".comment_id").val()})
-    })
+    })*/
     $("#submit_new_response").click(function() {
         var data = {}
         data["comment_id"] = $(".comment_id").val()
@@ -155,14 +161,14 @@ $(document).ready(function() {
         data["anonymous"] = $("#anonymous").val()
         $.post("add_response", data)
     })
-    $(".up_response").click(function() {
+    /*$(".up_response").click(function() {
         var comment_box = $(this).parentsUntil(".response_box")
         $.post("up_response", {"response_id" : comment_box.find(".response_id").val()})
     })
     $(".down_response").click(function() {
         var comment_box = $(this).parentsUntil(".response_box")
         $.post("down_response", {"response_id" : comment_box.find(".response_id").val()})
-    })
+    })*/
     // r_response: a personal message responding to a response; in short, a response response
     $(".add_r_response").click(function() {
     })

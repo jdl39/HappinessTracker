@@ -361,55 +361,70 @@ class ActivitiesController < ApplicationController
         end 
     end
 
-    vote_threshold = -3
-    spread_amount = 5
+    $vote_threshold = -3
+    $spread_amount = 5
 
     # honestly don't know if I should've combined comment and response into single class
 
     # params: comment_index
     def up_comment
-        comment = Comment.where(id: params[:comment_id])
+        puts "up comment!"
+        comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if current_user.up_comments.map(&:id).include? comment.id
-        #return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        return if comment.up_voters.include? current_user
+        puts "not already up voted"
         comment.up_voters << current_user
-        comment.votes = comment.votes + 1
-        new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
+        comment.votes = comment.votes.to_i + 1
+        new_readers = User.limit($spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
         # is this adding correctly???
-        comment.readers << new_readers
+        comment.readers.concat new_readers
         comment.save
         #new_readers.each{|reader| reader.readable_comment
+        puts "finished"
     end
 
     # params: comment_index
     def down_comment
-        comment = Comment.where(id: params[:comment_id])
+        puts "down comment!"
+        comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        return if comment.down_voters.include? current_user
+        puts "not already down voted"
         comment.down_voters << current_user
-        comment.votes = comment.votes - 1
-        comment.readers.delete(:current_user)#:current_user.id???
-        comment.readers.delete_all if comment.votes < vote_threshold
+        comment.votes = comment.votes.to_i - 1
+        comment.up_voters.delete(:current_user)
+        comment.readers.delete(:current_user)
+        comment.readers.delete_all if comment.votes < $vote_threshold
         comment.save
+        puts "finished"
     end
 
     # params: response_index
     def up_response
-        response = session[:responses][params[:response_index]]
+        puts "up resonse! " + params[:respond_id]
+        response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return unless Response.where(id: params[:response_id], up_voter: current_user).empty?
-        response.votes = response.votes + 1
+        return if response.up_voters.include? current_user
+        puts "not already up voted"
+        response.votes = response.votes.to_i + 1
         # TODO: make new random readers besides downvoters
+        response.save
+        puts "finished"
     end
 
     # params: response_id
     def down_response
-        response = session[:responses][params[:response_index]]
+        puts "down response! " + params[:response_id]
+        response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return unless Response.where(id: params[:response_id], down_voter: current_user).empty?
-        response.votes = response.votes - 1
-        response.readers.delete(:current_user)#:current_user.id???
-        response.readers.delete_all if response.votes < vote_threshold
+        return if response.down_voters.include? current_user
+        puts "not already down voted"
+        response.votes = response.votes.to_i - 1
+        response.up_voters.delete(current_user)
+        response.readers.delete(current_user)
+        response.readers.delete_all if response.votes < $vote_threshold
+        response.save
+        puts "finished"
     end
 
 	private
