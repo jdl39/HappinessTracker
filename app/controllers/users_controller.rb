@@ -45,6 +45,7 @@ class UsersController < ApplicationController
 			  render 'friend_profile'
 		  else
 			  # Render non-friend page
+          @newsfeed_hashes = gather_newsfeed_entries(@viewed_user.id)
 		      @friend_request_exists = friend_request_exists(current_user.id, @viewed_user.id)
 			  render 'non_friend_profile'
 	      end
@@ -90,11 +91,13 @@ class UsersController < ApplicationController
       # username
       # password
     @user = User.new(user_params)
-    if @user.save
+    if @user.valid? && @user.save
       sign_in @user
       redirect_to action: 'home'
     else
-      render 'index'
+      p @user.errors.messages
+      flash.now[:error] = @user.errors.messages
+      render 'index', :layout => false
     end
   end
 

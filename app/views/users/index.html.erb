@@ -1,38 +1,39 @@
 <script>
-	$(document).ready(function() {
-		$('#create').click(function(e) {
+	// $(document).ready(function() {
+	// 	$('#create').click(function(e) {
 
-			alert('create clicked');
+	// 		alert('create clicked');
 
 
-			$.get("new", function(response) {
-				$("#content").html(response);
-			});
+	// 		$.get("new", function(response) {
+	// 			$("#content").html(response);
+	// 		});
 
-			pageurl = "new";
-			if(pageurl!=window.location){
-				window.history.pushState({path:pageurl},'',pageurl);
-			}
+	// 		pageurl = "new";
+	// 		if(pageurl!=window.location){
+	// 			window.history.pushState({path:pageurl},'',pageurl);
+	// 		}
 
-			return false;
-			/*
-			e.preventDefault();
+	// 		return false;
 			
-			//get the link location that was clicked
-			pageurl = $(this).attr('href');
-			alert(pageurl);
-
-			//to change the browser URL to the given link location
-			if(pageurl!=window.location){
-				window.history.pushState({path:pageurl},'',pageurl);
-			}
+	// 		e.preventDefault();
 			
-			//stop refreshing to the page given in
-			return false;
-			*/
+	// 		//get the link location that was clicked
+	// 		pageurl = $(this).attr('href');
+	// 		alert(pageurl);
 
-		});
-	});
+	// 		//to change the browser URL to the given link location
+	// 		if(pageurl!=window.location){
+	// 			window.history.pushState({path:pageurl},'',pageurl);
+	// 		}
+			
+	// 		//stop refreshing to the page given in
+	// 		return false;
+			
+
+	// 	});
+ //    //$("#create-account-form").hide();
+	// });
 </script>
 
 <!--Login stuff-->
@@ -91,75 +92,76 @@
 
   <main>
     <div class="container">
-      <h1>Sign in</h1>
+      <div id="login-form">
+        <h1>Login to HapApp!</h1>
+        <div id="user-widget">
+          <% if current_user %>
+            Welcome <strong><%= current_user.name %></strong>!
+            <%= link_to "Sign out", signout_path, id: "sign_out" %>
+          <% else %>
+            <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
+          <% end %>
+        </div>
+        <%= form_for(:session, url: sessions_path) do |f| %>
+        <ul>
+          <li><%= render 'shared/error_messages' %></li>
 
-<div id="user-widget">
-  <% if current_user %>
-    Welcome <strong><%= current_user.name %></strong>!
-    <%= link_to "Sign out", signout_path, id: "sign_out" %>
-  <% else %>
-    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
-  <% end %>
-</div>
+          <li>
+            <%= f.label :username %>
+            <%= f.text_field :username, :required => true %>
 
-      <div>
-      <%= form_for(:session, url: sessions_path) do |f| %>
-      	<%= render 'shared/error_messages' %>
+            <%= f.label :password %>
+            <%= f.password_field :password, :required => true  %>
+          </li>
 
-      	<%= f.label :username %>
-          <%= f.text_field :username, :required => true %>
-
-          <%= f.label :password %>
-          <%= f.password_field :password, :required => true  %>
-
-          <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
-      <% end %>
-      <div>
-      <!-- <p>Not a member? <a href="" id="create">Get happy now!</a></p> -->
-      <br><br><br><br>
-
-      	
+          <li><%= f.submit "Sign in", class: "btn btn-large btn-primary" %></li>
+        </ul>
+        <% end %>
+        <p>Not a member? <a href="#create" onclick="toggleCreateAccountForm()">Get happy now!</a></p>
+      </div>
       <!--Create account stuff-->
-      <div class="row">
+      <div id="create-account-form">
+        <h1>Get started with HapApp!</h1>
         <div class="span6 offset3">
       	  <%= form_for(@user) do |f| %>
       	  	<%= render 'shared/error_messages' %>
-              <ul>
-      		  <li>
-      		     <%= f.label :first_name %>
-      		     <%= f.text_field :first_name, :required => true %>
+            <ul>
+      		    <li>
+      		      <%= f.label :first_name %>
+      		      <%= f.text_field :first_name, :required => true %>
       	      </li>
 
-      		  <li>
-      		     <%= f.label :last_name %>
-      		     <%= f.text_field :last_name, :required => true %>
-                </li>
+      		    <li>
+      		      <%= f.label :last_name %>
+      		      <%= f.text_field :last_name, :required => true %>
+              </li>
 
-      		  <li>
-      	         <%= f.label :username %>
-      		     <%= f.text_field :username, :required => true %>
-                </li>
+      		    <li>
+                <%= f.label :username %>
+      		      <%= f.text_field :username, :required => true %>
+              </li>
 
-      		  <li>
-      		     <%= f.label :email %>
-      	         <%= f.text_field :email, :required => true %>
-                </li>
+      		    <li>
+      		      <%= f.label :email %>
+                <%= f.text_field :email, :required => true %>
+              </li>
 
-      		  <li>
-      		     <%= f.label :password %>
-      		     <%= f.password_field :password, :required => true %>
-                </li>
+      		    <li>
+      		      <%= f.label :password %>
+      		      <%= f.password_field :password, :required => true %>
+              </li>
 
-      		  <li>
-      		     <%= f.label :password_confirmation, "Confirmation" %>
-      		     <%= f.password_field :password_confirmation, :required => true %>
-                </li>
+      		    <li>
+      		      <%= f.label :password_confirmation, "Confirmation" %>
+      		      <%= f.password_field :password_confirmation, :required => true %>
+              </li>
 
-      		  <li>
+      		    <li>
       		     <%= f.submit "Get Happy!", class: "btn btn-large btn-primary" %>
       	      </li>	 
-      	  </ul>
-      	<% end %>
+      	   </ul>
+          <% end %>
+          <p>Already a member? <a href="#login" onclick="toggleLoginForm()">Login!</a></p>
         </div>
       </div>
     </div><!-- /.container -->
