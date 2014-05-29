@@ -31,7 +31,7 @@ function new_comment_box(comment_id) {
     </div> \
     <div class="signature_box"> \
     </div> \
-    <button class="add_response" onclick="add_response(' + comment_box_id + ')">\
+    <button class="add_text_area" onclick="add_text_area(' + comment_box_id + ')">\
         reply \
     </button>\
     <div class="new_text_area"> \
@@ -58,17 +58,10 @@ function hide(box) {
     box.style.display = "none"
 }
 
-function add_response(comment_box_id) {
-    /*comment_box_id.style.display = "none"
-    console.log("yo! " + comment_box_id.id)
+function add_text_area(comment_box_id) {
     var this_box = $("#" + comment_box_id.id)
-    console.log(this_box)
-    var text_box = this_box.children(".new_text_area")
-    console.log(text_box)
-    text_box.style.display = "block"
-    var reply_button = this_box.children("add_response")
-    console.log(reply_button)
-    reply_button.style.display = "none"*/
+    this_box.find(".add_text_area").remove()
+    this_box.find(".new_text_area")[0].style.display = "block"
 }
 
 function load_new_responses(comment_id) {
@@ -111,7 +104,7 @@ function new_response_box(comment_id, response_id) {
     </div> \
     <div class="response_body"> \
     </div> \
-    <button class="add_r_response">\
+    <button class="add_text_area" onclick="add_text_area(' + response_box_id + ')">\
         reply \
     </button>\
     <div class="new_text_area"> \
