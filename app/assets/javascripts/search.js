@@ -393,21 +393,26 @@ function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
     if(measurements && measurements.length != 0) {
         if(measurements[0] != "") {
+            console.log("show first add input");
             document.getElementById('input_measure1').innerHTML = measurements[0];
+            document.getElementById('measure_input1').style.display = 'block';
         } else {
             document.getElementById('measure_input1').style.display = 'none';
-            document.getElementById('measure1_error').style.display = 'none';
         }
         if(measurements[1] && measurements[1] != "") {
+            console.log("show second add input");
             document.getElementById('input_measure2').innerHTML = measurements[1];
+            document.getElementById('measure_input2').style.display = 'block';        
         } else {
             document.getElementById('measure_input2').style.display = 'none';
-            document.getElementById('measure2_error').style.display = 'none';
         }
     } else {
+        console.log("no measurements to show");
         document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
         document.getElementById('measure_input1').style.display = 'none';
         document.getElementById('measure_input2').style.display = 'none';
+        document.getElementById('measure1_error').style.display = 'none';
+        document.getElementById('measure2_error').style.display = 'none';
     }
 }
 

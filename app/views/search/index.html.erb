@@ -33,8 +33,8 @@
                 <p>How do you want to measure <span class="activity_header"></span>?</p>
     <!--             <p>Users most commonly store <span class="activity_header"></span> by: lbs.</p> -->
                 <p>If you don't need to track anything specific about <span class="activity_header"></span>, please leave the field blank.</p>
-                <input class="measurements" type="text" name="measure1" placeholder="first measurement"><br>
-                <input class="measurements no_display" type="text" name="measure2" id="second_measurement" placeholder="second measurement">
+                <input class="measurements" type="text" name="measure1" placeholder="first measurement" autocomplete="off"><br>
+                <input class="measurements no_display" type="text" name="measure2" id="second_measurement" placeholder="second measurement" autocomplete="off">
                 <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
                 <button type="button" id="commit_new_measurement_button()" onclick="commit_new_measurement_form()">Submit</button>
             </form>
@@ -43,8 +43,52 @@
             <form class="activity_form no_display" id="add_activity">
                 <h3>Track <span class="activity_header"></span>!</h3>
                 <span id="no_measure"></span>
-                <div id="measure_input1"><span id="input_measure1"></span>: <input class="measurements" type="text" name="measure1"><div id="measure1_error" class="no_display">You must input a measurement.</div></div>
-                <div id="measure_input2"><span id="input_measure2"></span>: <input class="measurements" type="text" name="measure2"><div id="measure2_error" class="no_display">You must input a measurement.</div></div>
+                <div id="measure_input1">
+                    <span id="input_measure1"></span>: <input class="measurements" type="text" name="measure1" id="add_activity_1" autocomplete="off">
+                    <script type="text/javascript">
+                        document.getElementById('add_activity_1').onkeyup = function(e) {
+                            input_str = document.getElementById('add_activity_1').value.trim();
+                            if (input_str == "" || /^\d+$/.test(input_str)) {
+                                document.getElementById('measure1_num_only').style.display = "none";
+                                if(document.getElementById('measure2_num_only').style.display == '' || document.getElementById('measure2_num_only').style.display == 'none') {
+                                    document.getElementById('commit_new_measurement_button').disabled = false;
+                                }
+                            } else {
+                                document.getElementById('measure1_num_only').style.display = "block";
+                                document.getElementById('commit_new_measurement_button').disabled = "disabled";
+                            }
+                        }
+                    </script>
+                    <div id="measure1_error" class="no_display">
+                        You must input a measurement.
+                    </div>
+                    <div id="measure1_num_only" class="no_display">
+                        Numbers only please.
+                    </div>
+                </div>
+                <div id="measure_input2">
+                    <span id="input_measure2"></span>: <input class="measurements" type="text" name="measure2" id="add_activity_2" autocomplete="off">
+                    <script type="text/javascript">
+                        document.getElementById('add_activity_2').onkeyup = function(e) {
+                            input_str = document.getElementById('add_activity_2').value.trim();
+                            if (input_str == "" || /^\d+$/.test(input_str)) {
+                                document.getElementById('measure2_num_only').style.display = "none";
+                                if(document.getElementById('measure1_num_only').style.display == '' || document.getElementById('measure1_num_only').style.display == 'none') {
+                                    document.getElementById('commit_new_measurement_button').disabled = false;
+                                }
+                            } else {
+                                document.getElementById('measure2_num_only').style.display = "block";
+                                document.getElementById('commit_new_measurement_button').disabled = "disabled";
+                            }
+                        }
+                    </script>
+                    <div id="measure2_error" class="no_display">
+                        You must input a measurement.
+                    </div>
+                    <div id="measure2_num_only" class="no_display">
+                        Numbers only please.
+                    </div>
+                </div>
                 <button type="button" id="commit_new_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
             </form>
             <!--   render 'shared/goal_form'   -->    
