@@ -107,6 +107,7 @@ class ActivitiesController < ApplicationController
             return
         end
 
+        to_return["new_measurements"] = []
         measurements = [[params[:measure1], params[:value1]], [params[:measure2], params[:value2]]]
         for measurement_array in measurements do
             measurement_name = measurement_array[0]
@@ -119,7 +120,7 @@ class ActivitiesController < ApplicationController
                     to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                     next
                 end
-                activity.user.log_new_measurement(activity, measurement_type, measurement_value)
+                to_return["new_measurements"] << activity.user.log_new_measurement(activity, measurement_type, measurement_value)
             end
         end
 

@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
       measurement.activity = activity
       measurement.value = value
       measurement.save
+      return measurement
     end
 
   	def happiness_score_for_category_at_time(category, time)
