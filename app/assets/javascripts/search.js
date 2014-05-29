@@ -45,7 +45,8 @@ function searchInitial() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_data?str=';
-    xhr.open("GET", url+encodeURIComponent(str), true); 
+    console.log(url + encodeURIComponent(str));
+    xhr.open("GET", url + encodeURIComponent(str), true); 
     xhr.send();
     function xhrHandler() {
         if(str != cur_str) return;
@@ -85,23 +86,6 @@ function searchMore() {
         json  = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], false);
-
-        // if(json['user_does_activity']) {
-        //     update_friends(json['friends']);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('add');
-        //     update_suggested(json['spellings_sugs'][0]);
-        // } else if (json['query_activity_exists']) {
-        //     update_friends(json['friends']);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('new');
-        //     update_suggested(json['spellings_sugs'][0]);
-        // } else {
-        //     update_friends([]);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('new');
-        //     update_suggested(json["spellings_sugs"][0]);
-        // }
     }
     console.log("more search started");
 }
@@ -198,6 +182,7 @@ function get_data_for_activity(selected_str) {
 }
 
 function update_graph() {
+    console.log("data", data);
     if(data[0].length > 0) {
         console.log("Show the graph with information", data[0]);
         document.getElementById("graph_box").style.display = 'block';
@@ -209,15 +194,23 @@ function update_graph() {
 }
 
 function setChart(recent_measurements, measurement_types) {
+
+
+
+
+
+
     if(measurement_types[0] != "") {
         if(measurement_types[1] != "") { // 2 measurements used
-
+            console.log("2 measurements");
 
         } else { // 1 measurement used
+            console.log("1 measurements");
 
 
         }
     } else { // 0 mesurements used
+        console.log("0 measurements");
 
 
     }
@@ -288,6 +281,7 @@ function show_form(option) {
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
     }
+    document.getElementById('commit_new_measurement_button').disabled = false;
 }
 
 function clear_form_values() {
@@ -332,6 +326,7 @@ function add_measurement_form() {
 // AJAX request that will submit the new activity measurements for a tracked activity
 function commit_new_measurement_form() {
     var measurements = validate_new_form();
+    document.getElementById('commit_new_measurement_button').disabled = true;
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/create_activity?";
@@ -354,6 +349,8 @@ function commit_new_measurement_form() {
         data = null;
         update_add_form_inputs(measurements);
         show_form('add');
+        data = [[], json['measurement_types']]
+        document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
 }
@@ -361,7 +358,7 @@ function commit_new_measurement_form() {
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
     console.log("Submitting new measurement");
-
+    document.getElementById('commit_add_measurement_button').disabled = true;
     var measurements = validate_add_form();
     if(measurements == null) return; // form was not properly filled out
     var cur_str = str;
@@ -383,7 +380,9 @@ function commit_add_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        // data[0].push(json['recent_measurements']);
+        console.log('new measure to add', json['new_measurements']);
+        data[0].concat(json['new_measurements']);
+        document.getElementById('commit_add_measurement_button').disabled = false;
         update_graph();
     }
     xhr.send();
@@ -391,7 +390,9 @@ function commit_add_measurement_form() {
 
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
-    if(measurements && measurements.length != 0) {
+    document.getElementById('commit_new_measurement_button').disabled = false;
+    if(measurements[0] != "" || measurements[1] != "") {
+        console.log("length", measurements.length);
         if(measurements[0] != "") {
             console.log("show first add input");
             document.getElementById('input_measure1').innerHTML = measurements[0];
@@ -428,7 +429,7 @@ function validate_new_form() {
 // check if form is properly filled out and returns form data if completed
 function validate_add_form() {
     var  error  = false;
-    if(document.forms["add_activity"][0].style.display != 'none') {
+    if(document.forms["add_activity"][0].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;

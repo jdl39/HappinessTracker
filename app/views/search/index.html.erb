@@ -2,14 +2,14 @@
     <div id="left-panel">
         <input id="search" type="text" name="activity" placeholder="What activity did you just do?" autofocus autocomplete="off">
         <script type="text/javascript">
-            document.getElementById('search').onkeyup = function(e){
+            document.getElementById('search').onkeyup = function(e) {
                 if (!e) e = window.event;
                 var keyCode = e.keyCode || e.which;
-                if (keyCode == '13' && document.getElementById('search').value.trim() != ""){
-                    // Enter pressed
+                if (keyCode == '13' && document.getElementById('search').value.trim() != ""){ // Enter pressed
                     console.log('entered pressed');
                     pickIfMatching();                  
                 } else {
+                    console.log('search now');
                     search(keyCode == '13');
                 }
             }
@@ -36,7 +36,7 @@
                 <input class="measurements" type="text" name="measure1" placeholder="first measurement" autocomplete="off"><br>
                 <input class="measurements no_display" type="text" name="measure2" id="second_measurement" placeholder="second measurement" autocomplete="off">
                 <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
-                <button type="button" id="commit_new_measurement_button()" onclick="commit_new_measurement_form()">Submit</button>
+                <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
         </div>
         <div>
@@ -51,11 +51,11 @@
                             if (input_str == "" || /^\d+$/.test(input_str)) {
                                 document.getElementById('measure1_num_only').style.display = "none";
                                 if(document.getElementById('measure2_num_only').style.display == '' || document.getElementById('measure2_num_only').style.display == 'none') {
-                                    document.getElementById('commit_new_measurement_button').disabled = false;
+                                    document.getElementById('commit_add_measurement_button').disabled = false;
                                 }
                             } else {
                                 document.getElementById('measure1_num_only').style.display = "block";
-                                document.getElementById('commit_new_measurement_button').disabled = "disabled";
+                                document.getElementById('commit_add_measurement_button').disabled = true;
                             }
                         }
                     </script>
@@ -74,11 +74,11 @@
                             if (input_str == "" || /^\d+$/.test(input_str)) {
                                 document.getElementById('measure2_num_only').style.display = "none";
                                 if(document.getElementById('measure1_num_only').style.display == '' || document.getElementById('measure1_num_only').style.display == 'none') {
-                                    document.getElementById('commit_new_measurement_button').disabled = false;
+                                    document.getElementById('commit_add_measurement_button').disabled = false;
                                 }
                             } else {
                                 document.getElementById('measure2_num_only').style.display = "block";
-                                document.getElementById('commit_new_measurement_button').disabled = "disabled";
+                                document.getElementById('commit_add_measurement_button').disabled = true;
                             }
                         }
                     </script>
@@ -89,7 +89,7 @@
                         Numbers only please.
                     </div>
                 </div>
-                <button type="button" id="commit_new_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
+                <button type="button" id="commit_add_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
             </form>
             <!--   render 'shared/goal_form'   -->    
         </div>
