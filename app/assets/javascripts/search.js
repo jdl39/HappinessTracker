@@ -3,10 +3,13 @@ prev = '';
 displayed_results = [];
 str = '';
 
-function search() {
-    if(str == document.getElementById('search').value.trim()) return;
+function search(enterPress) {
+    console.log('enterPress', enterPress);
+    if(str == document.getElementById('search').value.trim()) {
+        console.log("still same string", str);
+        return;
+    }
     str = document.getElementById('search').value.trim();
-    // updateActivityName(str);
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     if(str) {
         set_headers();
@@ -16,14 +19,19 @@ function search() {
     // searchMore();
 }
 
+function pickIfMatching() {
+    if(displayed_results[0]) {
+        get_data_for_activity(displayed_results[0]);
+    } else {
+        create_new_activity(document.getElementById('search').value.trim());
+    }
+}
+
 function set_headers(header) {
     var elements = document.getElementsByClassName('activity_header');
     for (var element in elements) {
-        if(header) {
-            (elements[element]).innerHTML = header;
-        } else {
-            (elements[element]).innerHTML = str;            
-        }
+        if(header) (elements[element]).innerHTML = header;
+        else (elements[element]).innerHTML = str;
     }
 }
 
@@ -173,7 +181,8 @@ function get_data_for_activity(selected_str) {
         document.getElementById('results').innerHTML = '';
         if(json['user_does_activity']) {
             show_form('add');
-            update_graph(json['recent_measurements'], json['measurement_types']);
+            data = [json['recent_measurements'], json['measurement_types']]
+            update_graph();
             measurements = [];
             if(json['measurement_types'][0]) {
                 measurements.push(json['measurement_types'][0][1]);
@@ -188,7 +197,31 @@ function get_data_for_activity(selected_str) {
     }
 }
 
+function update_graph() {
+    if(data[0].length > 0) {
+        console.log("Show the graph with information", data[0]);
+        document.getElementById("graph_box").style.display = 'block';
+        setChart(data[0], data[1]);
+    } else {
+        console.log("Hide the graph", data[0]);
+        document.getElementById("graph_box").style.display = 'none';
+    }
+}
+
 function setChart(recent_measurements, measurement_types) {
+    if(measurement_types[0] != "") {
+        if(measurement_types[1] != "") { // 2 measurements used
+
+
+        } else { // 1 measurement used
+
+
+        }
+    } else { // 0 mesurements used
+
+
+    }
+
     new Highcharts.Chart({
         chart: { renderTo: 'activity_chart' }, // name of div to be filled with content
         title: { text: str }, // title of current activity
@@ -266,15 +299,6 @@ function clear_form_values() {
     document.getElementById('measure2_error').style.display = "none";
 }
 
-function update_graph(recent_measurements, measurement_types) {
-    if(recent_measurements) {
-        document.getElementById("graph_box").style.display = 'block';
-        setChart(recent_measurements, measurement_types);
-    } else {
-        document.getElementById("graph_box").style.display = 'none';
-    }
-}
-
 function update_friends(friends) {
     document.getElementById('friends-list').innerHTML = '';
     if(friends) {
@@ -305,7 +329,7 @@ function add_measurement_form() {
     document.getElementById('add_new_measurement_button').style.display = 'none';
 }
 
-// AJAX request that will submit the new activity meanurements for a tracked activity
+// AJAX request that will submit the new activity measurements for a tracked activity
 function commit_new_measurement_form() {
     var measurements = validate_new_form();
     var cur_str = str;
@@ -327,6 +351,7 @@ function commit_new_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
+        data = null;
         update_add_form_inputs(measurements);
         show_form('add');
     }
@@ -358,22 +383,22 @@ function commit_add_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        update_graph(json['recent_measurements'], json['measurement_types']);
+        // data[0].push(json['recent_measurements']);
+        update_graph();
     }
     xhr.send();
 }
 
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
-    if(measurements[0])
     if(measurements && measurements.length != 0) {
-        if(measurements[0]) {
+        if(measurements[0] != "") {
             document.getElementById('input_measure1').innerHTML = measurements[0];
         } else {
             document.getElementById('measure_input1').style.display = 'none';
             document.getElementById('measure1_error').style.display = 'none';
         }
-        if(measurements[1]) {
+        if(measurements[1] && measurements[1] != "") {
             document.getElementById('input_measure2').innerHTML = measurements[1];
         } else {
             document.getElementById('measure_input2').style.display = 'none';
@@ -399,14 +424,12 @@ function validate_new_form() {
 function validate_add_form() {
     var  error  = false;
     if(document.forms["add_activity"][0].style.display != 'none') {
-        console.log('1 not hidden');
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;
         }
     }
     if(document.forms["add_activity"][1].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
-        console.log('2 not hidden');
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
             error = true;
