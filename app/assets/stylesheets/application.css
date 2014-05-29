@@ -399,3 +399,30 @@ footer {
 .profile-recent a {
   color: #00aadd;
 }
+
+/* ============================================================
+  FRIEND LIST
+============================================================ */
+
+.friend-list-heading {
+  /*background-color: rgb(123,214,190);*/
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+}
+
+.friend-list-heading h1 {
+  font-weight: bold;
+}
+
+.friend-list a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  COMMENT STUFF
+  ============================================================ */
+
+.new_text_area {
+    display: none;
+}

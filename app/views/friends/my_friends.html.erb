@@ -50,8 +50,10 @@
   <% end %>
 </ul>
 
-<h1>My Friends</h1>
-<ul>
+<div class="friend-list-heading">
+  <h1>My Friends</h1>
+</div>
+<ul class="friend-list">
   <% @accepted_friends.each do |friend| %>
   <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
   <% end %>
