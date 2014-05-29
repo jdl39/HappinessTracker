@@ -15,6 +15,7 @@ function load_new_comments(activity_type_id) {
 }
 
 function new_comment_box(comment_id) {
+    var comment_box_id = "comment_box_" + comment_id
     $(".comment_area").append($('<div class="comment_box" id="new_comment_box"> \
     <input type="hidden" class="comment_id"> \
     </input> \
@@ -22,7 +23,7 @@ function new_comment_box(comment_id) {
         <button class="up_comment"> \
             up \
         </button> \
-        <button class="down_comment"> \
+        <button class="down_comment" onclick="hide(' + comment_box_id + ')"> \
             down \
         </button> \
     </div> \
@@ -30,17 +31,44 @@ function new_comment_box(comment_id) {
     </div> \
     <div class="signature_box"> \
     </div> \
+    <button class="add_response" onclick="add_response(' + comment_box_id + ')">\
+        reply \
+    </button>\
+    <div class="new_text_area"> \
+        <textarea class="new_text"> \
+        </textarea> \
+        <input type="checkbox" class="anonymous_check" value="anonymous"> \
+            post anonymously \
+        </input> \
+        <button class="submit_new_text"> \
+            submit \
+        </button> \
+    </div> \
     <button class="show_responses">\
         show responses \
     </button>\
-    <button class="add_response">\
-        reply \
-    </button>\
 </div>'))
-    $("#new_comment_box").attr("id","comment_box_" + comment_id)
+    $("#new_comment_box").attr("id", comment_box_id)
     var box = $("#comment_box_" + comment_id)
     box.hide()
     return box
+}
+
+function hide(box) {
+    box.style.display = "none"
+}
+
+function add_response(comment_box_id) {
+    /*comment_box_id.style.display = "none"
+    console.log("yo! " + comment_box_id.id)
+    var this_box = $("#" + comment_box_id.id)
+    console.log(this_box)
+    var text_box = this_box.children(".new_text_area")
+    console.log(text_box)
+    text_box.style.display = "block"
+    var reply_button = this_box.children("add_response")
+    console.log(reply_button)
+    reply_button.style.display = "none"*/
 }
 
 function load_new_responses(comment_id) {
@@ -58,32 +86,46 @@ function load_new_responses(comment_id) {
         }
         var more_responses_buttons = $("#comment_box_" + comment_id).find(".show_more_responses")
         if (more_responses_buttons.length == 0 && data["new_responses"].length != 0) {
-            var new_button = $("#comment_box_" + comment_id).append($('<button class="show_more_responses">Show More Responses</button>'))
-            new_button.click(comment_id, function(e) { load_new_responses(e.data) } )
+            var new_button = $("#comment_box_" + comment_id).append($('<button class="show_more_responses" onclick="load_new_responses(' + comment_id + ')">Show More Responses</button>'))
         }
     });
 }
 
+function load_wrapper(e) {
+    load_new_responses(e.data)
+}
+
 function new_response_box(comment_id, response_id) {
+    response_box_id = "response_box_" + response_id
     $("#comment_box_" + comment_id).append($(
 '<div class="response_box" id="new_response_box"> \
     <input type="hidden" class="response_id"> \
     </input> \
     <div class="vote_box"> \
-        <button class="up_vote"> \
+        <button class="up_response"> \
             up \
         </button> \
-        <button class="down_vote"> \
+        <button class="down_response" onclick="hide(' + response_box_id + ')"> \
             down \
         </button> \
     </div> \
     <div class="response_body"> \
     </div> \
-    <div class="signature_box"> \
-    </div> \
     <button class="add_r_response">\
         reply \
     </button>\
+    <div class="new_text_area"> \
+        <textarea class="new_text"> \
+        </textarea> \
+        <input type="checkbox" class="anonymous_check" value="anonymous"> \
+            post anonymously \
+        </input> \
+        <button class="submit_new_text"> \
+            submit \
+        </button> \
+    </div> \
+    <div class="signature_box"> \
+    </div> \
 </div>'))
     $("#new_response_box").attr("id","response_box_" + response_id)
     var box = $("#response_box_" + response_id)
@@ -96,13 +138,13 @@ $(document).ready(function() {
     $("#show_more_comments").click(function() {
         load_new_comments(2)
     })
-    $(".new_comment").click(function() {
+    $(".add_comment").click(function() {
     })
     $("#submit_new_comment").click(function() {
         var data = {}
         data["activity_type_id"] = 2
         data["content"] = $("#new_comment").val()
-        data["signature"] = $("#signature").val()
+        data["anonymous"] = $("#anonymous").val()
         $.post("add_comment", data)
     })
     $(".up_comment").click(function() {
@@ -113,13 +155,11 @@ $(document).ready(function() {
         var comment_box = $(this).parentsUntil(".comment_box")
         $.post("down_comment", {"comment_id" : comment_box.find(".comment_id").val()})
     })
-    $(".new_response").click(function() {
-    })
     $("#submit_new_response").click(function() {
         var data = {}
         data["comment_id"] = $(".comment_id").val()
         data["content"] = $("#new_response").val()
-        data["signature"] = $("#signature").val()
+        data["anonymous"] = $("#anonymous").val()
         $.post("add_response", data)
     })
     $(".up_response").click(function() {
@@ -131,16 +171,8 @@ $(document).ready(function() {
         $.post("down_response", {"response_id" : comment_box.find(".response_id").val()})
     })
     // r_response: a personal message responding to a response; in short, a response response
-    $(".new_r_response").click(function() {
+    $(".add_r_response").click(function() {
     })
-    $("#submit_new_resply").click(function() {
+    $("#submit_new_r_response").click(function() {
     })
 })
-
-function create_text_box() {
-    html =
-'   <textarea id="new_comment"> \
-    </textarea> \
-    <input type="text" id="signature" value="<%= current_user.username %>"> \
-    </input> '
-}
