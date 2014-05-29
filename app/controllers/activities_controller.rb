@@ -199,11 +199,8 @@ class ActivitiesController < ApplicationController
             return
         end
 
-        p "Top: " + top_activities.to_s
-        user_activity = top_activities.select{|activity| activity.user = current_user}.first
-        #p user_activity
+        user_activity = top_activities.select{|activity| activity.user == current_user}.first
         user_does_activity = !user_activity.nil?
-        #p user_does_activity
         friend_activities = top_activities.to_a.select{|activity| friends.include? activity.user}
         friends = []
         friends = friend_activities.sort!{|activity| activity.num_measured}.reverse!.map(&:user) unless friend_activities.empty?
