@@ -7,6 +7,7 @@ doNotUpdateSearchMore = false;
 
 var ready = function setStartingParam() {
     console.log("page is loaded");
+    if(!document.getElementById('search')) return;
     var len = document.getElementById('search').value.length;
     document.getElementById('search').focus();
     document.getElementById('search').setSelectionRange(len, len);
