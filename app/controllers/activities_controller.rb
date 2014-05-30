@@ -342,7 +342,7 @@ class ActivitiesController < ApplicationController
     end
 
     # params: activity, content, signature
-    def addComment
+    def new_comment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters - yourself
         # TODO: if - yourself, then need to flash feedback
@@ -350,7 +350,7 @@ class ActivitiesController < ApplicationController
     end
 
     # params: comment_index, content, signature, isPublic
-    def addResponse
+    def new_response
         comment = Comment.where(id: session[:comments][params[:comment_index]])
         # create a message to author of comment from user
         message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
@@ -361,55 +361,68 @@ class ActivitiesController < ApplicationController
         end 
     end
 
-    vote_threshold = -3
-    spread_amount = 5
+    def new_r_response
+        # create a message, like in new_response if isPublic was always false
+    end
 
-    # honestly don't know if I should've combined comment and response into single class
+    $vote_threshold = -3
+    $spread_amount = 5
 
-    # params: comment_index
     def up_comment
-        comment = Comment.where(id: params[:comment_id])
+        puts "up comment!"
+        comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if current_user.up_comments.map(&:id).include? comment.id
-        #return unless Comment.where(id: comment.id, up_voter: current_user).empty?
+        return if comment.up_voters.include? current_user
+        puts "not already up voted"
         comment.up_voters << current_user
-        comment.votes = comment.votes + 1
-        new_readers = User.limit(spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
+        comment.votes = comment.votes.to_i + 1
+        new_readers = User.limit($spread_amount).where.not(id: current_user.id, down_comments: comment.id, readable_comments: comment.id).order("RANDOM()")
         # is this adding correctly???
-        comment.readers << new_readers
+        comment.readers.concat new_readers
         comment.save
         #new_readers.each{|reader| reader.readable_comment
+        puts "finished"
     end
 
-    # params: comment_index
     def down_comment
-        comment = Comment.where(id: params[:comment_id])
+        puts "down comment!"
+        comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return unless Comment.where(id: params[:comment_id], down_voter: current_user).empty?
+        return if comment.down_voters.include? current_user
+        puts "not already down voted"
         comment.down_voters << current_user
-        comment.votes = comment.votes - 1
-        comment.readers.delete(:current_user)#:current_user.id???
-        comment.readers.delete_all if comment.votes < vote_threshold
+        comment.votes = comment.votes.to_i - 1
+        comment.readers.delete(current_user)
+        comment.readers.delete_all if comment.votes < $vote_threshold
+        comment.up_voters.delete(current_user)
         comment.save
+        puts "finished"
     end
 
-    # params: response_index
     def up_response
-        response = session[:responses][params[:response_index]]
+        puts "up resonse! " + params[:respond_id]
+        response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return unless Response.where(id: params[:response_id], up_voter: current_user).empty?
-        response.votes = response.votes + 1
+        return if response.up_voters.include? current_user
+        puts "not already up voted"
+        response.votes = response.votes.to_i + 1
         # TODO: make new random readers besides downvoters
+        response.save
+        puts "finished"
     end
 
-    # params: response_id
     def down_response
-        response = session[:responses][params[:response_index]]
+        puts "down response! " + params[:response_id]
+        response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return unless Response.where(id: params[:response_id], down_voter: current_user).empty?
-        response.votes = response.votes - 1
-        response.readers.delete(:current_user)#:current_user.id???
-        response.readers.delete_all if response.votes < vote_threshold
+        return if response.down_voters.include? current_user
+        puts "not already down voted"
+        response.votes = response.votes.to_i - 1
+        response.up_voters.delete(current_user)
+        response.readers.delete(current_user)
+        response.readers.delete_all if response.votes < $vote_threshold
+        response.save
+        puts "finished"
     end
 
 	private
