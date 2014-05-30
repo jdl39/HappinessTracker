@@ -2,10 +2,53 @@ inputs = [];
 prev = '';
 displayed_results = [];
 str = '';
+doNotUpdateSearchMore = false;
 
-function search(enterPress) {
-    console.log('enterPress', enterPress);
-    if(str == document.getElementById('search').value.trim()) {
+window.onload = function setStartingParam() {
+    var len = document.getElementById('search').value.length;
+    document.getElementById('search').focus();
+    document.getElementById('search').setSelectionRange(len, len);
+    search();
+    document.getElementById('search').onkeyup = function(e) {
+        if (!e) e = window.event;
+        var keyCode = e.keyCode || e.which;
+        if (keyCode == '13' && document.getElementById('search').value.trim() != ""){ // Enter pressed
+            console.log('entered pressed');
+            pickIfMatching();                  
+        } else {
+            console.log('search now');
+            search();
+        }
+    }
+    document.getElementById('add_activity_1').onkeyup = function(e) {
+        input_str = document.getElementById('add_activity_1').value.trim();
+        if (input_str == "" || /^\d+$/.test(input_str)) {
+            document.getElementById('measure1_num_only').style.display = "none";
+            if(document.getElementById('measure2_num_only').style.display == '' || document.getElementById('measure2_num_only').style.display == 'none') {
+                document.getElementById('commit_add_measurement_button').disabled = false;
+            }
+        } else {
+            document.getElementById('measure1_num_only').style.display = "block";
+            document.getElementById('commit_add_measurement_button').disabled = true;
+        }
+    }
+    document.getElementById('add_activity_2').onkeyup = function(e) {
+        input_str = document.getElementById('add_activity_2').value.trim();
+        if (input_str == "" || /^\d+$/.test(input_str)) {
+            document.getElementById('measure2_num_only').style.display = "none";
+            if(document.getElementById('measure1_num_only').style.display == '' || document.getElementById('measure1_num_only').style.display == 'none') {
+                document.getElementById('commit_add_measurement_button').disabled = false;
+            }
+        } else {
+            document.getElementById('measure2_num_only').style.display = "block";
+            document.getElementById('commit_add_measurement_button').disabled = true;
+        }
+    }
+}
+
+function search() {
+    console.log("str", str);
+    if(str && str == document.getElementById('search').value.trim()) {
         console.log("still same string", str);
         return;
     }
@@ -16,7 +59,6 @@ function search(enterPress) {
     }
     show_form('');
     searchInitial();
-    // searchMore(); // Search is really slow with this line, for now, I am not using it. 
 }
 
 function pickIfMatching() {
@@ -37,6 +79,7 @@ function set_headers(header) {
 
 function searchInitial() {
     console.log("initial search started");
+    doNotUpdateSearchMore = false;
     var cur_str = str;
     if(str == '') {
         update_results([], true);
@@ -86,9 +129,12 @@ function searchMore() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        update_results(json['search_results'], false);
+        if(!doNotUpdateSearchMore) {
+            update_results(json['search_results'], false);
+        }
+        doNotUpdateSearchMore = true;
+        console.log("more search ended");        
     }
-    console.log("more search ended");
 }
 
 function update_results(results, initial) {
@@ -142,6 +188,7 @@ function update_results(results, initial) {
 function create_new_activity(new_activity_str) {
     console.log("hey there once again.", new_activity_str);
     selectedStr = new_activity_str;
+    doNotUpdateSearchMore = true;
     show_form('new');
     document.getElementById('results').innerHTML = '';
 }
@@ -149,6 +196,7 @@ function create_new_activity(new_activity_str) {
 function get_data_for_activity(selected_str) {
     console.log("hey", selected_str);
     selectedStr = selected_str;
+    doNotUpdateSearchMore = true;
     str = selected_str;
     document.getElementById('search').value = selected_str;
     set_headers(selected_str);
@@ -206,7 +254,60 @@ function setChart(recent_measurements, measurement_types) {
     if(measurement_types[0] != "") {
         if(measurement_types[1] != "") { // 2 measurements used
             console.log("2 measurements");
-
+            new Highcharts.Chart({
+                chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'USD to EUR exchange rate from 2006 through 2008'
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                        'Click and drag in the plot area to zoom in' :
+                        'Pinch the chart to zoom in'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    minRange: 14 * 24 * 3600000 // fourteen days
+                },
+                yAxis: {
+                    title: {
+                        text: 'Exchange rate'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+        
+                series: [{
+                    type: 'area',
+                    name: 'USD to EUR',
+                    pointInterval: 24 * 3600 * 1000,
+                    pointStart: Date.UTC(2006, 0, 01),
+                    data: []
+                }]
+            });
 
         } else { // 1 measurement used
             console.log("1 measurements");
@@ -218,46 +319,6 @@ function setChart(recent_measurements, measurement_types) {
 
 
     }
-
-    new Highcharts.Chart({
-        chart: { renderTo: 'activity_chart' }, // name of div to be filled with content
-        title: { text: str }, // title of current activity
-        xAxis: { type: 'datetime' }, // x axis will be based on time
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}°C',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            title: {
-                text: 'measure2',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            opposite: true
-
-        }, { // Secondary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'measure1',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value} mm',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            }
-
-        }],
-        series: [{
-            data: [1, 2, 5, 7, 3]
-        }]
-    });
 }
 
 function show_form(option) {
@@ -389,7 +450,6 @@ function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
     document.getElementById('commit_new_measurement_button').disabled = false;
     if(measurements[0] != "") {
-        console.log("length", measurements.length);
         if(measurements[0] != "") {
             console.log("show first add input");
             document.getElementById('input_measure1').innerHTML = measurements[0];

@@ -261,7 +261,7 @@ class ActivitiesController < ApplicationController
                 wordCheck[:synsets] = wordCheck[:correct] ? lex.lookup_synsets(wordCheck[:lemma]) : []
             end
 
-            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)}}
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:synsets].reduce([]){|sum, n| sum | n.words.map(&:lemma)}}.flatten
             search_results |= getTypesForWords(searchWords)
 
             puts "SEARCH RESULTS 3"
@@ -277,7 +277,7 @@ class ActivitiesController < ApplicationController
                 wordCheck[:cousins] = wordCheck[:correct] ? wordCheck[:synsets].map{|synset| synset.hypernyms.map{|x| x.hyponyms}}.flatten : []
                 # could also do the same for words spelled incorrectly, but passing for now
             end
-            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:cousins].reduce([]){|sum, n| sum | n.words.map(&:lemma)}} 
+            searchWords = spellCheckedWords.map{|wordCheck| wordCheck[:cousins].reduce([]){|sum, n| sum | n.words.map(&:lemma)}}.flatten
             search_results |= getTypesForWords(searchWords)
             
             puts "SEARCH RESULTS 4"
