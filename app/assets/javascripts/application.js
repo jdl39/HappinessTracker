@@ -16,7 +16,7 @@
 //= require_tree .
 //= require highcharts
 //= require highcharts/highcharts-more
-//= require highcharts/themes/dark-unica
+//= require highcharts/themes/gray
 
 
 function toggleCreateAccountForm() {
@@ -44,8 +44,8 @@ function togglePageLayout() {
 
 function toggleHeaderLayout() { 
   console.log("Toggle header layout called.")
-			    var desiredColor = happiness_status ? '#ff9933' : '#5f9ea0';
-		    $("h2").css("color", desiredColor);
-			    $("h1").css("color", desiredColor);
-				    $("hr").css("background-color", desiredColor);
+  var desiredColor = happiness_status ? '#ff9933' : '#5f9ea0';
+  $("h2").css("color", desiredColor);
+  $("h1").css("color", desiredColor);
+  $("hr").css("background-color", desiredColor);
 }
