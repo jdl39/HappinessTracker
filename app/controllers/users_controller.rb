@@ -81,7 +81,8 @@ class UsersController < ApplicationController
     @user = current_user
 	#TODO: Set these recommended_activities
 	@recommended_activities = ['Running', 'Jogging', 'Swimming', 'Hiking']
-    # Render landing page
+    # Set recent challenges received by user
+	@my_received_challenges = recently_received_challenges(current_user.id) 
   end
 
   def create

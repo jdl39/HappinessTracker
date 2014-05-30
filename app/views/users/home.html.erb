@@ -124,9 +124,13 @@
 	<hr>
 	<h2><a href="/challenges"> Recent Challenges</a></h2>
 	<hr>
-	<ul>
+	<% my_challenges.each do |challenge|%>
+		<%= render :partial => 'shared/challenge', :challenge => challenge %>
+    <% end %> 
+	<!--<ul>
 	  <li> Joe challenged you to, "Eat a banana!" Accept, decline, etc.</li>
-	<hr>
+	  <--> 
+	 <hr>
 	
 
 </div>
