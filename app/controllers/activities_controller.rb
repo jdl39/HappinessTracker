@@ -130,7 +130,7 @@ class ActivitiesController < ApplicationController
 
     # TODO: Consider caching results in db for quick processing?
     def recommendations
-        render json: {:recommendation_array => activity_recommendations}
+        render json: {:recommendation_array => current_user.activity_recommendations}
     end
 
     $max_result_size = 6
@@ -441,37 +441,8 @@ class ActivitiesController < ApplicationController
         return types.map{|type, size| [type.id, type.name]}
     end
 
-    def activity_recommendations
-        score_hash = {}
-        for activity_type in ActivityType.all do
-            prior = activity_type.activities.size * 1.0 / num_users
-            score_hash[activity_type.name] = prior
-        end
-
-        for activity in current_user.activities do
-            count_hash = Hash.new { |hash,key| hash[key] = 1 }
-            this_activity_type = activity.activity_type
-            for other_instance in this_activity_type.activities do
-                for activity_to_count in other_instance.user.activities do
-                    count_hash[activity_to_count.activity_type.name] += 1
-                end
-            end
-
-            for activity_type in ActivityType.all do
-                score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
-            end
-        end
-
-        existing_activities = current_user.activities.map{|activity| activity.activity_type.name}
-        recommendations = []
-        score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
-            recommendations << tuple[0] unless existing_activities.include? tuple[0]
-        }
-        return recommendations
-    end
-
     def num_users
-        @num_users ||= User.size
+        @num_users ||= User.all.size
         return @num_users
     end
 
