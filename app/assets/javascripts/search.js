@@ -234,7 +234,7 @@ function get_data_for_activity(selected_str) {
                 measurements.push(json['measurement_types'][1][1]);
             }
             update_add_form_inputs(measurements);
-            data = [json['recent_measurements'], measurements];
+            data = [json['recent_measurements'], parseMeasurements(json['measurement_types'])];
             update_graph();
         } else {
             show_form('new');
@@ -255,14 +255,35 @@ function update_graph() {
 }
 
 function setChart(recent_measurements, measurement_types) {
-    console.log("final data", recent_measurements, measurement_types);
-    if(measurement_types[0] != "") {
-        if(measurement_types[1] != "") { // 2 measurements used
+    // console.log("final data", recent_measurements);
+    var strict_data = [[], []];
+    for(recent_measurement in recent_measurements) {
+        // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
+        console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
+        // var created = Date(recent_measurements[recent_measurement]['created_at']);
+        // var year = parseFloat(created.getUTCFullYear());
+        // var month = parseFloat(created.getUTCMonth());
+        // var day = parseFloat(created.getUTCDay());
+
+        var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+        if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
+            strict_data[0].push(newElem);
+        } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
+            strict_data[1].push(newElem);
+        } else {
+            console.log("no matches ERROR");
+        }
+        // console.log("elem", recent_measurements[recent_measurement]);
+    }
+    console.log("strict", strict_data);
+
+    if(measurement_types[0][1] != "") {
+        if(measurement_types[1][1] != "") { // 2 measurements used
             console.log("2 measurements");
             new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
-                    zoomType: 'x'
+                    // zoomType: 'x'
                 },
                 title: {
                     text: 'Your History of ' + str
@@ -274,8 +295,12 @@ function setChart(recent_measurements, measurement_types) {
                 },
                 xAxis: {
                     type: 'datetime',
-                    tickInterval: 24 * 3600 * 1000
+                    // tickInterval: 24 * 3600 * 1000
                     // minRange: 1 * 24 * 3600000 // 1 day
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    }
                 },
                 yAxis: [{ // Primary yAxis
                     gridLineWidth: 0,
@@ -286,7 +311,7 @@ function setChart(recent_measurements, measurement_types) {
                         }
                     },
                     title: {
-                        text: measurement_types[0],
+                        text: measurement_types[0][1],
                         style: {
                             color: Highcharts.getOptions().colors[5]
                         }
@@ -301,7 +326,7 @@ function setChart(recent_measurements, measurement_types) {
                         }
                     },
                     title: {
-                        text: measurement_types[1],
+                        text: measurement_types[1][1],
                         style: {
                             color: Highcharts.getOptions().colors[2]
                         }
@@ -317,23 +342,63 @@ function setChart(recent_measurements, measurement_types) {
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 series: [{
-                    name: measurement_types[0], // series for measure 1
+                    name: measurement_types[0][1], // series for measure 1
                     type: 'spline',
-                    pointInterval:  3600 * 1000,
+                    // pointInterval:  3600 * 1000,
                     // pointStart: Date(2014, 4, 01, 0, 0, 0, 0),
-                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                    data: [strict_data[0]]
                 },  {
-                    name: measurement_types[1], // series for measure 2
+                    name: measurement_types[1][1], // series for measure 2
                     type: 'spline',
-                    pointInterval:  3600 * 1000,
+                    // pointInterval:  3600 * 1000,
                     yAxis: 1,
-                    data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+                    data: [strict_data[1]]
                 }]
             });
 
         } else { // 1 measurement used
             console.log("1 measurements");
+            new Highcharts.Chart({
+                chart: {
+                    renderTo: 'activity_chart',
+                    // zoomType: 'x'
+                    type: 'spline'
+                },
+                // chart: {
+                // type: 'spline'
+                // },
+                title: {
+                    text: 'Snow depth at Vikjafjellet, Norway'
+                },
+                subtitle: {
+                    text: 'Irregular time data in Highcharts JS'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Snow depth (m)'
+                    },
+                    min: 0
+                },
+                // tooltip: {
+                //     headerFormat: '<b>{series.name}</b><br>',
+                //     pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+                // },
 
+                series: [{
+                    name: 'hey',
+                    data: strict_data[0]
+                }]
+            });
 
         }
     } else { // 0 mesurements used
@@ -421,17 +486,26 @@ function commit_new_measurement_form() {
         json  = this.responseText;
         json = JSON.parse(json);
         data = null;
+        var fullMeasurements = parseMeasurements(json['measurement_types']);
         update_add_form_inputs(measurements);
         show_form('add');
-        data = [[], measurements];
+        data = [[], fullMeasurements];
+        console.log("jeremy's new data");
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
 }
 
+function parseMeasurements(json) {
+    if(json[0][0]) parseFloat(json[0][0]);
+    if(json[1][0]) parseFloat(json[1][0]);
+    return json;
+}
+
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
     var measurements = validate_add_form();
+    console.log("meas", measurements);
     if(measurements == null) return; // form was not properly filled out
     console.log("Submitting new measurement");
     document.getElementById('commit_add_measurement_button').disabled = true;
@@ -451,7 +525,7 @@ function commit_add_measurement_form() {
             return;
         }
         console.log("starting");
-        // console.log(this.responseText);
+        console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
         console.log('new measure to add', data[0], json['new_measurements']);
@@ -507,8 +581,9 @@ function validate_new_form() {
 
 // check if form is properly filled out and returns form data if completed
 function validate_add_form() {
+    console.log("data at add form", data);
     var  error  = false;
-    if(data[1][0] != '') {
+    if(data[1][0][1] != '') {
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;
@@ -516,7 +591,7 @@ function validate_add_form() {
             document.getElementById('measure1_error').style.display = 'none';
         }
     }
-    if(data[1][1] != '') {
+    if(data[1][1][1] != '') {
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
             error = true;
