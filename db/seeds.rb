@@ -385,13 +385,13 @@ hc_humor.happiness_questions << HappinessQuestion.find(14)
 # need readables, upvotes, downvotes
 
 comment_data = [
-	{'activity_type_id' => 1, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 1},
+	{'activity_type_id' => 1, 'content' => 'Should I buy myself good running shoes?', 'signature' => 'curious', 'author_id' => 4},
 	{'activity_type_id' => 1, 'content' => 'I love running!!! <3', 'signature' => 'excited', 'author_id' => 2},
-	{'activity_type_id' => 1, 'content' => 'Is running bad for someone with flat feet?', 'signature' => 'Xandra', 'author_id' => 0},
+	{'activity_type_id' => 1, 'content' => 'Is running bad for someone with flat feet?', 'signature' => 'Xandra', 'author_id' => 1},
 	{'activity_type_id' => 2, 'content' => 'Reading is stupid', 'signature' => 'coolkid92', 'author_id' => 7},
 	{'activity_type_id' => 2, 'content' => 'I never realized how fulfilling reading could be until my friend showed me the wonderful novel Twilight! Respond if you want to talk about this amazing series!!!', 'signature' => 'happy', 'author_id' => 3},
 	{'activity_type_id' => 2, 'content' => 'Reading is super stupid', 'signature' => 'stillcool', 'author_id' => 7},
-	{'activity_type_id' => 2, 'content' => 'What\'s your favorite book?', 'signature' => 'Xandra', 'author_id' => 0},
+	{'activity_type_id' => 2, 'content' => 'What\'s your favorite book?', 'signature' => 'Xandra', 'author_id' => 1},
 ]
 
 response_data = [
