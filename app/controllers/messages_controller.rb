@@ -2,8 +2,17 @@ class MessagesController < ApplicationController
 
 	include MessagesHelper
 
+    # @Jimmy: I don't know what the purpose of friend_inbox and not_friend_inbox are. However, if you still want them, I left your original inbox method in old_method
+
     # Renders page based on whether user/friend/non-friend
 	def inbox
+        @message_items = recently_sent_messages(current_user.id)
+        @message_items += recently_received_messages(current_user.id)
+	    @message_items.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+        render 'my_inbox'
+	end
+
+    def old_method
        viewed_user = User.find_by_username(params[:username]) 
 	      if (params[:username] == nil || is_current_user(viewed_user.username))
 			  @message_items = recently_sent_messages(current_user.id)
@@ -20,7 +29,7 @@ class MessagesController < ApplicationController
 			  #Render non-friend-view
 			  render 'non_friend_inbox'
 		  end  
-	end
+    end
 
 	# Creates a new message
 	# TODO: Check that sender id corresponds to current user

@@ -18,9 +18,18 @@ module MessagesHelper
 	messages.each do |message|
 	  sender = User.find(message.sender_id) 
 	  receiver = User.find(message.receiver_id)
-	  result = {:sender => sender, 
-				:receiver => receiver, 
-				:message => message, 
+      #if sender.users.include? receiver
+      if receiver.users.include? sender
+          sender_sig = sender.username
+          receiver_sig = receiver.username
+      else
+          sender_sig = message.sender_sig
+          receiver_sig = message.receiver_sig
+      end
+	  result = {:sender_sig => sender_sig, 
+                :receiver_sig => receiver_sig,
+				:content => message.content,
+                :quote => message.quote,
 				:type => 'message',
 				:timestamp => message.created_at
 			   }   

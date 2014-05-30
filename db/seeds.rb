@@ -236,7 +236,7 @@ for datum in activity_data do
 end
 
 measure_data = [
-    {'value' => 1, 'measurement_type_id' => 0, 'activity_id' => 0}
+    {'value' => 1, 'measurement_type_id' => 1, 'activity_id' => 1}
 ]
 
 happiness_question_data = [
@@ -276,8 +276,11 @@ happiness_question_data = [
 
 frienddata = [
 	{'user_id' => 1, 'friend_id' => 2},
+	{'user_id' => 2, 'friend_id' => 1},
 	{'user_id' => 1, 'friend_id' => 3},
+	{'user_id' => 3, 'friend_id' => 1},
 	{'user_id' => 2, 'friend_id' => 3},
+	{'user_id' => 3, 'friend_id' => 2},
 ]
 
 for friend in frienddata do

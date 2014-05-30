@@ -363,11 +363,11 @@ class ActivitiesController < ApplicationController
 
     # params: comment_index, content, signature, isPublic
     def new_response
-        comment = Comment.find(params[:comment_id])
-        signature = params[:anonymous] ? "anonymous" : current_user.username
+        comment = Comment.find(params[:comment_id].to_i)
+        sender_sig = params[:anonymous] == "true" ? "anonymous" : current_user.username
         # create a message to author of comment from user
-        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], sender_sig: comment.signature, receiver_sig: signature)
-        if params[:is_public]
+        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], receiver_sig: comment.signature, sender_sig: sender_sig)
+        if params[:is_public] == "true"
             response = Response.create(author: current_user, comment: comment, content: params[:content])
             response.signature = signature
             new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
@@ -386,8 +386,8 @@ class ActivitiesController < ApplicationController
 
     def new_r_response
         comment = Comment.find(params[:comment_id])
-        signature = params[:anonymous] ? "anonymous" : current_user.username
-        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], sender_sig: comment.signature, receiver_sig: signature)
+        sender_sig = params[:anonymous] ? "anonymous" : current_user.username
+        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], receiver_sig: comment.signature, receiver_sig: sender_sig)
         render nothing: true
     end
 
