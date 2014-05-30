@@ -21,7 +21,7 @@
 
   <!-- <%= javascript_include_tag "jquery" %> -->
 
-  <%= javascript_include_tag "application", "highcharts", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
 </head>
 
 <body>
@@ -93,7 +93,7 @@
       //alert('logging out');
       //window.location.replace("/signout");
       $.ajax({
-        url: "signout"
+        url: "/signout"
       });
     });
   });

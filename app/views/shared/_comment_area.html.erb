@@ -1,13 +1,19 @@
 <div>
     <div class="comment_area">
     </div>
-    <textarea id="new_comment">
-    </textarea>
-    <input type="text" id="signature" value="<%= current_user.username %>">
-    </input>
-    <button id="add_new_comment">
+    <button class="add_text_area" onclick="add_text_area(comment_area)">
         Add comment
     </button>
+    <div class="new_text_area">
+        <textarea class="new_text">
+        </textarea>
+        <input type="checkbox" class="anonymous_check" value="anonymous">
+            post anonymously
+        </input>
+        <button class="submit_new_text" onclick="submit_new_comment">
+            submit
+        </button>
+    </div>
     <button id="show_more_comments">
         Show more comments
     </button>

@@ -3,10 +3,13 @@ prev = '';
 displayed_results = [];
 str = '';
 
-function search() {
-    if(str == document.getElementById('search').value.trim()) return;
+function search(enterPress) {
+    console.log('enterPress', enterPress);
+    if(str == document.getElementById('search').value.trim()) {
+        console.log("still same string", str);
+        return;
+    }
     str = document.getElementById('search').value.trim();
-    // updateActivityName(str);
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     if(str) {
         set_headers();
@@ -16,14 +19,19 @@ function search() {
     // searchMore();
 }
 
+function pickIfMatching() {
+    if(displayed_results[0]) {
+        get_data_for_activity(displayed_results[0]);
+    } else {
+        create_new_activity(document.getElementById('search').value.trim());
+    }
+}
+
 function set_headers(header) {
     var elements = document.getElementsByClassName('activity_header');
     for (var element in elements) {
-        if(header) {
-            (elements[element]).innerHTML = header;
-        } else {
-            (elements[element]).innerHTML = str;            
-        }
+        if(header) (elements[element]).innerHTML = header;
+        else (elements[element]).innerHTML = str;
     }
 }
 
@@ -37,7 +45,8 @@ function searchInitial() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_data?str=';
-    xhr.open("GET", url+encodeURIComponent(str), true); 
+    console.log(url + encodeURIComponent(str));
+    xhr.open("GET", url + encodeURIComponent(str), true); 
     xhr.send();
     function xhrHandler() {
         if(str != cur_str) return;
@@ -77,23 +86,6 @@ function searchMore() {
         json  = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], false);
-
-        // if(json['user_does_activity']) {
-        //     update_friends(json['friends']);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('add');
-        //     update_suggested(json['spellings_sugs'][0]);
-        // } else if (json['query_activity_exists']) {
-        //     update_friends(json['friends']);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('new');
-        //     update_suggested(json['spellings_sugs'][0]);
-        // } else {
-        //     update_friends([]);
-        //     update_graph(json['recent_measurements'], json['measurement_types']);
-        //     show_form('new');
-        //     update_suggested(json["spellings_sugs"][0]);
-        // }
     }
     console.log("more search started");
 }
@@ -173,7 +165,6 @@ function get_data_for_activity(selected_str) {
         document.getElementById('results').innerHTML = '';
         if(json['user_does_activity']) {
             show_form('add');
-            update_graph(json['recent_measurements'], json['measurement_types']);
             measurements = [];
             if(json['measurement_types'][0]) {
                 measurements.push(json['measurement_types'][0][1]);
@@ -182,13 +173,48 @@ function get_data_for_activity(selected_str) {
                 measurements.push(json['measurement_types'][1][1]);
             }
             update_add_form_inputs(measurements);
+            data = [json['recent_measurements'], measurements];
+            update_graph();
         } else {
             show_form('new');
         }
     }
 }
 
+function update_graph() {
+    console.log("data", data);
+    if(data[0].length > 0) {
+        console.log("Show the graph with information", data[0]);
+        document.getElementById("graph_box").style.display = 'block';
+        setChart(data[0], data[1]);
+    } else {
+        console.log("Hide the graph", data[0]);
+        document.getElementById("graph_box").style.display = 'none';
+    }
+}
+
 function setChart(recent_measurements, measurement_types) {
+    console.log("final data", recent_measurements, measurement_types);
+
+
+
+
+
+    if(measurement_types[0] != "") {
+        if(measurement_types[1] != "") { // 2 measurements used
+            console.log("2 measurements");
+
+        } else { // 1 measurement used
+            console.log("1 measurements");
+
+
+        }
+    } else { // 0 mesurements used
+        console.log("0 measurements");
+
+
+    }
+
     new Highcharts.Chart({
         chart: { renderTo: 'activity_chart' }, // name of div to be filled with content
         title: { text: str }, // title of current activity
@@ -255,6 +281,7 @@ function show_form(option) {
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
     }
+    document.getElementById('commit_new_measurement_button').disabled = false;
 }
 
 function clear_form_values() {
@@ -264,15 +291,6 @@ function clear_form_values() {
     document.forms["new_activity"][1].value = "";
     document.getElementById('measure1_error').style.display = "none";
     document.getElementById('measure2_error').style.display = "none";
-}
-
-function update_graph(recent_measurements, measurement_types) {
-    if(recent_measurements) {
-        document.getElementById("graph_box").style.display = 'block';
-        setChart(recent_measurements, measurement_types);
-    } else {
-        document.getElementById("graph_box").style.display = 'none';
-    }
 }
 
 function update_friends(friends) {
@@ -286,28 +304,16 @@ function update_friends(friends) {
     }
 }
 
-// Update suggested 
-function update_suggested(suggestedName) {
-    console.log(suggestedName);
-    if(suggestedName) {
-        console.log(suggestedName);
-        document.getElementById('suggested').innerHTML = "Did you mean "+suggestedName+"?";
-    } else if(suggestedName == str) {
-        document.getElementById('suggested').innerHTML = "";
-    } else {
-        document.getElementById('suggested').innerHTML = "";
-    }
-}
-
 function add_measurement_form() {
     document.getElementById('second_measurement').style.display = 'block';
     document.forms["new_activity"][1].focus();
     document.getElementById('add_new_measurement_button').style.display = 'none';
 }
 
-// AJAX request that will submit the new activity meanurements for a tracked activity
+// AJAX request that will submit the new activity measurements for a tracked activity
 function commit_new_measurement_form() {
     var measurements = validate_new_form();
+    document.getElementById('commit_new_measurement_button').disabled = true;
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/create_activity?";
@@ -327,18 +333,21 @@ function commit_new_measurement_form() {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
+        data = null;
         update_add_form_inputs(measurements);
         show_form('add');
+        data = [[], measurements];
+        document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
 }
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
-    console.log("Submitting new measurement");
-
     var measurements = validate_add_form();
     if(measurements == null) return; // form was not properly filled out
+    console.log("Submitting new measurement");
+    document.getElementById('commit_add_measurement_button').disabled = true;
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/track_activity?";
@@ -355,34 +364,49 @@ function commit_add_measurement_form() {
             return;
         }
         console.log("starting");
-        console.log(this.responseText);
+        // console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        update_graph(json['recent_measurements'], json['measurement_types']);
+        console.log('new measure to add', data[0], json['new_measurements']);
+        if(data[0].length == 0) {
+            console.log('first entered into the activity');
+            data[0] = json['new_measurements'];
+        } else {
+            data[0].push.apply(data[0], json['new_measurements']);
+        }
+        console.log("new data", data[0]);
+        document.getElementById('commit_add_measurement_button').disabled = false;
+        update_graph();
     }
     xhr.send();
 }
 
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
-    if(measurements[0])
-    if(measurements && measurements.length != 0) {
-        if(measurements[0]) {
+    document.getElementById('commit_new_measurement_button').disabled = false;
+    if(measurements[0] != "") {
+        console.log("length", measurements.length);
+        if(measurements[0] != "") {
+            console.log("show first add input");
             document.getElementById('input_measure1').innerHTML = measurements[0];
+            document.getElementById('measure_input1').style.display = 'block';
         } else {
             document.getElementById('measure_input1').style.display = 'none';
-            document.getElementById('measure1_error').style.display = 'none';
         }
-        if(measurements[1]) {
+        if(measurements[1] && measurements[1] != "") {
+            console.log("show second add input");
             document.getElementById('input_measure2').innerHTML = measurements[1];
+            document.getElementById('measure_input2').style.display = 'block';        
         } else {
             document.getElementById('measure_input2').style.display = 'none';
-            document.getElementById('measure2_error').style.display = 'none';
         }
     } else {
+        console.log("no measurements to show");
         document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
         document.getElementById('measure_input1').style.display = 'none';
         document.getElementById('measure_input2').style.display = 'none';
+        document.getElementById('measure1_error').style.display = 'none';
+        document.getElementById('measure2_error').style.display = 'none';
     }
 }
 
@@ -398,23 +422,28 @@ function validate_new_form() {
 // check if form is properly filled out and returns form data if completed
 function validate_add_form() {
     var  error  = false;
-    if(document.forms["add_activity"][0].style.display != 'none') {
-        console.log('1 not hidden');
+    if(data[1][0] != '') {
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;
+        } else {
+            document.getElementById('measure1_error').style.display = 'none';
         }
     }
-    if(document.forms["add_activity"][1].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
-        console.log('2 not hidden');
+    if(data[1][1] != '') {
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
             error = true;
+        } else {
+            document.getElementById('measure2_error').style.display = 'none';
         }
     }
     if(error) {
         return null;
+        console.log("error", error);
     } else {
+        document.getElementById('measure1_error').style.display = 'none';
+        document.getElementById('measure2_error').style.display = 'none';
         var measure1 = document.getElementById('input_measure1').innerHTML;
         var measure2 = document.getElementById('input_measure2').innerHTML;
         var value_1 = document.forms["add_activity"][0].value;
@@ -422,6 +451,19 @@ function validate_add_form() {
         document.forms["add_activity"][0].value = '';
         document.forms["add_activity"][1].value = '';
         return [[measure1, value_1], [measure2, value_2]];    
+    }
+}
+
+// Update suggested 
+function update_suggested(suggestedName) {
+    console.log(suggestedName);
+    if(suggestedName) {
+        console.log(suggestedName);
+        document.getElementById('suggested').innerHTML = "Did you mean "+suggestedName+"?";
+    } else if(suggestedName == str) {
+        document.getElementById('suggested').innerHTML = "";
+    } else {
+        document.getElementById('suggested').innerHTML = "";
     }
 }
 

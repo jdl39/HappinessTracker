@@ -15,6 +15,8 @@ green             : #9FFF4B
 blue              : #00aadd
 dark blue         : #1A35B2
 
+other green       : rgb(123,214,190)
+
 neutral-lightest  : #ddd
 neutral-light     : #aaa
 neutral-mid       : #999
@@ -233,6 +235,11 @@ footer {
   MISC
 ============================================================ */
 
+.time {
+  font-size: 12px;
+  color: #aaa;
+}
+
 .result {
   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #dddddd));
   background:-moz-linear-gradient(top, #cccccc 5%, #dddddd 100%);
@@ -279,4 +286,143 @@ footer {
   padding: 5px;
 }
 
+/* ============================================================
+  LOGIN FORM
+============================================================ */
 
+#login-form {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+  margin-top: 64px;
+  margin-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 56%;
+  padding: 16px;
+  /*background-color: rgb(200,200,200);*/
+}
+
+#login-form h1 {
+  margin-left: auto;
+  margin-right: auto;
+  width: 32%;
+  margin-bottom: 42px;
+}
+
+#login-form ul li {
+  margin-bottom: 8px;
+}
+
+#login-form input[type=text],
+#login-form input[type=password] {
+  height: 24px;
+}
+
+#login-form a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  CREATE ACCOUNT FORM
+============================================================ */
+
+#create-account-form {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+  margin-top: 64px;
+  margin-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 56%;
+  padding: 16px;
+/*  background-color: rgb(220,156,104); */
+  display: none;
+}
+
+#create-account-form h1 {
+  margin-left: auto;
+  margin-right: auto;
+  width: 44%;
+  margin-bottom: 42px;
+}
+
+#create-account-form label {
+  /*background-color: rgb(220,220,220);*/
+  width: 35%;
+  margin-right: 13px;
+  display: inline-block;
+  text-align:right;
+}
+
+#create-account-form input[type=text],
+#create-account-form input[type=password] {
+  height: 24px;
+  width: 193px;
+}
+
+#create-account-form a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  PROFILE STYLES
+============================================================ */
+
+.profile-name {
+  text-align: center;
+  /*background-color: rgb(123,214,190);*/
+  border-left-style: solid;
+  border-right-style: solid;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+}
+
+.profile-name h1 {
+  font-weight: bold;
+}
+
+.profile-recent li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  /*background-color: rgb(123,214,190);*/
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.profile-recent a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  FRIEND LIST
+============================================================ */
+
+.friend-list-heading {
+  /*background-color: rgb(123,214,190);*/
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+}
+
+.friend-list-heading h1 {
+  font-weight: bold;
+}
+
+.friend-list a {
+  color: #00aadd;
+}
+
+/* ============================================================
+  COMMENT STUFF
+  ============================================================ */
+
+.new_text_area {
+    display: none;
+}

@@ -14,3 +14,21 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//= require highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/themes/gray
+
+
+function toggleCreateAccountForm() {
+	var loginForm = document.getElementById("login-form");
+	loginForm.style.display = "none";
+	var createForm = document.getElementById("create-account-form");
+	createForm.style.display = "block";
+}
+
+function toggleLoginForm() {
+	var loginForm = document.getElementById("login-form");
+	loginForm.style.display = "block";
+	var createForm = document.getElementById("create-account-form");
+	createForm.style.display = "none";
+}
