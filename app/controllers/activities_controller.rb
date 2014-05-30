@@ -339,32 +339,48 @@ class ActivitiesController < ApplicationController
         }
     end
 
-# TODO: use readable_comments_count and readable_responses_count
-# (incr/decr the counts in up/down votes or new comment/response, use to get rid of old comments whenever you spread)
+    $vote_threshold = -3
+    $spread_amount = 5
+    $history_size = 25
 
     # params: activity, content, signature
     def new_comment
-        comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
+        comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content])
+        comment.signature = params[:anonymous] ? "anonymous" : current_user.username
         new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
         new_readers |= current_user.friends
         comment.readers.concat new_readers
         comment.save
+        new_readers.each do |reader|
+            if reader.readable_comments.size > $history_size
+                reader.readable_comments.sort{|a,b| a.created_at <=> b.created_at}.first.remove
+            end
+            reader.save
+        end
         # TODO: flash feedback
         render nothing: true
     end
 
     # params: comment_index, content, signature, isPublic
     def new_response
-        comment = Comment.where(id: session[:comments][params[:comment_index]])
+        comment = Comment.find(params[:comment_id])
         # create a message to author of comment from user
-        message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
+        #message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
+        # TODO: quoted content and signature for person being responded to
         # TODO: send message
-        if isPublic
-            response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
+        if params[:is_public]
+            response = Response.create(comment: comment, content: params[:content])
+            response.signature = params[:anonymous] ? "anonymous" : current_user.username
             new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
             new_readers |= current_user.friends
             response.readers.concat new_readers
             response.save
+            new_readers.each do |reader|
+                if reader.readable_responses.size > $history_size
+                    reader.readable_responses.sort{|a,b| a.created_at <=> b.created_at}.first.remove
+                end
+                reader.save
+            end
         end 
         render nothing: true
     end
@@ -373,9 +389,6 @@ class ActivitiesController < ApplicationController
         # create a message, like in new_response if isPublic was always false
         render nothing: true
     end
-
-    $vote_threshold = -3
-    $spread_amount = 5
 
     def up_comment
         puts "up comment!"
@@ -389,7 +402,12 @@ class ActivitiesController < ApplicationController
             new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
             comment.readers.concat new_readers
             comment.save
-            #new_readers.each{|reader| reader.readable_comment
+            new_readers.each do |reader|
+                if reader.readable_comments.size > $history_size
+                    reader.readable_comments.sort{|a,b| a.created_at <=> b.created_at}.first.remove
+                end
+                reader.save
+            end
         end
         puts "finished"
         render nothing: true
@@ -423,6 +441,12 @@ class ActivitiesController < ApplicationController
             new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
             response.readers.concat new_readers
             response.save
+            new_readers.each do |reader|
+                if reader.readable_responses.size > $history_size
+                    reader.readable_responses.sort{|a,b| a.created_at <=> b.created_at}.first.remove
+                end
+                reader.save
+            end
         end
         puts "finished"
         render nothing: true

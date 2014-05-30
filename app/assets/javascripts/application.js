@@ -16,7 +16,7 @@
 //= require_tree .
 //= require highcharts
 //= require highcharts/highcharts-more
-//= require highcharts/themes/dark-unica
+//= require highcharts/themes/gray
 
 
 function toggleCreateAccountForm() {
@@ -31,4 +31,21 @@ function toggleLoginForm() {
 	loginForm.style.display = "block";
 	var createForm = document.getElementById("create-account-form");
 	createForm.style.display = "none";
+}
+
+function togglePageLayout() {
+   var body = $("body");
+   var wrapper = $(".wrapper");
+   var desiredColor = happiness_status ? '#ff9933' : '#5f9ea0';
+   body.css("background-color", desiredColor);
+   var desiredWrapperColor = happiness_status ? '#cc6600' : '#335556';
+   wrapper.css("border-top", "solid 5px " + desiredWrapperColor); 
+}
+
+function toggleHeaderLayout() { 
+  console.log("Toggle header layout called.")
+  var desiredColor = happiness_status ? '#ff9933' : '#5f9ea0';
+  $("h2").css("color", desiredColor);
+  $("h1").css("color", desiredColor);
+  $("hr").css("background-color", desiredColor);
 }

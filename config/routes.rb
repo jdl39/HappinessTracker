@@ -81,6 +81,9 @@ HappinessApp::Application.routes.draw do
   # TEST FOR RECOMMENDATIONS
   get '/recommendations', to: 'activities#recommendations'
 
+  # HAPPINESS PAGE
+  match '/happiness_status/set', to: 'users#set_happy_status', via: 'post' #is_happy
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
