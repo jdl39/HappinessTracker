@@ -16,7 +16,7 @@ function search(enterPress) {
     }
     show_form('');
     searchInitial();
-    // searchMore();
+    // searchMore(); // Search is really slow with this line, for now, I am not using it. 
 }
 
 function pickIfMatching() {
@@ -61,6 +61,7 @@ function searchInitial() {
         json  = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], true);
+        searchMore();
     }
     console.log("initial search ended");
 }
@@ -87,7 +88,7 @@ function searchMore() {
         json = JSON.parse(json);
         update_results(json['search_results'], false);
     }
-    console.log("more search started");
+    console.log("more search ended");
 }
 
 function update_results(results, initial) {
@@ -95,6 +96,12 @@ function update_results(results, initial) {
     if(initial) {
         document.getElementById('results').innerHTML = '';
         displayed_results = [];
+    } else {
+        var div = document.getElementById('create_activity_div');
+        if(div) {
+            div.parentNode.removeChild(div.nextSibling);
+            div.parentNode.removeChild(div);
+        }
     }
     var results_div = document.getElementById('results');
     for (var element in results) {
@@ -126,6 +133,7 @@ function update_results(results, initial) {
         newDiv.addEventListener('click', function(){
             create_new_activity(str);
         });
+        newDiv.id = "create_activity_div";
         results_div.appendChild(newDiv);
         results_div.appendChild(document.createElement('br'));
     }
@@ -195,14 +203,10 @@ function update_graph() {
 
 function setChart(recent_measurements, measurement_types) {
     console.log("final data", recent_measurements, measurement_types);
-
-
-
-
-
     if(measurement_types[0] != "") {
         if(measurement_types[1] != "") { // 2 measurements used
             console.log("2 measurements");
+
 
         } else { // 1 measurement used
             console.log("1 measurements");
@@ -454,7 +458,7 @@ function validate_add_form() {
     }
 }
 
-// Update suggested 
+// Update suggested // for now we are not using a suggestion for user input
 function update_suggested(suggestedName) {
     console.log(suggestedName);
     if(suggestedName) {

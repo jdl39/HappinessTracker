@@ -21,6 +21,22 @@ class HappinessController < ApplicationController
         redirect_to action: 'index'
     end
 
+    def get_happiness_scores
+        num_days = params[:num_days]
+        num_days = 90 if num_days.nil?
+
+        happiness_values = []
+        (0...num_days).each do |days_ago|
+            hv = {}
+            time = (num_days - days_ago - 1).days.ago
+            hv[:timestamp] = time
+            hv[:value] = current_user.happiness_score_at_time(time)
+            happiness_values << hv
+        end
+
+        render json: happiness_values
+    end
+
     def index
         # Will need to have three different templates to route to based on if same user, friends, non_friends
     end
