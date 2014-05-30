@@ -124,16 +124,16 @@
 	<hr>
 	<h2><a href="/challenges"> Recent Challenges</a></h2>
 	<hr>
-	<% my_challenges.each do |challenge|%>
-		<%= render :partial => 'shared/challenge', :challenge => challenge %>
-    <% end %> 
+	<ul>
+	<% @my_received_challenges.each do |challenge| %>
+		<li><%= render :partial => 'shared/challenge_feed_entry', :locals => {:item=>challenge} %></li>
+	<% end %>
+    </ul>	
 	<!--<ul>
 	  <li> Joe challenged you to, "Eat a banana!" Accept, decline, etc.</li>
 	  <--> 
 	 <hr>
-	
-
-</div>
+	</div>
 <div id = "left_col">
 	<h2>News Feed</h2>
 	<hr>
@@ -151,5 +151,5 @@
 	</article><!-- /article -->
 
 	<button>Load More News</button>
-  </div><!-- /section -->
+</div><!-- /section -->
 </section>
