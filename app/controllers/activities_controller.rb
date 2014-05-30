@@ -1,6 +1,8 @@
 # TODO: update and delete look copy-pasted.
 
 class ActivitiesController < ApplicationController
+    before_action :setup_goals, only: [:track_new_measurement, :get_activity_data]
+
     def create_activity
         # Parse json
         # json = JSON.parse(params[:json])
@@ -499,5 +501,9 @@ class ActivitiesController < ApplicationController
     # Helper for search and data_for_user
     def data_for_user_helper(user_id, activity_type_id)
     	# TODO: Implement.
+    end
+
+    def setup_goals
+        Goal.setup_goals_for(current_user)
     end
 end

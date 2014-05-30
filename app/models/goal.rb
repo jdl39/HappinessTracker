@@ -9,6 +9,15 @@ class Goal < ActiveRecord::Base
   	goal.check_for_rescheduling
   end
 
+  # Triggers the goals for the user, which allows it to be rescheduled if necessary.
+  def Goal.setup_goals_for(user)
+    user.activities.each do |act|
+      act.goals.each do |goal|
+        goal.touch
+      end
+    end
+  end
+
   def time_due
   	return self.start_time + self.goal_type.days_to_complete.days
   end
