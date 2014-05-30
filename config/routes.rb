@@ -31,6 +31,8 @@ HappinessApp::Application.routes.draw do
   get '/friends/', to: 'friends#index'
   get '/friends/:username', to: 'friends#index'
 
+  get '/happiness_scores', to: 'happiness#get_happiness_scores'
+
   get 'blah', to: 'activities#delete_me'
   get 'get_comments', to: 'activities#getComments'
   post 'add_comment', to: 'activities#addComment'
