@@ -375,7 +375,7 @@ class ActivitiesController < ApplicationController
         puts "not already up voted"
         comment.up_voters << current_user
         comment.votes = comment.votes.to_i + 1
-        new_readers = User.limit($spread_amount).where.not(user: current_user, down_comments: comment, readable_comments: comment).order("RANDOM()")
+        new_readers = User.limit($spread_amount).where.not(id: current_user.id, down_comments: comment.id, readable_comments: comment.id).order("RANDOM()")
         # is this adding correctly???
         comment.readers.concat new_readers
         comment.save
@@ -392,9 +392,9 @@ class ActivitiesController < ApplicationController
         puts "not already down voted"
         comment.down_voters << current_user
         comment.votes = comment.votes.to_i - 1
-        comment.up_voters.delete(:current_user)
-        comment.readers.delete(:current_user)
+        comment.readers.delete(current_user)
         comment.readers.delete_all if comment.votes < $vote_threshold
+        comment.up_voters.delete(current_user)
         comment.save
         puts "finished"
     end
