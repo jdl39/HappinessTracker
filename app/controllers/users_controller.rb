@@ -102,6 +102,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def set_happy_status
+	  current_user.is_happy = params[:is_happy]
+	  if current_user.save
+		  render text: current_user.id
+	  else
+		  render text: '-1'
+      end
+  end
+
   private
     	def user_params
      		return params.require(:user).permit(:first_name, :last_name, :username, :email, :password,

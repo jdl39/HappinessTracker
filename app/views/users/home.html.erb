@@ -11,19 +11,19 @@
 
   hr {
 	height:2px;
-	background-color:#7f8381;
+	background-color:#5f9ea0;
 	border:none;
   }
   
   h1 {
     font-weight:bold;
-	color:#7f8381;
+	color:#5f9ea0;
 	text-align:center;
   }
 
   h2 {
     font-weight:bold;
-	color:#7f8381;
+	color:#5f9ea0;
 	text-align:center;
   }
 
@@ -56,13 +56,13 @@
   .onoffswitch-inner:before {
     content: "HAPPY";
 	padding-left: 10px;
-	background-color: #CC6600; color: #FFFFFF;
+	background-color: #FF9933; color: #FFFFFF;
   }
 
   .onoffswitch-inner:after {
     content: "SAD";
 	padding-right: 10px;
-	background-color: #7F8381; color: #FCF9F9;
+	background-color: #5f9ea0; color: #FCF9F9;
 	text-align: right;
   }
 
@@ -84,9 +84,14 @@
   }
 
 </style>
+
 <h1>Welcome, <%= current_user.first_name %>!</h1>
 <div class="onoffswitch">
-  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+	<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"
+	<% if current_user.is_happy %>
+		checked
+	<% end %>
+	>
     <label class="onoffswitch-label" for="myonoffswitch">
 	  <span class="onoffswitch-inner"></span>
 	  <span class="onoffswitch-switch"></span>
@@ -108,21 +113,21 @@
 	</ul>
 
 	<hr>
-	<h2><a href ="/friends">Friends' Moods</a></h2>
+	<h2>Friends' Moods</h2>
 	<hr>
 	<ul>
 	  <li> Joe: Sad  | Send Joe a Message</li>
 	  <li> Bob: Happy | Send Bob a Message</li>
     </ul>
 	<hr>
-	<h2><a href="/inbox">Recent Messages</a></h2>
+	<h2><Recent Messages</h2>
 	<hr>
 	<ul>
 	  <li> Joe: "Hi!...." <a href="">View more</a></li>
       <li> Bob: "Yo!...." <a href="">View more</a></li>
     </ul>
 	<hr>
-	<h2><a href="/challenges"> Recent Challenges</a></h2>
+	<h2>Recent Challenges</h2>
 	<hr>
 	<ul>
 	<% @my_received_challenges.each do |challenge| %>
@@ -153,3 +158,16 @@
 	<button>Load More News</button>
 </div><!-- /section -->
 </section>
+
+<script>
+	$(document).ready(function() {
+	  toggleHeaderLayout();
+	  $('#myonoffswitch').change (function(e) {
+		  happiness_status = $('#myonoffswitch').prop("checked");
+		  console.log($("myonoffswitch").prop("checked"));
+		 togglePageLayout();
+		 toggleHeaderLayout();
+		 $.post('/happiness_status/set', {'is_happy': happiness_status}); 
+	  });
+  });
+</script>

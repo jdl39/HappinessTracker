@@ -88,7 +88,11 @@
 </body>
 
 <script>
+  var happiness_status = <%= current_user.is_happy %>
+
   $(document).ready(function() {
+	togglePageLayout();
+
     $('#logout').click(function(e) {
       //alert('logging out');
       //window.location.replace("/signout");
@@ -97,6 +101,7 @@
       });
     });
   });
+
 </script>
 
 </html>
