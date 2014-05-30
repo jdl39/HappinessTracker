@@ -153,7 +153,7 @@ function update_results(results, initial) {
     for (var element in results) {
         !function outer(element) {
             console.log("element name", results[element][1]);
-            if(displayed_results.length <= 10) {
+            if(displayed_results.length <= 10 && displayed_results.indexOf(results[element][1]) == -1) {
                 displayed_results.push(results[element][1]);
                 var newDiv = document.createElement('div');
                 newDiv.innerHTML = results[element][1];
@@ -196,6 +196,7 @@ function create_new_activity(new_activity_str) {
 function get_data_for_activity(selected_str) {
     console.log("hey", selected_str);
     selectedStr = selected_str;
+    document.getElementById('results').innerHTML = '';
     doNotUpdateSearchMore = true;
     str = selected_str;
     document.getElementById('search').value = selected_str;
@@ -218,7 +219,6 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        document.getElementById('results').innerHTML = '';
         if(json['user_does_activity']) {
             show_form('add');
             measurements = [];
@@ -256,56 +256,72 @@ function setChart(recent_measurements, measurement_types) {
             console.log("2 measurements");
             new Highcharts.Chart({
                 chart: {
+                    renderTo: 'activity_chart',
                     zoomType: 'x'
                 },
                 title: {
-                    text: 'USD to EUR exchange rate from 2006 through 2008'
+                    text: 'Your History of ' + str
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
-                        'Click and drag in the plot area to zoom in' :
-                        'Pinch the chart to zoom in'
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in'
                 },
                 xAxis: {
                     type: 'datetime',
-                    minRange: 14 * 24 * 3600000 // fourteen days
+                    tickInterval: 24 * 3600 * 1000
+                    // minRange: 1 * 24 * 3600000 // 1 day
                 },
-                yAxis: {
+                yAxis: [{ // Primary yAxis
+                    gridLineWidth: 0,
+                    abels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[5]
+                        }
+                    },
                     title: {
-                        text: 'Exchange rate'
-                    }
+                        text: measurements[0],
+                        style: {
+                            color: Highcharts.getOptions().colors[5]
+                        }
+                    },
+                    opposite: false
+
+                },  { // Secondary yAxis
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    title: {
+                        text: measurements[1],
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    opposite: true
+
+                }],
+                tooltip: {
+                    shared: true
                 },
                 legend: {
-                    enabled: false
+                    floating: false,
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
-                plotOptions: {
-                    area: {
-                        fillColor: {
-                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                            ]
-                        },
-                        marker: {
-                            radius: 2
-                        },
-                        lineWidth: 1,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        },
-                        threshold: null
-                    }
-                },
-        
                 series: [{
-                    type: 'area',
-                    name: 'USD to EUR',
-                    pointInterval: 24 * 3600 * 1000,
-                    pointStart: Date.UTC(2006, 0, 01),
-                    data: []
+                    name: measurements[0], // series for measure 1
+                    type: 'spline',
+                    pointInterval:  3600 * 1000,
+                    pointStart: Date.UTC(2006, 0, 01, 0, 0, 0, 0),
+                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                },  {
+                    name: measurements[1], // series for measure 2
+                    type: 'spline',
+                    yAxis: 1,
+                    data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
                 }]
             });
 
