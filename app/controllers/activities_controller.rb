@@ -364,15 +364,14 @@ class ActivitiesController < ApplicationController
     # params: comment_index, content, signature, isPublic
     def new_response
         comment = Comment.find(params[:comment_id])
+        signature = params[:anonymous] ? "anonymous" : current_user.username
         # create a message to author of comment from user
-        #message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
-        # TODO: quoted content and signature for person being responded to
-        # TODO: send message
+        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], sender_sig: comment.signature, receiver_sig: signature)
         if params[:is_public]
             response = Response.create(comment: comment, content: params[:content])
-            response.signature = params[:anonymous] ? "anonymous" : current_user.username
+            response.signature = signature
             new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
-            new_readers |= current_user.friends
+            new_readers |= current_user.users
             response.readers.concat new_readers
             response.save
             new_readers.each do |reader|
@@ -386,7 +385,9 @@ class ActivitiesController < ApplicationController
     end
 
     def new_r_response
-        # create a message, like in new_response if isPublic was always false
+        comment = Comment.find(params[:comment_id])
+        signature = params[:anonymous] ? "anonymous" : current_user.username
+        message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], sender_sig: comment.signature, receiver_sig: signature)
         render nothing: true
     end
 
