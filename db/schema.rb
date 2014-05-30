@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(version: 20140527032552) do
     t.string   "city"
     t.integer  "readable_comments_count"
     t.integer  "readable_responses_count"
+    t.boolean  "is_happy",                 default: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "provider"
