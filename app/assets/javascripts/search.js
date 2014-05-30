@@ -4,7 +4,9 @@ displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
 
-window.onload = function setStartingParam() {
+
+var ready = function setStartingParam() {
+    console.log("page is loaded");
     var len = document.getElementById('search').value.length;
     document.getElementById('search').focus();
     document.getElementById('search').setSelectionRange(len, len);
@@ -45,6 +47,9 @@ window.onload = function setStartingParam() {
         }
     }
 }
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
 
 function search() {
     console.log("str", str);
@@ -281,7 +286,7 @@ function setChart(recent_measurements, measurement_types) {
                         }
                     },
                     title: {
-                        text: measurements[0],
+                        text: measurement_types[0],
                         style: {
                             color: Highcharts.getOptions().colors[5]
                         }
@@ -296,7 +301,7 @@ function setChart(recent_measurements, measurement_types) {
                         }
                     },
                     title: {
-                        text: measurements[1],
+                        text: measurement_types[1],
                         style: {
                             color: Highcharts.getOptions().colors[2]
                         }
@@ -312,14 +317,15 @@ function setChart(recent_measurements, measurement_types) {
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 series: [{
-                    name: measurements[0], // series for measure 1
+                    name: measurement_types[0], // series for measure 1
                     type: 'spline',
                     pointInterval:  3600 * 1000,
-                    pointStart: Date.UTC(2006, 0, 01, 0, 0, 0, 0),
+                    // pointStart: Date(2014, 4, 01, 0, 0, 0, 0),
                     data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
                 },  {
-                    name: measurements[1], // series for measure 2
+                    name: measurement_types[1], // series for measure 2
                     type: 'spline',
+                    pointInterval:  3600 * 1000,
                     yAxis: 1,
                     data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
                 }]
