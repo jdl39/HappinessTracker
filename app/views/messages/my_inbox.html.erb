@@ -1,1 +1,11 @@
 <h1>My Inbox</h1>
+<ul>
+<% @message_items.each do |item| %>
+  <li>
+	<div><%= Sender: item['sender'].username %></div>
+	<div><%= Receiver: item['receiver'].username %></div>
+	<div><%= Content: item['message'].content %></div>
+	<div><%= Time: item['timestamp'] %></div>
+  </li>
+<% end %>
+</ul>
