@@ -6,9 +6,9 @@ class MessagesController < ApplicationController
 	def inbox
        viewed_user = User.find_by_username(params[:username]) 
 	      if (params[:username] == nil || is_current_user(viewed_user.username))
-			  @messages = recently_sent_messages(current_user.id)
-			  @messages += recently_received_messages(current_user.id)
-			  @messages.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+			  @message_items = recently_sent_messages(current_user.id)
+			  @message_items += recently_received_messages(current_user.id)
+			  @message_items.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 			  #Render personal view of inbox
 			  render 'my_inbox'
 		  elsif (are_friends(current_user.id, viewed_user.id))
