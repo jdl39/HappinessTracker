@@ -14,11 +14,11 @@ class User < ActiveRecord::Base
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
+  	validates :email, allow_nil: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
 	validates :first_name, presence: true
 	validates :last_name, presence: true
 
-	before_save { self.email = email.downcase }
+	before_save { self.email = email.nil? ? nil : email.downcase }
 
 	before_create :create_remember_token
 
@@ -94,9 +94,39 @@ class User < ActiveRecord::Base
           user.oauth_expires_at = Time.at(auth.credentials.expires_at)
           user.password = SecureRandom.urlsafe_base64
           user.password_confirmation = user.password
-          user.email = ""
+          user.email = nil
           user.save!
         end
+    end
+
+    def activity_recommendations
+        score_hash = {}
+        for activity_type in ActivityType.all do
+            prior = activity_type.activities.size
+            prior *= 1.0 / User.all.size
+            score_hash[activity_type.name] = prior
+        end
+
+        for activity in self.activities do
+            count_hash = Hash.new { |hash,key| hash[key] = 1 }
+            this_activity_type = activity.activity_type
+            for other_instance in this_activity_type.activities do
+                for activity_to_count in other_instance.user.activities do
+                    count_hash[activity_to_count.activity_type.name] += 1
+                end
+            end
+
+            for activity_type in ActivityType.all do
+                score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
+            end
+        end
+
+        existing_activities = self.activities.map{|activity| activity.activity_type.name}
+        recommendations = []
+        score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
+            recommendations << tuple[0] unless existing_activities.include? tuple[0]
+        }
+        return recommendations
     end
 
 	private

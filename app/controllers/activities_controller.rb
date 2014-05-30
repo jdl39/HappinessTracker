@@ -130,7 +130,7 @@ class ActivitiesController < ApplicationController
 
     # TODO: Consider caching results in db for quick processing?
     def recommendations
-        render json: {:recommendation_array => activity_recommendations}
+        render json: {:recommendation_array => current_user.activity_recommendations}
     end
 
     $max_result_size = 6
@@ -303,8 +303,6 @@ class ActivitiesController < ApplicationController
         session["upvoted_responses"] = []
     end
 
-# TODO: use readable_comments_count and readable_responses_count
-
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
@@ -341,11 +339,17 @@ class ActivitiesController < ApplicationController
         }
     end
 
+# TODO: use readable_comments_count and readable_responses_count
+# (incr/decr the counts in up/down votes or new comment/response, use to get rid of old comments whenever you spread)
+
     # params: activity, content, signature
     def new_comment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
-        # TODO: add to friends + random readers - downvoters - yourself
-        # TODO: if - yourself, then need to flash feedback
+        new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+        new_readers |= current_user.friends
+        comment.readers.concat new_readers
+        comment.save
+        # TODO: flash feedback
         render nothing: true
     end
 
@@ -357,12 +361,17 @@ class ActivitiesController < ApplicationController
         # TODO: send message
         if isPublic
             response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
-            # TODO: add to friends + random readers - downvoters - yourself
+            new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+            new_readers |= current_user.friends
+            response.readers.concat new_readers
+            response.save
         end 
+        render nothing: true
     end
 
     def new_r_response
         # create a message, like in new_response if isPublic was always false
+        render nothing: true
     end
 
     $vote_threshold = -3
@@ -372,57 +381,68 @@ class ActivitiesController < ApplicationController
         puts "up comment!"
         comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if comment.up_voters.include? current_user
-        puts "not already up voted"
-        comment.up_voters << current_user
-        comment.votes = comment.votes.to_i + 1
-        new_readers = User.limit($spread_amount).where.not(id: current_user.id, down_comments: comment.id, readable_comments: comment.id).order("RANDOM()")
-        # is this adding correctly???
-        comment.readers.concat new_readers
-        comment.save
-        #new_readers.each{|reader| reader.readable_comment
+        unless comment.up_voters.include? current_user
+            puts "not already up voted"
+            comment.up_voters << current_user
+            comment.votes = comment.votes.to_i + 1
+            avoid_users = comment.down_voters | comment.readers | [current_user.id]
+            new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
+            comment.readers.concat new_readers
+            comment.save
+            #new_readers.each{|reader| reader.readable_comment
+        end
         puts "finished"
+        render nothing: true
     end
 
     def down_comment
         puts "down comment!"
         comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if comment.down_voters.include? current_user
-        puts "not already down voted"
-        comment.down_voters << current_user
-        comment.votes = comment.votes.to_i - 1
-        comment.readers.delete(current_user)
-        comment.readers.delete_all if comment.votes < $vote_threshold
-        comment.up_voters.delete(current_user)
-        comment.save
+        unless comment.down_voters.include? current_user
+            puts "not already down voted"
+            comment.down_voters << current_user
+            comment.votes = comment.votes.to_i - 1
+            comment.readers.delete(current_user)
+            comment.readers.delete_all if comment.votes < $vote_threshold
+            comment.up_voters.delete(current_user)
+            comment.save
+        end
         puts "finished"
+        render nothing: true
     end
 
     def up_response
         puts "up resonse! " + params[:respond_id]
         response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return if response.up_voters.include? current_user
-        puts "not already up voted"
-        response.votes = response.votes.to_i + 1
-        # TODO: make new random readers besides downvoters
-        response.save
+        unless response.up_voters.include? current_user
+            puts "not already up voted"
+            response.votes = response.votes.to_i + 1
+            avoid_users = response.down_voters | response.readers | [response_user.id]
+            new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
+            response.readers.concat new_readers
+            response.save
+        end
         puts "finished"
+        render nothing: true
     end
 
+    # params: response_id
     def down_response
         puts "down response! " + params[:response_id]
         response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return if response.down_voters.include? current_user
-        puts "not already down voted"
-        response.votes = response.votes.to_i - 1
-        response.up_voters.delete(current_user)
-        response.readers.delete(current_user)
-        response.readers.delete_all if response.votes < $vote_threshold
-        response.save
+        unless response.down_voters.include? current_user
+            puts "not already down voted"
+            response.votes = response.votes.to_i - 1
+            response.up_voters.delete(current_user)
+            response.readers.delete(current_user)
+            response.readers.delete_all if response.votes < $vote_threshold
+            response.save
+        end
         puts "finished"
+        render nothing: true
     end
 
 	private
@@ -441,37 +461,8 @@ class ActivitiesController < ApplicationController
         return types.map{|type, size| [type.id, type.name]}
     end
 
-    def activity_recommendations
-        score_hash = {}
-        for activity_type in ActivityType.all do
-            prior = activity_type.activities.size * 1.0 / num_users
-            score_hash[activity_type.name] = prior
-        end
-
-        for activity in current_user.activities do
-            count_hash = Hash.new { |hash,key| hash[key] = 1 }
-            this_activity_type = activity.activity_type
-            for other_instance in this_activity_type.activities do
-                for activity_to_count in other_instance.user.activities do
-                    count_hash[activity_to_count.activity_type.name] += 1
-                end
-            end
-
-            for activity_type in ActivityType.all do
-                score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
-            end
-        end
-
-        existing_activities = current_user.activities.map{|activity| activity.activity_type.name}
-        recommendations = []
-        score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
-            recommendations << tuple[0] unless existing_activities.include? tuple[0]
-        }
-        return recommendations
-    end
-
     def num_users
-        @num_users ||= User.size
+        @num_users ||= User.all.size
         return @num_users
     end
 
