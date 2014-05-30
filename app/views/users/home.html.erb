@@ -126,7 +126,7 @@
 	<hr>
 	<ul>
 	<% @my_received_challenges.each do |challenge| %>
-		<li><%= render :partial => 'shared/challenge_feed_entry', :locals => {:item=>challenge} %></li>
+		<li><%= render :partial => 'shared/challenge_home_entry', :locals => {:item=>challenge} %></li>
 	<% end %>
     </ul>	
 	<!--<ul>
