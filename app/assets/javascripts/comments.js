@@ -74,7 +74,9 @@ function down_response(box) {
 
 function add_text_area(comment_box_id) {
     var this_box = $("#" + comment_box_id.id)
-    this_box.find(".add_text_area").remove()
+    console.log(this_box)
+    console.log(this_box.find(".new_text_area"))
+    this_box.find(".add_text_area")[0].remove()
     this_box.find(".new_text_area")[0].style.display = "block"
 }
 
