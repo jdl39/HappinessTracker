@@ -40,7 +40,7 @@ function new_comment_box(comment_id) {
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
             post anonymously \
         </input> \
-        <button class="submit_new_text"> \
+        <button class="submit_new_text" onclick="submit_new_response()"> \
             submit \
         </button> \
     </div> \
@@ -127,7 +127,7 @@ function new_response_box(comment_id, response_id) {
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
             post anonymously \
         </input> \
-        <button class="submit_new_text"> \
+        <button class="submit_new_text" onclick="submit_new_r_response()"> \
             submit \
         </button> \
     </div> \
@@ -138,6 +138,15 @@ function new_response_box(comment_id, response_id) {
     var box = $("#response_box_" + response_id)
     box.hide()
     return box
+}
+
+function submit_new_response() {
+// parameters needed: content, content of what's being responded to, signature used by person being responded to
+// and signature, which is either "anonymous" or username depending on anonymous_check
+    $.post("submit_new_response", {"response_id" : $("#" + box.id).find(".response_id").val()})
+}
+
+function submit_new_r_response() {
 }
 
 $(document).ready(function() {
@@ -160,10 +169,5 @@ $(document).ready(function() {
         data["content"] = $("#new_response").val()
         data["anonymous"] = $("#anonymous").val()
         $.post("add_response", data)
-    })
-    // r_response: a personal message responding to a response; in short, a response response
-    $(".add_r_response").click(function() {
-    })
-    $("#submit_new_r_response").click(function() {
     })
 })

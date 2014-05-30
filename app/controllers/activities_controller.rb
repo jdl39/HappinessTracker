@@ -342,7 +342,7 @@ class ActivitiesController < ApplicationController
     end
 
     # params: activity, content, signature
-    def addComment
+    def new_comment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
         # TODO: add to friends + random readers - downvoters - yourself
         # TODO: if - yourself, then need to flash feedback
@@ -350,7 +350,7 @@ class ActivitiesController < ApplicationController
     end
 
     # params: comment_index, content, signature, isPublic
-    def addResponse
+    def new_response
         comment = Comment.where(id: session[:comments][params[:comment_index]])
         # create a message to author of comment from user
         message = Message.create(quote: comment.content, content: params[:content], sender_sig: params[:signature], receiver_sig: comment.signature)
@@ -361,12 +361,13 @@ class ActivitiesController < ApplicationController
         end 
     end
 
+    def new_r_response
+        # create a message, like in new_response if isPublic was always false
+    end
+
     $vote_threshold = -3
     $spread_amount = 5
 
-    # honestly don't know if I should've combined comment and response into single class
-
-    # params: comment_index
     def up_comment
         puts "up comment!"
         comment = Comment.find(params[:comment_id])
@@ -383,7 +384,6 @@ class ActivitiesController < ApplicationController
         puts "finished"
     end
 
-    # params: comment_index
     def down_comment
         puts "down comment!"
         comment = Comment.find(params[:comment_id])
@@ -399,7 +399,6 @@ class ActivitiesController < ApplicationController
         puts "finished"
     end
 
-    # params: response_index
     def up_response
         puts "up resonse! " + params[:respond_id]
         response = Response.find(params[:response_id])
@@ -412,7 +411,6 @@ class ActivitiesController < ApplicationController
         puts "finished"
     end
 
-    # params: response_id
     def down_response
         puts "down response! " + params[:response_id]
         response = Response.find(params[:response_id])

@@ -33,11 +33,12 @@ HappinessApp::Application.routes.draw do
 
   get 'blah', to: 'activities#delete_me'
   get 'get_comments', to: 'activities#getComments'
-  post 'add_comment', to: 'activities#addComment'
+  post 'submit_new_comment', to: 'activities#new_comment'
   post 'up_comment', to: 'activities#up_comment'
   post 'down_comment', to: 'activities#down_comment'
   get 'get_responses', to: 'activities#getResponses'
-  post 'add_response', to: 'activities#addResponse'
+  post 'submit_new_response', to: 'activities#new_response'
+  post 'submit_new_r_response', to: 'activities#new_r_response'
   post 'up_response', to: 'activities#up_response'
   post 'down_response', to: 'activities#down_response'
   
