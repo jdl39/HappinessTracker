@@ -117,6 +117,9 @@ function searchInitial() {
 
 function searchMore() {
     console.log("more search started");
+
+    document.getElementsByClassName("loading-indicator")[0].style.display = "block";
+
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
@@ -139,6 +142,7 @@ function searchMore() {
             update_results(json['search_results'], false);
         }
         doNotUpdateSearchMore = true;
+        document.getElementsByClassName("loading-indicator")[0].style.display = "none";
         console.log("more search ended");        
     }
 }

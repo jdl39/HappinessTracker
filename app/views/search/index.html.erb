@@ -1,7 +1,10 @@
 <div id="content">
     <div id="left-panel">
         <input id="search" type="text" name="activity" placeholder="What activity did you just do?" autocomplete="off" value="<%= @startingStr %>">
-        <div id="results"></div>
+        <div class="result-area">
+            <div id="results"></div>
+            <div class="loading-indicator no_display"></div>
+        </div>
         <!-- <div id="suggested"></div> -->
 
         <div id="friends-panel" class="no_display">

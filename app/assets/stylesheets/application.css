@@ -235,9 +235,25 @@ footer {
   MISC
 ============================================================ */
 
+.loading-indicator {
+  background-image: url('loading3.gif');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .time {
   font-size: 12px;
   color: #aaa;
+}
+
+.result-area {
+  width: 150px;
 }
 
 .result {
