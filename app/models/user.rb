@@ -99,6 +99,36 @@ class User < ActiveRecord::Base
         end
     end
 
+    def activity_recommendations
+        score_hash = {}
+        for activity_type in ActivityType.all do
+            prior = activity_type.activities.size
+            prior *= 1.0 / User.all.size
+            score_hash[activity_type.name] = prior
+        end
+
+        for activity in self.activities do
+            count_hash = Hash.new { |hash,key| hash[key] = 1 }
+            this_activity_type = activity.activity_type
+            for other_instance in this_activity_type.activities do
+                for activity_to_count in other_instance.user.activities do
+                    count_hash[activity_to_count.activity_type.name] += 1
+                end
+            end
+
+            for activity_type in ActivityType.all do
+                score_hash[activity_type.name] *= count_hash[activity_type.name] * 1.0 / this_activity_type.activities.size
+            end
+        end
+
+        existing_activities = self.activities.map{|activity| activity.activity_type.name}
+        recommendations = []
+        score_hash.sort_by { |activity_name, score| 1.0 - score }.each { |tuple| 
+            recommendations << tuple[0] unless existing_activities.include? tuple[0]
+        }
+        return recommendations
+    end
+
 	private
 		def create_remember_token
 			self.remember_token = User.digest(User.new_remember_token)

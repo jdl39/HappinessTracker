@@ -4,5 +4,6 @@ class SearchController < ApplicationController
         session["upvoted_comments"] = []
         session["responses"] = []
         session["upvoted_responses"] = []
+        @startingStr = params[:str]
     end
 end
