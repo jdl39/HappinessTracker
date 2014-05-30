@@ -303,8 +303,6 @@ class ActivitiesController < ApplicationController
         session["upvoted_responses"] = []
     end
 
-# TODO: use readable_comments_count and readable_responses_count
-
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
@@ -341,11 +339,17 @@ class ActivitiesController < ApplicationController
         }
     end
 
+# TODO: use readable_comments_count and readable_responses_count
+# (incr/decr the counts in up/down votes or new comment/response, use to get rid of old comments whenever you spread)
+
     # params: activity, content, signature
     def new_comment
         comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content], signature: params[:signature])
-        # TODO: add to friends + random readers - downvoters - yourself
-        # TODO: if - yourself, then need to flash feedback
+        new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+        new_readers |= current_user.friends
+        comment.readers.concat new_readers
+        comment.save
+        # TODO: flash feedback
         render nothing: true
     end
 
@@ -357,12 +361,17 @@ class ActivitiesController < ApplicationController
         # TODO: send message
         if isPublic
             response = Response.create(comment: comment, content: params[:content], signature: params[:signature], isPublic: params[:isPublic])
-            # TODO: add to friends + random readers - downvoters - yourself
+            new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+            new_readers |= current_user.friends
+            response.readers.concat new_readers
+            response.save
         end 
+        render nothing: true
     end
 
     def new_r_response
         # create a message, like in new_response if isPublic was always false
+        render nothing: true
     end
 
     $vote_threshold = -3
@@ -372,43 +381,51 @@ class ActivitiesController < ApplicationController
         puts "up comment!"
         comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if comment.up_voters.include? current_user
-        puts "not already up voted"
-        comment.up_voters << current_user
-        comment.votes = comment.votes.to_i + 1
-        new_readers = User.limit($spread_amount).where.not(id: current_user.id, down_comments: comment.id, readable_comments: comment.id).order("RANDOM()")
-        # is this adding correctly???
-        comment.readers.concat new_readers
-        comment.save
-        #new_readers.each{|reader| reader.readable_comment
+        unless comment.up_voters.include? current_user
+            puts "not already up voted"
+            comment.up_voters << current_user
+            comment.votes = comment.votes.to_i + 1
+            avoid_users = comment.down_voters | comment.readers | [current_user.id]
+            new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
+            comment.readers.concat new_readers
+            comment.save
+            #new_readers.each{|reader| reader.readable_comment
+        end
         puts "finished"
+        render nothing: true
     end
 
     def down_comment
         puts "down comment!"
         comment = Comment.find(params[:comment_id])
         # do nothing if user already voted
-        return if comment.down_voters.include? current_user
-        puts "not already down voted"
-        comment.down_voters << current_user
-        comment.votes = comment.votes.to_i - 1
-        comment.readers.delete(current_user)
-        comment.readers.delete_all if comment.votes < $vote_threshold
-        comment.up_voters.delete(current_user)
-        comment.save
+        unless comment.down_voters.include? current_user
+            puts "not already down voted"
+            comment.down_voters << current_user
+            comment.votes = comment.votes.to_i - 1
+            comment.readers.delete(current_user)
+            comment.readers.delete_all if comment.votes < $vote_threshold
+            comment.up_voters.delete(current_user)
+            comment.save
+        end
         puts "finished"
+        render nothing: true
     end
 
     def up_response
         puts "up resonse! " + params[:respond_id]
         response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return if response.up_voters.include? current_user
-        puts "not already up voted"
-        response.votes = response.votes.to_i + 1
-        # TODO: make new random readers besides downvoters
-        response.save
+        unless response.up_voters.include? current_user
+            puts "not already up voted"
+            response.votes = response.votes.to_i + 1
+            avoid_users = response.down_voters | response.readers | [response_user.id]
+            new_readers = User.limit($spread_amount).where.not(id: avoid_users).order("RANDOM()")
+            response.readers.concat new_readers
+            response.save
+        end
         puts "finished"
+        render nothing: true
     end
 
     # params: response_id
@@ -416,14 +433,16 @@ class ActivitiesController < ApplicationController
         puts "down response! " + params[:response_id]
         response = Response.find(params[:response_id])
         # do nothing if user already voted
-        return if response.down_voters.include? current_user
-        puts "not already down voted"
-        response.votes = response.votes.to_i - 1
-        response.up_voters.delete(current_user)
-        response.readers.delete(current_user)
-        response.readers.delete_all if response.votes < $vote_threshold
-        response.save
+        unless response.down_voters.include? current_user
+            puts "not already down voted"
+            response.votes = response.votes.to_i - 1
+            response.up_voters.delete(current_user)
+            response.readers.delete(current_user)
+            response.readers.delete_all if response.votes < $vote_threshold
+            response.save
+        end
         puts "finished"
+        render nothing: true
     end
 
 	private

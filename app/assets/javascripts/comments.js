@@ -64,6 +64,8 @@ function up_response(box) {
 
 function down_comment(box) {
     box.style.display = "none"
+    console.log(box)
+    console.log($("#" + box.id))
     $.post("down_comment", {"comment_id" : $("#" + box.id).find(".comment_id").val()})
 }
 
@@ -164,12 +166,5 @@ $(document).ready(function() {
         data["content"] = $("#new_comment").val()
         data["anonymous"] = $("#anonymous").val()
         $.post("add_comment", data)
-    })
-    $("#submit_new_response").click(function() {
-        var data = {}
-        data["comment_id"] = $(".comment_id").val()
-        data["content"] = $("#new_response").val()
-        data["anonymous"] = $("#anonymous").val()
-        $.post("add_response", data)
     })
 })
