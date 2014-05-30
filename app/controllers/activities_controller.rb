@@ -345,7 +345,7 @@ class ActivitiesController < ApplicationController
 
     # params: activity, content, signature
     def new_comment
-        comment = Comment.create(activity_type_id: params[:activity_type_id], content: params[:content])
+        comment = Comment.create(author: current_user, activity_type_id: params[:activity_type_id], content: params[:content])
         comment.signature = params[:anonymous] ? "anonymous" : current_user.username
         new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
         new_readers |= current_user.friends
@@ -368,7 +368,7 @@ class ActivitiesController < ApplicationController
         # create a message to author of comment from user
         message = Message.create(sender: current_user, receiver: comment.author, quote: comment.content, content: params[:content], sender_sig: comment.signature, receiver_sig: signature)
         if params[:is_public]
-            response = Response.create(comment: comment, content: params[:content])
+            response = Response.create(author: current_user, comment: comment, content: params[:content])
             response.signature = signature
             new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
             new_readers |= current_user.users
