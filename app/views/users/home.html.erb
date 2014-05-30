@@ -10,20 +10,18 @@
   }
 
   hr {
-	height:2px;
+	height:1px;
 	background-color:#7f8381;
 	border:none;
   }
   
   h1 {
     font-weight:bold;
-	color:#7f8381;
 	text-align:center;
   }
 
   h2 {
     font-weight:bold;
-	color:#7f8381;
 	text-align:center;
   }
 
@@ -166,7 +164,7 @@
 		  happiness_status = $('#myonoffswitch').prop("checked");
 		  console.log($("myonoffswitch").prop("checked"));
 		 togglePageLayout();
-		 //toggleHeaderLayout();
+		 toggleHeaderLayout();
 		 $.post('/happiness_status/set', {'is_happy': happiness_status}); 
 	  });
   });
