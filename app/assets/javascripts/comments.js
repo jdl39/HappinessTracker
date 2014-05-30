@@ -38,7 +38,7 @@ function new_comment_box(comment_id) {
         <textarea class="new_text"> \
         </textarea> \
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
-            post anonymously \
+            reply anonymously \
         </input> \
         <button class="submit_new_text" onclick="submit_new_response()"> \
             submit \
@@ -125,7 +125,7 @@ function new_response_box(comment_id, response_id) {
         <textarea class="new_text"> \
         </textarea> \
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
-            post anonymously \
+            reply anonymously \
         </input> \
         <button class="submit_new_text" onclick="submit_new_r_response()"> \
             submit \
