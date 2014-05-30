@@ -14,11 +14,11 @@ class User < ActiveRecord::Base
 
 	validates :username, presence: true, uniqueness: true
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
+  	validates :email, allow_nil: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: {case_sensitive: false}
 	validates :first_name, presence: true
 	validates :last_name, presence: true
 
-	before_save { self.email = email.downcase }
+	before_save { self.email = email.nil? ? nil : email.downcase }
 
 	before_create :create_remember_token
 
@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
           user.oauth_expires_at = Time.at(auth.credentials.expires_at)
           user.password = SecureRandom.urlsafe_base64
           user.password_confirmation = user.password
-          user.email = ""
+          user.email = nil
           user.save!
         end
     end

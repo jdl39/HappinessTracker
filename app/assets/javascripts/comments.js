@@ -38,7 +38,7 @@ function new_comment_box(comment_id) {
         <textarea class="new_text"> \
         </textarea> \
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
-            post anonymously \
+            reply anonymously \
         </input> \
         <button class="submit_new_text" onclick="submit_new_response()"> \
             submit \
@@ -74,7 +74,9 @@ function down_response(box) {
 
 function add_text_area(comment_box_id) {
     var this_box = $("#" + comment_box_id.id)
-    this_box.find(".add_text_area").remove()
+    console.log(this_box)
+    console.log(this_box.find(".new_text_area"))
+    this_box.find(".add_text_area")[0].remove()
     this_box.find(".new_text_area")[0].style.display = "block"
 }
 
@@ -125,7 +127,7 @@ function new_response_box(comment_id, response_id) {
         <textarea class="new_text"> \
         </textarea> \
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
-            post anonymously \
+            reply anonymously \
         </input> \
         <button class="submit_new_text" onclick="submit_new_r_response()"> \
             submit \
