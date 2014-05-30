@@ -17,7 +17,7 @@ function load_new_comments(activity_type_id) {
 function new_comment_box(comment_id) {
     var comment_box_id = "comment_box_" + comment_id
     $(".comment_area").append($('<div class="comment_box" id="new_comment_box"> \
-    <input type="hidden" class="comment_id"> \
+    <input type="hidden" class="comment_id" value="' + comment_id + '"> \
     </input> \
     <div class="vote_box"> \
         <button class="up_comment" onclick="up_comment(' + comment_box_id + ')"> \
@@ -40,7 +40,10 @@ function new_comment_box(comment_id) {
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
             reply anonymously \
         </input> \
-        <button class="submit_new_text" onclick="submit_new_response()"> \
+        <input type="checkbox" class="public_check" value="public" checked> \
+            publicly \
+        </input> \
+        <button class="submit_new_text" onclick="submit_new_response(' + comment_box_id + ')"> \
             submit \
         </button> \
     </div> \
@@ -78,7 +81,7 @@ function add_text_area(comment_box_id) {
     var this_box = $("#" + comment_box_id.id)
     console.log(this_box)
     console.log(this_box.find(".new_text_area"))
-    this_box.find(".add_text_area")[0].remove()
+    this_box.find(".add_text_area")[0].style.display = "none"
     this_box.find(".new_text_area")[0].style.display = "block"
 }
 
@@ -110,7 +113,7 @@ function new_response_box(comment_id, response_id) {
     response_box_id = "response_box_" + response_id
     $("#comment_box_" + comment_id).append($(
 '<div class="response_box" id="new_response_box"> \
-    <input type="hidden" class="response_id"> \
+    <input type="hidden" class="response_id" value="' + response_id + '"> \
     </input> \
     <div class="vote_box"> \
         <button class="up_response" onclick="up_response(' + response_box_id + ')"> \
@@ -131,7 +134,7 @@ function new_response_box(comment_id, response_id) {
         <input type="checkbox" class="anonymous_check" value="anonymous"> \
             reply anonymously \
         </input> \
-        <button class="submit_new_text" onclick="submit_new_r_response()"> \
+        <button class="submit_new_text" onclick="submit_new_r_response(' + response_box_id  + ')"> \
             submit \
         </button> \
     </div> \
@@ -144,13 +147,43 @@ function new_response_box(comment_id, response_id) {
     return box
 }
 
-function submit_new_response() {
-// parameters needed: content, content of what's being responded to, signature used by person being responded to
-// and signature, which is either "anonymous" or username depending on anonymous_check
-    $.post("submit_new_response", {"response_id" : $("#" + box.id).find(".response_id").val()})
+function submit_new_comment(box) {
+    var this_box = $("#" + box.id)
+    this_box.find(".add_text_area")[0].style.display = "block"
+    this_box.find(".new_text_area")[0].style.display = "none"
+    console.log(box)
+    var data = {"comment_id" : $(box).find(".comment_id").val(),
+            "content" : $(box).find(".new_text").val(),
+            "anonymous" : $(box).find(".anonymous_check").prop("checked")}
+    console.log(data)
+    $.post("submit_new_comment", data)
 }
 
-function submit_new_r_response() {
+function submit_new_response(box) {
+    var this_box = $("#" + box.id)
+    this_box.find(".add_text_area")[0].style.display = "block"
+    this_box.find(".new_text_area")[0].style.display = "none"
+    console.log(box)
+    var box = $("#" + box.id);
+    var data = {"comment_id" : $(box).find(".comment_id").val(),
+            "content" : $(box).find(".new_text").val(),
+            "is_public" : $(box).find(".public_check").prop("checked"),
+            "anonymous" : $(box).find(".anonymous_check").prop("checked")}
+    console.log(data)
+    $.post("submit_new_response", data)
+}
+
+function submit_new_r_response(box) {
+    var this_box = $("#" + box.id)
+    this_box.find(".add_text_area")[0].style.display = "block"
+    this_box.find(".new_text_area")[0].style.display = "none"
+    console.log(box)
+    var box = $("#" + box.id);
+    var data = {"comment_id" : $(box).find(".comment_id").val(),
+            "content" : $(box).find(".new_text").val(),
+            "anonymous" : $(box).find(".anonymous_check").prop("checked")}
+    console.log(data)
+    $.post("submit_new_response", data)
 }
 
 $(document).ready(function() {
@@ -159,12 +192,5 @@ $(document).ready(function() {
         load_new_comments(2)
     })
     $(".add_comment").click(function() {
-    })
-    $("#submit_new_comment").click(function() {
-        var data = {}
-        data["activity_type_id"] = 2
-        data["content"] = $("#new_comment").val()
-        data["anonymous"] = $("#anonymous").val()
-        $.post("add_comment", data)
     })
 })
