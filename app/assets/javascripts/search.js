@@ -165,8 +165,6 @@ function get_data_for_activity(selected_str) {
         document.getElementById('results').innerHTML = '';
         if(json['user_does_activity']) {
             show_form('add');
-            data = [json['recent_measurements'], json['measurement_types']]
-            update_graph();
             measurements = [];
             if(json['measurement_types'][0]) {
                 measurements.push(json['measurement_types'][0][1]);
@@ -175,6 +173,8 @@ function get_data_for_activity(selected_str) {
                 measurements.push(json['measurement_types'][1][1]);
             }
             update_add_form_inputs(measurements);
+            data = [json['recent_measurements'], measurements];
+            update_graph();
         } else {
             show_form('new');
         }
@@ -194,7 +194,7 @@ function update_graph() {
 }
 
 function setChart(recent_measurements, measurement_types) {
-
+    console.log("final data", recent_measurements, measurement_types);
 
 
 
@@ -304,19 +304,6 @@ function update_friends(friends) {
     }
 }
 
-// Update suggested 
-function update_suggested(suggestedName) {
-    console.log(suggestedName);
-    if(suggestedName) {
-        console.log(suggestedName);
-        document.getElementById('suggested').innerHTML = "Did you mean "+suggestedName+"?";
-    } else if(suggestedName == str) {
-        document.getElementById('suggested').innerHTML = "";
-    } else {
-        document.getElementById('suggested').innerHTML = "";
-    }
-}
-
 function add_measurement_form() {
     document.getElementById('second_measurement').style.display = 'block';
     document.forms["new_activity"][1].focus();
@@ -349,7 +336,7 @@ function commit_new_measurement_form() {
         data = null;
         update_add_form_inputs(measurements);
         show_form('add');
-        data = [[], json['measurement_types']]
+        data = [[], measurements];
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
@@ -357,10 +344,10 @@ function commit_new_measurement_form() {
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
-    console.log("Submitting new measurement");
-    document.getElementById('commit_add_measurement_button').disabled = true;
     var measurements = validate_add_form();
     if(measurements == null) return; // form was not properly filled out
+    console.log("Submitting new measurement");
+    document.getElementById('commit_add_measurement_button').disabled = true;
     var cur_str = str;
     var xhr = new XMLHttpRequest();
     var url = "/track_activity?";
@@ -377,11 +364,17 @@ function commit_add_measurement_form() {
             return;
         }
         console.log("starting");
-        console.log(this.responseText);
+        // console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
-        console.log('new measure to add', json['new_measurements']);
-        data[0].concat(json['new_measurements']);
+        console.log('new measure to add', data[0], json['new_measurements']);
+        if(data[0].length == 0) {
+            console.log('first entered into the activity');
+            data[0] = json['new_measurements'];
+        } else {
+            data[0].push.apply(data[0], json['new_measurements']);
+        }
+        console.log("new data", data[0]);
         document.getElementById('commit_add_measurement_button').disabled = false;
         update_graph();
     }
@@ -391,7 +384,7 @@ function commit_add_measurement_form() {
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
     document.getElementById('commit_new_measurement_button').disabled = false;
-    if(measurements[0] != "" || measurements[1] != "") {
+    if(measurements[0] != "") {
         console.log("length", measurements.length);
         if(measurements[0] != "") {
             console.log("show first add input");
@@ -429,21 +422,28 @@ function validate_new_form() {
 // check if form is properly filled out and returns form data if completed
 function validate_add_form() {
     var  error  = false;
-    if(document.forms["add_activity"][0].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
+    if(data[1][0] != '') {
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
             error = true;
+        } else {
+            document.getElementById('measure1_error').style.display = 'none';
         }
     }
-    if(document.forms["add_activity"][1].style.display != 'none' && document.forms["add_activity"][1].style.display != '') {
+    if(data[1][1] != '') {
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
             error = true;
+        } else {
+            document.getElementById('measure2_error').style.display = 'none';
         }
     }
     if(error) {
         return null;
+        console.log("error", error);
     } else {
+        document.getElementById('measure1_error').style.display = 'none';
+        document.getElementById('measure2_error').style.display = 'none';
         var measure1 = document.getElementById('input_measure1').innerHTML;
         var measure2 = document.getElementById('input_measure2').innerHTML;
         var value_1 = document.forms["add_activity"][0].value;
@@ -451,6 +451,19 @@ function validate_add_form() {
         document.forms["add_activity"][0].value = '';
         document.forms["add_activity"][1].value = '';
         return [[measure1, value_1], [measure2, value_2]];    
+    }
+}
+
+// Update suggested 
+function update_suggested(suggestedName) {
+    console.log(suggestedName);
+    if(suggestedName) {
+        console.log(suggestedName);
+        document.getElementById('suggested').innerHTML = "Did you mean "+suggestedName+"?";
+    } else if(suggestedName == str) {
+        document.getElementById('suggested').innerHTML = "";
+    } else {
+        document.getElementById('suggested').innerHTML = "";
     }
 }
 
