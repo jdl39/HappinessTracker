@@ -17,4 +17,8 @@ class Measurement < ActiveRecord::Base
       goal.check_for_completion(self)
     end
   end
+
+  def date_string
+    self.created_at.strftime('%a %h %d %G')
+  end
 end

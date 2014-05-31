@@ -218,11 +218,21 @@ class ActivitiesController < ApplicationController
             measurement_types = top_activities.group_by{|activity| activity.measurement_types.pluck(:id,:name,:is_quantifiable)}.to_a.sort{|measurement, activities| activities.size}.last.first
         end
 
+        recent_measurement_hashs = []
+        recent_measurements.each do |measurement|
+            mh = {}
+            mh["measurement_type_id"] = measurement.measurement_type_id
+            mh["activity_id"] = measurement.activity_id
+            mh["value"] = measurement.value
+            mh["created_at"] = measurement.date_string
+            recent_measurement_hashs << mh
+        end
+        p recent_measurement_hashs
         render json:  {
             user_does_activity: user_does_activity,
             friends: friends,
             measurement_types: measurement_types,
-            recent_measurements: recent_measurements,
+            recent_measurements: recent_measurement_hashs,
             recent_measurement_notes: recent_measurement_notes
         }
     end

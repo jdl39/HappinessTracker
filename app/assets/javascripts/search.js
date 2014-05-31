@@ -263,28 +263,29 @@ function update_graph() {
 
 function setChart(recent_measurements, measurement_types) {
     // console.log("final data", recent_measurements);
-    var strict_data = [[], []];
-    for(recent_measurement in recent_measurements) {
-        // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
-        console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
-        // var created = Date(recent_measurements[recent_measurement]['created_at']);
-        // var year = parseFloat(created.getUTCFullYear());
-        // var month = parseFloat(created.getUTCMonth());
-        // var day = parseFloat(created.getUTCDay());
 
-        var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
-        if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
-            strict_data[0].push(newElem);
-        } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
-            strict_data[1].push(newElem);
-        } else {
-            console.log("no matches ERROR");
-        }
-        // console.log("elem", recent_measurements[recent_measurement]);
-    }
     console.log("strict", strict_data);
 
     if(measurement_types[0][1] != "") {
+        var strict_data = [[], []];
+        for(recent_measurement in recent_measurements) {
+            // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
+            console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
+            // var created = Date(recent_measurements[recent_measurement]['created_at']);
+            // var year = parseFloat(created.getUTCFullYear());
+            // var month = parseFloat(created.getUTCMonth());
+            // var day = parseFloat(created.getUTCDay());
+
+            var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+            if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
+                strict_data[0].push(newElem);
+            } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
+                strict_data[1].push(newElem);
+            } else {
+                console.log("no matches ERROR");
+            }
+            // console.log("elem", recent_measurements[recent_measurement]);
+        }        
         if(measurement_types[1][1] != "") { // 2 measurements used
             console.log("2 measurements");
             new Highcharts.Chart({
@@ -364,28 +365,53 @@ function setChart(recent_measurements, measurement_types) {
             });
 
         } else { // 1 measurement used
+            var categories = [];
+            var graph_data = [];
+            for(recent_measurement in recent_measurements) {
+                // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
+                // console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
+                var created = recent_measurements[recent_measurement]['created_at'];
+                console.log("create", created);
+                // splitDate = created.split("\\s");
+                // console.log("split date", splitDate);
+                // var year = parseFloat(splitDate(3));
+                // var month = splitDate(1);
+                // var day = parseFloat(splitDate(2));
+                // var dayOfWeek = splitDate(0);
+                // console.log("stuffs", year, month, day, dayOfWeek);
+
+                // var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+                // if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
+                //     strict_data[0].push(newElem);
+                // } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
+                //     strict_data[1].push(newElem);
+                // } else {
+                //     console.log("no matches ERROR");
+                // }
+                // console.log("elem", recent_measurements[recent_measurement]);
+            }
+            
             console.log("1 measurements");
-            new Highcharts.Chart({
+            var chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
                     // zoomType: 'x'
                     type: 'spline'
                 },
-                // chart: {
-                // type: 'spline'
-                // },
                 title: {
-                    text: 'Snow depth at Vikjafjellet, Norway'
+                    text: 'Your History of ' + str
                 },
                 subtitle: {
-                    text: 'Irregular time data in Highcharts JS'
+                    text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in'
                 },
                 xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: { // don't display the dummy year
-                        month: '%e. %b',
-                        year: '%b'
-                    },
+                    type: 'category',
+                    // dateTimeLabelFormats: { // don't display the dummy year
+                    //     month: '%e. %b',
+                    //     year: '%b'
+                    // },
                     title: {
                         text: 'Date'
                     }
@@ -400,12 +426,10 @@ function setChart(recent_measurements, measurement_types) {
                 //     headerFormat: '<b>{series.name}</b><br>',
                 //     pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
                 // },
-
-                series: [{
-                    name: 'hey',
-                    data: strict_data[0]
-                }]
             });
+            chart.addSeries({name: 'hey'}, true, true);
+            var series = chart.series[0];
+            series.addPoint([1, 1], true, true);
 
         }
     } else { // 0 mesurements used
