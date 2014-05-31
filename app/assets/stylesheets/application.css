@@ -446,10 +446,10 @@ footer {
     display: none;
 }
 
-.add_text_area {
-  display: inherit;
+/*.add_text_area {
+  display: none;
 }
 
-.show_more_comments {
-  display: inherit;
-}
+#show_more_comments {
+  display: none;
+}*/

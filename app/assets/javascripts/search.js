@@ -3,7 +3,6 @@ prev = '';
 displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
-displayed_activity_id = 0
 
 
 var ready = function setStartingParam() {
@@ -205,6 +204,8 @@ function create_new_activity(new_activity_str) {
 }
 
 function get_data_for_activity(selected_str) {
+    hide_goal_form();
+    hide_comment_area();
     console.log("hey", selected_str);
     selectedStr = selected_str;
     document.getElementById('results').innerHTML = '';
@@ -231,6 +232,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
+        display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             show_form('add');
             measurements = [];
@@ -243,6 +245,7 @@ function get_data_for_activity(selected_str) {
             update_add_form_inputs(measurements);
             data = [json['recent_measurements'], parseMeasurements(json['measurement_types'])];
             update_graph();
+            display_goal_form(selected_str, measurements);
         } else {
             show_form('new');
         }
@@ -657,6 +660,28 @@ function update_suggested(suggestedName) {
     } else {
         document.getElementById('suggested').innerHTML = "";
     }
+}
+
+//--------------------------//
+// Goals and comments       //
+//--------------------------//
+function display_goal_form(activity_name, measurement_names) {
+    updateActivityName(activity_name)
+    updateMeasurementNames(measurement_names)
+    document.getElementsByClassName("goal-area")[0].style.display = "inline";
+
+}
+function hide_goal_form() {
+    document.getElementsByClassName("goal-area")[0].style.display = "none";
+}
+
+function display_comment_area(displayed_activity_id) {
+    document.getElementById("comment_system").style.display = "inline";
+    load_new_comments(displayed_activity_id);
+}
+function hide_comment_area() {
+    reset_comment_area();
+    document.getElementById("comment_system").style.display = "none";
 }
 
 // SAMPLE RESPONSE

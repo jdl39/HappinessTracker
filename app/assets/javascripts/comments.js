@@ -2,7 +2,9 @@
 
 function load_new_comments(activity_type_id) {
 // TODO: show upvote
+    $("#comment_area_loading_indicator").show();
     $.get( "get_comments?activity_type_id=" + activity_type_id + "&num_needed=3", function( data ) {
+        $("#comment_area_loading_indicator").hide();
         for(var i = 0; i < data["new_comments"].length; i++) {
             var box = new_comment_box(data["new_comments"][i].id)
             box.find(".comment_body").html(data["new_comments"][i].content)
@@ -184,6 +186,29 @@ function submit_new_r_response(box) {
             "anonymous" : $(box).find(".anonymous_check").prop("checked")}
     console.log(data)
     $.post("submit_new_response", data)
+}
+
+function reset_comment_area() {
+    // TODO: Implement.
+    $("#comment_system").html('<button class="add_text_area add_comment_button" onclick="add_text_area(comment_system)">\
+        Add comment\
+    </button>\
+    <div class="new_text_area">\
+        <textarea class="new_text">\
+        </textarea>\
+        <input type="checkbox" class="anonymous_check" value="anonymous">\
+            post anonymously\
+        </input>\
+        <button class="submit_new_text" onclick="submit_new_comment(comment_system)">\
+            submit\
+        </button>\
+    </div>\
+    <div class="comment_area">\
+    </div>\
+    <div class="loading-indicator no_display" id="comment_area_loading_indicator"></div>\
+    <button id="show_more_comments">\
+        Show more comments\
+    </button>')
 }
 
 /*$(document).ready(function() {
