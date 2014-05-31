@@ -122,7 +122,7 @@ class ActivitiesController < ApplicationController
                     to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                     next
                 end
-                to_return["new_measurements"] << activity.user.log_new_measurement(activity, measurement_type, measurement_value)
+                to_return["new_measurements"] << activity.user.log_new_measurement(activity, measurement_type, measurement_value).to_javascript_measurement
             end
         end
 
@@ -220,12 +220,7 @@ class ActivitiesController < ApplicationController
 
         recent_measurement_hashs = []
         recent_measurements.each do |measurement|
-            mh = {}
-            mh["measurement_type_id"] = measurement.measurement_type_id
-            mh["activity_id"] = measurement.activity_id
-            mh["value"] = measurement.value
-            mh["created_at"] = measurement.date_string
-            recent_measurement_hashs << mh
+            recent_measurement_hashs << measurement.to_javascript_measurement
         end
         p recent_measurement_hashs
         render json:  {

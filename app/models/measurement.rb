@@ -21,4 +21,13 @@ class Measurement < ActiveRecord::Base
   def date_string
     self.created_at.strftime('%a %h %d %G')
   end
+
+  def to_javascript_measurement
+    jm = {}
+    jm["measurement_type_id"] = self.measurement_type_id
+    jm["activity_id"] = self.activity_id
+    jm["value"] = self.value
+    jm["created_at"] = self.date_string
+    return jm
+  end
 end
