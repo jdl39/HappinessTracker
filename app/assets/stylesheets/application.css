@@ -190,6 +190,9 @@ header .logo {
   width: 120px;
   height: 120px;
   background-color: #fff;
+  /*background-image: url("happiness.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;*/
 }
 
 
@@ -441,4 +444,12 @@ footer {
 
 .new_text_area {
     display: none;
+}
+
+.add_text_area {
+  display: inherit;
+}
+
+.show_more_comments {
+  display: inherit;
 }

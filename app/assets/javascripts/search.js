@@ -3,6 +3,7 @@ prev = '';
 displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
+displayed_activity_id = 0
 
 
 var ready = function setStartingParam() {
@@ -208,6 +209,7 @@ function get_data_for_activity(selected_str) {
     selectedStr = selected_str;
     document.getElementById('results').innerHTML = '';
     doNotUpdateSearchMore = true;
+    document.getElementsByClassName("loading-indicator")[0].style.display = "none";
     str = selected_str;
     document.getElementById('search').value = selected_str;
     set_headers(selected_str);

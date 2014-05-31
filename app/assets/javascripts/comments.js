@@ -186,11 +186,11 @@ function submit_new_r_response(box) {
     $.post("submit_new_response", data)
 }
 
-$(document).ready(function() {
+/*$(document).ready(function() {
     load_new_comments(2)
     $("#show_more_comments").click(function() {
         load_new_comments(2)
     })
     $(".add_comment").click(function() {
     })
-})
+})*/
