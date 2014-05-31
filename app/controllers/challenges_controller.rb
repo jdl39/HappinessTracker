@@ -80,6 +80,8 @@ class ChallengesController < ApplicationController
 	def new
        challenge = Challenge.new(:sender_id => params[:sender_id],
 							 :receiver_id => params[:receiver_id],
+							 :challenge_id => params[:challenge_id],
+							 :activity_id => params[:activity_id],
 							 :content => params[:content])
 	   if challenge.save
            render json:challenge
