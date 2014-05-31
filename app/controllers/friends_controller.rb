@@ -21,11 +21,21 @@ class FriendsController < ApplicationController
 
    # Retrieves a user's accepted friends
    # Params:
-	#        user_id
+	#        username
    def get_friends
-      friends = Friend.where(user_id: params[:user_id], accepted: true)
-	  friends << Friend.where(friend_id: params[:user_id], accepted: true)
-	  render json:friends
+	  results = []
+	  user = User.find_by_username(params[:username])
+      friends = Friend.where(user_id: user.id, accepted: true)
+	  friends.each do |friend_rel|
+	    friend = User.find(friend_rel.friend_id)
+		results << {id:friend.id, username: friend.username}
+	  end
+	  friends = Friend.where(friend_id: user.id, accepted: true)
+	  friends.each do |friend_rel|
+        friend = User.find(friend_rel.user_id)
+	    results << {id:friend.id, username: friend.username}
+	  end
+	  render json:results
    end
 
    # Creates a friend request if it does not yet exist

@@ -1,5 +1,5 @@
 class GoalsController < ApplicationController
-	# TODO: Figure out how to update goals before anything is viewed.
+	before_action :setup_goals
 
     def index
     	if params[:username].nil?
@@ -67,4 +67,10 @@ class GoalsController < ApplicationController
 		new_goal.save
 		render inline: "done"
 	end
+
+	private
+
+	def setup_goals
+    	Goal.setup_goals_for(current_user)
+    end
 end
