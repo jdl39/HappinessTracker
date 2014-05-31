@@ -9,6 +9,10 @@
 	width:450px;
   }
 
+  a { 
+	  color: #00aadd;
+  }
+
   hr {
 	height:1px;
 	background-color:#7f8381;
@@ -106,7 +110,7 @@
 	<hr>
 	<ul>
 	  <% @recommended_activities.each do |recommended_activity| %>
-	    <li><a href = "/track"><%= recommended_activity %></a></li>
+		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity %></a></li>
 	  <% end %>
 	</ul>
 
