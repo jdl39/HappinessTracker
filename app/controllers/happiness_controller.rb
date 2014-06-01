@@ -29,7 +29,6 @@ class HappinessController < ApplicationController
         (0...num_days).each do |days_ago|
             hv = {}
             time = (num_days - days_ago - 1).days.ago
-            hv[:timestamp] = time
             hv[:value] = current_user.happiness_score_at_time(time)
             happiness_values << hv
         end

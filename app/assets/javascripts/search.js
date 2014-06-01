@@ -120,8 +120,8 @@ function searchInitial() {
         json = JSON.parse(json);
         update_results(json['search_results'], true);
         searchMore();
+        console.log("initial search ended");
     }
-    console.log("initial search ended");
 }
 
 function searchMore() {
