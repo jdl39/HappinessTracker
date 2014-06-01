@@ -3,20 +3,6 @@ prev = '';
 displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
-HighchartsLoaded = false;
-
-if(typeof Highcharts != 'undefined' && !HighchartsLoaded) {
-    HighchartsLoaded = true;
-    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-        return {
-            linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
-             stops: [
-                [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
-                [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
-            ]
-        };
-    });
-}
 
 var ready = function setStartingParam() {
     console.log("page is loaded");
@@ -60,6 +46,15 @@ var ready = function setStartingParam() {
             document.getElementById('commit_add_measurement_button').disabled = true;
         }
     }
+    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+        return {
+            linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
+             stops: [
+                [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
+                [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
+            ]
+        };
+    });
 }
 
 $(document).ready(ready);
@@ -281,9 +276,9 @@ function update_graph() {
 function setChart(recent_measurements, measurement_types) {
     // console.log("final data", recent_measurements);
 
-    console.log("measurement_types[1][0]", measurement_types[1][0]);
+    console.log("measurement_types", measurement_types);
 
-    if(measurement_types[1][0] != 1) {
+    if(measurement_types[0][0] != 1) {
         var strict_data = [[], []];
         for(recent_measurement in recent_measurements) {
             var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
@@ -296,7 +291,7 @@ function setChart(recent_measurements, measurement_types) {
             }
             // console.log("elem", recent_measurements[recent_measurement]);
         }        
-        if(measurement_types[1][1] != 1) { // 2 measurements used
+        if(measurement_types[1][0] != 1) { // 2 measurements used
             console.log("2 measurements");
             new Highcharts.Chart({
                 chart: {
@@ -453,13 +448,13 @@ function setChart(recent_measurements, measurement_types) {
             console.log("shortened", shortenStr);
             if(graph_data[0]) {
                 if(categories[categories.length - 1] != shortenStr) {
-                    graph_data.push(1);
+                    graph_data.push(.5);
                     categories.push(shortenStr);
                 } else {
-                    graph_data[graph_data.length - 1] = graph_data[graph_data.length - 1] + 1;
+                    graph_data[graph_data.length - 1] = graph_data[graph_data.length - 1] + .5;
                 }
             } else {
-                graph_data[0] = 1;
+                graph_data[0] = .5;
                 categories.push(shortenStr);                    
             }
         }
@@ -491,7 +486,7 @@ function setChart(recent_measurements, measurement_types) {
             },
             yAxis: {
                 title: {
-                    text: measurement_types[0][1].capitalize()
+                    text: 'Number of Times Completed per Day'
                 },
                 min: 0
             },
