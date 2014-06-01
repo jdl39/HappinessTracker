@@ -27,7 +27,7 @@ class Goal < ActiveRecord::Base
   		return
   	end
 
-  	if ((measurement.value >= self.goal_type.measure_value and self.goal_type.requires_greater) or (measurement.value <= self.goal_type.measure_value and not self.goal_type.requires_greater))
+  	if ((measurement.value >= self.goal_type.measurement_value and self.goal_type.requires_greater) or (measurement.value <= self.goal_type.measurement_value and not self.goal_type.requires_greater))
   		self.completing_measurement = measurement
   		self.active = false
   		self.save
@@ -49,15 +49,14 @@ class Goal < ActiveRecord::Base
 
   scope :recent, -> { order('created_at desc').limit(4) }
 
-  private
-  	def schedule_next_iteration
-  		new_goal = Goal.new
-  		new_goal.goal_type_id = self.goal_type_id
-  		new_goal.activity_id = self.activity_id
-  		new_goal.completing_measurement = nil
-  		new_goal.start_time = self.time_due
-  		new_goal.active = true
-  		new_goal.save
-  		new_goal.check_for_rescheduling
-  	end
+  def schedule_next_iteration
+  	new_goal = Goal.new
+  	new_goal.goal_type_id = self.goal_type_id
+  	new_goal.activity_id = self.activity_id
+  	new_goal.completing_measurement = nil
+  	new_goal.start_time = self.time_due
+  	new_goal.active = true
+  	new_goal.save
+  	new_goal.check_for_rescheduling
+  end
 end

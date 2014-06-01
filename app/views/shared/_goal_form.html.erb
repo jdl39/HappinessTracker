@@ -4,7 +4,7 @@
 	<%= hidden_field_tag "goal[activity_name]", "", id: "hiddenActivityNameField" %>
 	<!-- TODO: Possibly make this a real feature at some point... -->
 	<%= hidden_field_tag "goal[requires_greater]", true %>
-	<table class="goalTable">
+	<table class="goalFormTable">
 		<tr>
 			<td><%= f.label :measurement_type %></td>
 			<td><%= select_tag "goal[measurement_type]", "None", id: "measurementTypeSelect" %></td>

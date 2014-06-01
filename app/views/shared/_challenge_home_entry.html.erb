@@ -5,7 +5,8 @@
       time = item[:timestamp]
 	  status = challenge.status %>
 
-	  <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
+	  <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
+	  <p><%= challenge.content %></p>
 	  <% if status == 2 %>
 	  <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
 	  <% elsif status == 4 %>
