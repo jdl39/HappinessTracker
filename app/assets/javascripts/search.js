@@ -275,100 +275,74 @@ function update_graph() {
 
 function setChart(recent_measurements, measurement_types) {
     // console.log("final data", recent_measurements);
-
     console.log("measurement_types", measurement_types);
 
     if(measurement_types[0][0] != 1) {
-        var strict_data = [[], []];
-        for(recent_measurement in recent_measurements) {
-            var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
-            if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
-                strict_data[0].push(newElem);
-            } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
-                strict_data[1].push(newElem);
-            } else {
-                console.log("no matches ERROR");
-            }
-            // console.log("elem", recent_measurements[recent_measurement]);
-        }        
+        console.log("2 measurements");
+        var categories = [];
         if(measurement_types[1][0] != 1) { // 2 measurements used
-            console.log("2 measurements");
+            var strict_data = [[], []];
+            for(recent_measurement in recent_measurements) {
+                var created = recent_measurements[recent_measurement]['created_at'];
+                splitDate = created.split(" ");
+                var dayOfWeek = splitDate[0];
+                var month = splitDate[1];
+                var day = parseFloat(splitDate[2]);
+                var year = parseFloat(splitDate[3]);
+                var shortenStr = dayOfWeek + ' ' + month + ' ' + day + ', ' + year;
+                var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+                if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
+                    strict_data[0].push(newElem);
+                    categories.push(shortenStr);                    
+                } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
+                    strict_data[1].push(newElem);
+                } else {
+                    console.log("no matches ERROR");
+                }
+            }        
+            console.log("categories", categories);
+            console.log("strict_data", strict_data);
             new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
-                    // zoomType: 'x'
+                    zoomType: 'x'
                 },
                 title: {
-                    text: 'Your History of ' + str
+                    text: 'Your History of ' + str.capitalize()
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
                     'Click and drag in the plot area to zoom in' :
                     'Pinch the chart to zoom in'
                 },
-                xAxis: {
-                    type: 'datetime',
-                    // tickInterval: 24 * 3600 * 1000
-                    // minRange: 1 * 24 * 3600000 // 1 day
-                    dateTimeLabelFormats: { // don't display the dummy year
-                        month: '%e. %b',
-                        year: '%b'
-                    }
-                },
+                xAxis: [{
+                    categories: categories
+                }],
                 yAxis: [{ // Primary yAxis
-                    gridLineWidth: 0,
-                    abels: {
-                        format: '{value}',
-                        style: {
-                            color: Highcharts.getOptions().colors[5]
-                        }
-                    },
                     title: {
-                        text: measurement_types[0][1],
-                        style: {
-                            color: Highcharts.getOptions().colors[5]
-                        }
-                    },
-                    opposite: false
-
-                },  { // Secondary yAxis
-                    labels: {
-                        format: '{value}',
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
-                    },
+                        text: measurement_types[0][1].capitalize(),
+                    }
+                }, { // Secondary yAxis
                     title: {
-                        text: measurement_types[1][1],
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
+                        text: measurement_types[1][1].capitalize(),
                     },
                     opposite: true
-
                 }],
-                tooltip: {
-                    shared: true
-                },
                 legend: {
                     floating: false,
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 series: [{
-                    name: measurement_types[0][1], // series for measure 1
-                    type: 'spline',
-                    // pointInterval:  3600 * 1000,
-                    // pointStart: Date(2014, 4, 01, 0, 0, 0, 0),
-                    data: [strict_data[0]]
-                },  {
-                    name: measurement_types[1][1], // series for measure 2
-                    type: 'spline',
-                    // pointInterval:  3600 * 1000,
+                    name: measurement_types[0][1].capitalize(),
+                    type: 'column',
+                    data: strict_data[0]
+                }, {
+                    name: measurement_types[1][1].capitalize(),
+                    type: 'column',
                     yAxis: 1,
-                    data: [strict_data[1]]
+                    data: strict_data[1]
                 }]
             });
-
         } else { // 1 measurement used
             var categories = [];
             var graph_data = [[], []];
@@ -396,7 +370,7 @@ function setChart(recent_measurements, measurement_types) {
             console.log("categories", categories);            
             console.log("1 measurements");
 
-            var chart = new Highcharts.Chart({
+            new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
                     zoomType: 'x',
@@ -459,7 +433,7 @@ function setChart(recent_measurements, measurement_types) {
             }
         }
         console.log("graph_data", graph_data);
-        console.log("categories", categories);            
+        console.log("categories", categories);
         var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'activity_chart',
