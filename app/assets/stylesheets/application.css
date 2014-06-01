@@ -442,14 +442,38 @@ footer {
   COMMENT STUFF
   ============================================================ */
 
+/* Div surrounding reply forms. */
 .new_text_area {
     display: none;
 }
 
-/*.add_text_area {
-  display: none;
+/* Divs surrounding comments / responses */
+.comment_box {
 }
 
-#show_more_comments {
-  display: none;
-}*/
+.response_box {
+}
+
+/* Div surrounding vote buttons */
+.vote_box {
+}
+
+/* Divs for comment / response contents */
+.comment_body {
+}
+
+.response_body {
+}
+
+/* Buttons for up / down voting. */
+.up_comment {
+}
+
+.down_comment {
+}
+
+.up_response {
+}
+
+.down_response {
+}
