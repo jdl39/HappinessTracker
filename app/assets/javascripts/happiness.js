@@ -37,18 +37,20 @@ var ready = function setStartingParam() {
                 zoomType: 'x'
             },
             title: {
-                text: 'Your Happiness Score History'
+                text: 'Happiness Scores'
             },
             subtitle: {
                 text: document.ontouchstart === undefined ?
                 'Click and drag in the plot area to zoom in' :
                 'Pinch the chart to zoom in'
             },
-            xAxis: [{
-                name: 'Scores Over Last 90 Days',
+            xAxis: {
+                title: {
+                    text: 'Scores Over Last 90 Days'
+                },
                 type: 'datetime',
-                minRange: 1 * 24 * 3600000 // fourteen days
-            }],
+                minRange: 1 * 24 * 3600000 // 1 day
+            },
             yAxis: {
                 title: {
                     text: "Happiness Score %",
