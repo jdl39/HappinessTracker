@@ -1,3 +1,4 @@
+<div class="goal-area no_display">
 <h3 id="goalHeader"></h3>
 <%= form_for :goal, url: "/goals/new" do |f| %>
 	<%= hidden_field_tag "goal[activity_name]", "", id: "hiddenActivityNameField" %>
@@ -25,28 +26,4 @@
 		</tr>
 	</table>
 <% end %>
-
-<script>
-function updateActivityName(newName) {
-	$('#goalHeader').text("Set goal for " + newName)
-	$('#hiddenActivityNameField').val(newName)
-}
-
-function updateMeasurementNames(newNames) {
-	console.log(("measurementTypeSelect"))
-	$("#measurementTypeSelect").html("")
-	for (num in newNames) {
-		$("#measurementTypeSelect").append('<option value="' + newNames[num] + '">' + newNames[num] + '</option>')
-	}
-}
-
-measurementValuePrev = "0"
-$(".numberValueField").on('change keyup paste', function(e) {
-	var str = this.value
-	if (isNaN(str)) {
-		str = measurementValuePrev
-		this.value = str
-	}
-	measurementValuePrev = str
-})
-</script>
+</div>

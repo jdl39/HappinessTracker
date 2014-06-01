@@ -190,6 +190,9 @@ header .logo {
   width: 120px;
   height: 120px;
   background-color: #fff;
+  /*background-image: url("happiness.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;*/
 }
 
 
@@ -439,6 +442,38 @@ footer {
   COMMENT STUFF
   ============================================================ */
 
+/* Div surrounding reply forms. */
 .new_text_area {
     display: none;
+}
+
+/* Divs surrounding comments / responses */
+.comment_box {
+}
+
+.response_box {
+}
+
+/* Div surrounding vote buttons */
+.vote_box {
+}
+
+/* Divs for comment / response contents */
+.comment_body {
+}
+
+.response_body {
+}
+
+/* Buttons for up / down voting. */
+.up_comment {
+}
+
+.down_comment {
+}
+
+.up_response {
+}
+
+.down_response {
 }

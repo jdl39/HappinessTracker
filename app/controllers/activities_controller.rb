@@ -63,7 +63,7 @@ class ActivitiesController < ApplicationController
             render json: to_return
             return
     	end
-
+        to_return["measurement_types"] = activity.measurement_types.pluck(:id,:name,:is_quantifiable)
         # TODO: Build the json to return.
         render json: to_return
     end
@@ -122,7 +122,7 @@ class ActivitiesController < ApplicationController
                     to_return["hapapp_error"] = "The measurement " + measurement_name + " doesn't exist."
                     next
                 end
-                to_return["new_measurements"] << activity.user.log_new_measurement(activity, measurement_type, measurement_value)
+                to_return["new_measurements"] << activity.user.log_new_measurement(activity, measurement_type, measurement_value).to_javascript_measurement
             end
         end
 
@@ -196,7 +196,8 @@ class ActivitiesController < ApplicationController
                 friends: [],
                 measurement_types: [],
                 recent_measurements: [],
-                recent_measurement_notes: []
+                recent_measurement_notes: [],
+                activity_id: top_result_id
             }
             return
         end
@@ -211,7 +212,7 @@ class ActivitiesController < ApplicationController
             # get user's personal data for the activity
             measurement_types = user_activity.measurement_types.pluck(:id,:name,:is_quantifiable)
             # recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC').first $recent_measurements_size
-            recent_measurements = Measurement.where(activity: user_activity).order('created_at DESC')
+            recent_measurements = Measurement.where(activity: user_activity).order('created_at ASC')
             recent_measurement_notes = recent_measurements.map(&:measurement_note)
         else
             # get the most common measurement for the topmost activity
@@ -220,12 +221,7 @@ class ActivitiesController < ApplicationController
 
         recent_measurement_hashs = []
         recent_measurements.each do |measurement|
-            mh = {}
-            mh["measurement_type_id"] = measurement.measurement_type_id
-            mh["activity_id"] = measurement.activity_id
-            mh["value"] = measurement.value
-            mh["created_at"] = measurement.date_string
-            recent_measurement_hashs << mh
+            recent_measurement_hashs << measurement.to_javascript_measurement
         end
         p recent_measurement_hashs
         render json:  {
@@ -233,7 +229,8 @@ class ActivitiesController < ApplicationController
             friends: friends,
             measurement_types: measurement_types,
             recent_measurements: recent_measurement_hashs,
-            recent_measurement_notes: recent_measurement_notes
+            recent_measurement_notes: recent_measurement_notes,
+            activity_id: top_result_id
         }
     end
 

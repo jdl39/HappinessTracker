@@ -3,7 +3,20 @@ prev = '';
 displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
+HighchartsLoaded = false;
 
+if(typeof Highcharts != 'undefined' && !HighchartsLoaded) {
+    HighchartsLoaded = true;
+    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+        return {
+            linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
+             stops: [
+                [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
+                [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
+            ]
+        };
+    });
+}
 
 var ready = function setStartingParam() {
     console.log("page is loaded");
@@ -89,6 +102,7 @@ function searchInitial() {
     var cur_str = str;
     if(str == '') {
         update_results([], true);
+        document.getElementsByClassName("loading-indicator")[0].style.display = "none";
         return;
     }
     var xhr = new XMLHttpRequest();
@@ -204,10 +218,13 @@ function create_new_activity(new_activity_str) {
 }
 
 function get_data_for_activity(selected_str) {
+    hide_goal_form();
+    hide_comment_area();
     console.log("hey", selected_str);
     selectedStr = selected_str;
     document.getElementById('results').innerHTML = '';
     doNotUpdateSearchMore = true;
+    document.getElementsByClassName("loading-indicator")[0].style.display = "none";
     str = selected_str;
     document.getElementById('search').value = selected_str;
     set_headers(selected_str);
@@ -229,6 +246,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json  = this.responseText;
         json = JSON.parse(json);
+        display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             show_form('add');
             measurements = [];
@@ -241,6 +259,7 @@ function get_data_for_activity(selected_str) {
             update_add_form_inputs(measurements);
             data = [json['recent_measurements'], parseMeasurements(json['measurement_types'])];
             update_graph();
+            display_goal_form(selected_str, measurements);
         } else {
             show_form('new');
         }
@@ -262,18 +281,11 @@ function update_graph() {
 function setChart(recent_measurements, measurement_types) {
     // console.log("final data", recent_measurements);
 
-    console.log("strict", strict_data);
+    console.log("measurement_types[1][0]", measurement_types[1][0]);
 
-    if(measurement_types[0][1] != "") {
+    if(measurement_types[1][0] != 1) {
         var strict_data = [[], []];
         for(recent_measurement in recent_measurements) {
-            // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
-            console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
-            // var created = Date(recent_measurements[recent_measurement]['created_at']);
-            // var year = parseFloat(created.getUTCFullYear());
-            // var month = parseFloat(created.getUTCMonth());
-            // var day = parseFloat(created.getUTCDay());
-
             var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
             if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
                 strict_data[0].push(newElem);
@@ -284,7 +296,7 @@ function setChart(recent_measurements, measurement_types) {
             }
             // console.log("elem", recent_measurements[recent_measurement]);
         }        
-        if(measurement_types[1][1] != "") { // 2 measurements used
+        if(measurement_types[1][1] != 1) { // 2 measurements used
             console.log("2 measurements");
             new Highcharts.Chart({
                 chart: {
@@ -388,15 +400,7 @@ function setChart(recent_measurements, measurement_types) {
             console.log("graph_data", graph_data);
             console.log("categories", categories);            
             console.log("1 measurements");
-            Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-                return {
-                    linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
-                     stops: [
-                        [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
-                        [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
-                    ]
-                };
-            });
+
             var chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
@@ -437,77 +441,66 @@ function setChart(recent_measurements, measurement_types) {
     } else { // 0 mesurements used
         console.log("0 measurements");
         var categories = [];
-            var graph_data = [[], []];
-            for(recent_measurement in recent_measurements) {
-                var created = recent_measurements[recent_measurement]['created_at'];
-                splitDate = created.split(" ");
-                var dayOfWeek = splitDate[0];
-                var month = splitDate[1];
-                var day = parseFloat(splitDate[2]);
-                var year = parseFloat(splitDate[3]);
-                var shortenStr = dayOfWeek + ' ' + month + ' ' + day + ', ' + year; 
-                var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
-                if(graph_data[0]) {
-                    if(categories[categories.length() - 1] != shortenStr) {
-                        graph_data[0].push(newElem);
-                        categories.push(shortenStr);
-                    } else {
-                        graph_data[graph_data.length() - 1] = graph_data[graph_data.length() - 1] + 1;
-                    }
+        var graph_data = [];
+        for(recent_measurement in recent_measurements) {
+            var created = recent_measurements[recent_measurement]['created_at'];
+            splitDate = created.split(" ");
+            var dayOfWeek = splitDate[0];
+            var month = splitDate[1];
+            var day = parseFloat(splitDate[2]);
+            var year = parseFloat(splitDate[3]);
+            var shortenStr = dayOfWeek + ' ' + month + ' ' + day + ', ' + year;
+            console.log("shortened", shortenStr);
+            if(graph_data[0]) {
+                if(categories[categories.length - 1] != shortenStr) {
+                    graph_data.push(1);
+                    categories.push(shortenStr);
                 } else {
-                    graph_data[0].push(newElem);
-                    categories.push(shortenStr);                    
+                    graph_data[graph_data.length - 1] = graph_data[graph_data.length - 1] + 1;
                 }
+            } else {
+                graph_data[0] = 1;
+                categories.push(shortenStr);                    
             }
-            console.log("graph_data", graph_data);
-            console.log("categories", categories);            
-            console.log("1 measurements");
-            Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-                return {
-                    linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
-                     stops: [
-                        [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
-                        [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
-                    ]
-                };
-            });
-            var chart = new Highcharts.Chart({
-                chart: {
-                    renderTo: 'activity_chart',
-                    zoomType: 'x',
-                    type: 'column',
-                    style: {
-                        fontFamily: 'Book Antiqua'
-                    }
-                },
+        }
+        console.log("graph_data", graph_data);
+        console.log("categories", categories);            
+        var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'activity_chart',
+                zoomType: 'x',
+                type: 'column',
+                style: {
+                    fontFamily: 'Book Antiqua'
+                }
+            },
+            title: {
+                text: 'Your History of ' + str.capitalize()
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                'Click and drag in the plot area to zoom in' :
+                'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'category',
+                categories: categories,
                 title: {
-                    text: 'Your History of ' + str.capitalize()
+                    text: 'Date'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: measurement_types[0][1].capitalize()
                 },
-                subtitle: {
-                    text: document.ontouchstart === undefined ?
-                    'Click and drag in the plot area to zoom in' :
-                    'Pinch the chart to zoom in'
-                },
-                xAxis: {
-                    type: 'category',
-                    categories: categories,
-                    title: {
-                        text: 'Date'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: measurement_types[0][1].capitalize()
-                    },
-                    min: 0
-                },
-                series: [{
-                    name: measurement_types[0][1].capitalize(),
-                    color: Highcharts.getOptions().colors[3],
-                    data: graph_data[0]
-                }]
-            });
-
+                min: 0
+            },
+            series: [{
+                name: measurement_types[0][1].capitalize(),
+                color: Highcharts.getOptions().colors[3],
+                data: graph_data
+            }]
+        });
     }
 }
 
@@ -589,20 +582,30 @@ function commit_new_measurement_form() {
         json  = this.responseText;
         json = JSON.parse(json);
         data = null;
-        var fullMeasurements = parseMeasurements(json['measurement_types']);
-        update_add_form_inputs(measurements);
         show_form('add');
-        data = [[], fullMeasurements];
+
+        measurements = [];
+        if(json['measurement_types'][0]) {
+            measurements.push(json['measurement_types'][0][1]);
+        }
+        if(json['measurement_types'][1]) {
+            measurements.push(json['measurement_types'][1][1]);
+        }
+        update_add_form_inputs(measurements);
+        data = [[], parseMeasurements(json['measurement_types'])];
+
         console.log("jeremy's new data");
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
 }
 
-function parseMeasurements(json) {
-    if(json[0][0]) parseFloat(json[0][0]);
-    if(json[1][0]) parseFloat(json[1][0]);
-    return json;
+function parseMeasurements(measurements) {
+    console.log("measurements", measurements);
+    if(!measurements) return ['', ''];
+    if(measurements[0][0]) parseFloat(measurements[0][0]);
+    if(measurements[1][0]) parseFloat(measurements[1][0]);
+    return measurements;
 }
 
 // AJAX request to backend that will submit the measurements
@@ -648,7 +651,7 @@ function commit_add_measurement_form() {
 function update_add_form_inputs(measurements) {
     console.log("measurements to be displayed", measurements);
     document.getElementById('commit_new_measurement_button').disabled = false;
-    if(measurements[0] != "") {
+    if(measurements[0] != '') {
         if(measurements[0] != "") {
             console.log("show first add input");
             document.getElementById('input_measure1').innerHTML = measurements[0];
@@ -689,6 +692,7 @@ function validate_add_form() {
     if(data[1][0][1] != '') {
         if(document.forms["add_activity"][0].value == '') {
             document.getElementById('measure1_error').style.display = 'block';
+            console.log("error in add 1");
             error = true;
         } else {
             document.getElementById('measure1_error').style.display = 'none';
@@ -697,15 +701,17 @@ function validate_add_form() {
     if(data[1][1][1] != '') {
         if(document.forms["add_activity"][1].value == '') {
             document.getElementById('measure2_error').style.display = 'block';
+            console.log("error in add 2", data[1][1]);
             error = true;
         } else {
             document.getElementById('measure2_error').style.display = 'none';
         }
     }
     if(error) {
-        return null;
         console.log("error", error);
+        return null;
     } else {
+        console.log("no error in add form");
         document.getElementById('measure1_error').style.display = 'none';
         document.getElementById('measure2_error').style.display = 'none';
         var measure1 = document.getElementById('input_measure1').innerHTML;
@@ -731,10 +737,32 @@ function update_suggested(suggestedName) {
     }
 }
 
-
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
+
+//--------------------------//
+// Goals and comments       //
+//--------------------------//
+function display_goal_form(activity_name, measurement_names) {
+    updateActivityName(activity_name)
+    updateMeasurementNames(measurement_names)
+    document.getElementsByClassName("goal-area")[0].style.display = "inline";
+
+}
+function hide_goal_form() {
+    document.getElementsByClassName("goal-area")[0].style.display = "none";
+}
+
+function display_comment_area(displayed_activity_id) {
+    document.getElementById("comment_system").style.display = "inline";
+    load_new_comments(displayed_activity_id);
+}
+function hide_comment_area() {
+    reset_comment_area();
+    document.getElementById("comment_system").style.display = "none";
+}
+
 // SAMPLE RESPONSE
 
 // {"query_activity_exists":true,
