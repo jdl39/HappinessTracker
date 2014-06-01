@@ -19,6 +19,6 @@ class Measurement < ActiveRecord::Base
   end
 
   def date_string
-    self.created_at.strftime('%a %h %d %G')
+    self.created_at.strftime('%a %h %d %G %I %p')
   end
 end

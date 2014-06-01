@@ -364,40 +364,50 @@ function setChart(recent_measurements, measurement_types) {
 
         } else { // 1 measurement used
             var categories = [];
-            var graph_data = [];
+            var graph_data = [[], []];
             for(recent_measurement in recent_measurements) {
-                // console.log("equal", parseFloat(recent_measurements[recent_measurement]['measurement_type_id']), measurement_types[0][0]);
-                // console.log("date", Date(recent_measurements[recent_measurement]['created_at']));
                 var created = recent_measurements[recent_measurement]['created_at'];
-                console.log("create", created);
-                // splitDate = created.split("\\s");
-                // console.log("split date", splitDate);
-                // var year = parseFloat(splitDate(3));
-                // var month = splitDate(1);
-                // var day = parseFloat(splitDate(2));
-                // var dayOfWeek = splitDate(0);
-                // console.log("stuffs", year, month, day, dayOfWeek);
+                // splitDate = created.split(" ");
+                // var dayOfWeek = splitDate[0];
+                // var month = splitDate[1];
+                // var day = parseFloat(splitDate[2]);
+                // var year = parseFloat(splitDate[3]);
+                // var shortenStr = dayOfWeek + ' ' + month + ' ' + day + ', ' + year; 
+                // console.log("stuffs", dayOfWeek, year, month, day);
 
-                // var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
-                // if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
-                //     strict_data[0].push(newElem);
-                // } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
-                //     strict_data[1].push(newElem);
-                // } else {
-                //     console.log("no matches ERROR");
-                // }
-                // console.log("elem", recent_measurements[recent_measurement]);
+                var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+                if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[0][0]) {
+                    graph_data[0].push(newElem);
+                    categories.push(created);
+                } else if(parseFloat(recent_measurements[recent_measurement]['measurement_type_id']) == measurement_types[1][0]) {
+                    // ignore
+                } else {
+                    console.log("no matches ERROR");
+                }
             }
-            
+            console.log("graph_data", graph_data);
+            console.log("categories", categories);            
             console.log("1 measurements");
+            Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+                return {
+                    linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
+                     stops: [
+                        [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
+                        [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
+                    ]
+                };
+            });
             var chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'activity_chart',
-                    // zoomType: 'x'
-                    type: 'spline'
+                    zoomType: 'x',
+                    type: 'areaspline',
+                    style: {
+                        fontFamily: 'Book Antiqua'
+                    }
                 },
                 title: {
-                    text: 'Your History of ' + str
+                    text: 'Your History of ' + str.capitalize()
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
@@ -406,33 +416,97 @@ function setChart(recent_measurements, measurement_types) {
                 },
                 xAxis: {
                     type: 'category',
-                    // dateTimeLabelFormats: { // don't display the dummy year
-                    //     month: '%e. %b',
-                    //     year: '%b'
-                    // },
+                    categories: categories,
                     title: {
                         text: 'Date'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Snow depth (m)'
+                        text: measurement_types[0][1].capitalize()
                     },
                     min: 0
                 },
-                // tooltip: {
-                //     headerFormat: '<b>{series.name}</b><br>',
-                //     pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-                // },
+                series: [{
+                    name: measurement_types[0][1].capitalize(),
+                    color: Highcharts.getOptions().colors[3],
+                    data: graph_data[0]
+                }]
             });
-            chart.addSeries({name: 'hey'}, true, true);
-            var series = chart.series[0];
-            series.addPoint([1, 1], true, true);
-
         }
     } else { // 0 mesurements used
         console.log("0 measurements");
-
+        var categories = [];
+            var graph_data = [[], []];
+            for(recent_measurement in recent_measurements) {
+                var created = recent_measurements[recent_measurement]['created_at'];
+                splitDate = created.split(" ");
+                var dayOfWeek = splitDate[0];
+                var month = splitDate[1];
+                var day = parseFloat(splitDate[2]);
+                var year = parseFloat(splitDate[3]);
+                var shortenStr = dayOfWeek + ' ' + month + ' ' + day + ', ' + year; 
+                var newElem = parseFloat(recent_measurements[recent_measurement]['value']);
+                if(graph_data[0]) {
+                    if(categories[categories.length() - 1] != shortenStr) {
+                        graph_data[0].push(newElem);
+                        categories.push(shortenStr);
+                    } else {
+                        graph_data[graph_data.length() - 1] = graph_data[graph_data.length() - 1] + 1;
+                    }
+                } else {
+                    graph_data[0].push(newElem);
+                    categories.push(shortenStr);                    
+                }
+            }
+            console.log("graph_data", graph_data);
+            console.log("categories", categories);            
+            console.log("1 measurements");
+            Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+                return {
+                    linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
+                     stops: [
+                        [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
+                        [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
+                    ]
+                };
+            });
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'activity_chart',
+                    zoomType: 'x',
+                    type: 'column',
+                    style: {
+                        fontFamily: 'Book Antiqua'
+                    }
+                },
+                title: {
+                    text: 'Your History of ' + str.capitalize()
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in'
+                },
+                xAxis: {
+                    type: 'category',
+                    categories: categories,
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: measurement_types[0][1].capitalize()
+                    },
+                    min: 0
+                },
+                series: [{
+                    name: measurement_types[0][1].capitalize(),
+                    color: Highcharts.getOptions().colors[3],
+                    data: graph_data[0]
+                }]
+            });
 
     }
 }
@@ -657,6 +731,10 @@ function update_suggested(suggestedName) {
     }
 }
 
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
 // SAMPLE RESPONSE
 
 // {"query_activity_exists":true,
