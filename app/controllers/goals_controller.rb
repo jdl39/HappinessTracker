@@ -65,7 +65,7 @@ class GoalsController < ApplicationController
 		new_goal.start_time = Time.now
 		new_goal.active = true
 		new_goal.save
-		render inline: "done"
+		redirect_to action: 'index'
 	end
 
 	private
