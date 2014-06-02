@@ -130,11 +130,13 @@
 	<h2>Recent Messages</h2>
 	<hr>
 	<ul>
-	  <% @recently_received_message_threads.each do |message| %>
+      <% @recently_received_message_threads.each do |message| %>
+		<% if message[:sender_sig] != current_user.username %>
 		<li> 
 		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <%= message[:content] %> 
-		  <button type="button">View more</button>
+		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>
 		</li>
+	    <% end %>
       <% end %>
     </ul>
 	<hr>

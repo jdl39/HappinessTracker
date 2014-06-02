@@ -26,7 +26,7 @@ HappinessApp::Application.routes.draw do
   get '/guides', to: 'guides#index'
   get '/guides/:username', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
-  get '/inbox/:username', to: 'messages#inbox'
+  get '/inbox/:username', to: 'messages#show'
   get '/challenges', to: 'challenges#index'
   get '/challenges/:username', to: 'challenges#index'
   get '/friends/', to: 'friends#index'
