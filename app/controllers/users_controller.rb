@@ -83,7 +83,8 @@ class UsersController < ApplicationController
 	@recommended_activities = current_user.activity_recommendations.first 4
     # Render landing page
     # Set recent challenges received by user
-	@my_received_challenges = recently_received_challenges(current_user.id) 
+	@my_received_challenges = recently_received_challenges(current_user.id)
+    @my_friends_recently_updated = get_friend_info(current_user.id, true)	
   end
 
   def create

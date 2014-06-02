@@ -122,8 +122,13 @@
 	<h2>Friends' Moods</h2>
 	<hr>
 	<ul>
-	  <li> Joe: Sad  | Send Joe a Message</li>
-	  <li> Bob: Happy | Send Bob a Message</li>
+	  <% @my_friends_recently_updated.each do |friend| %>
+		  <li> 
+		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
+		  <%= friend.is_happy ? 'Happy' : 'Sad' %> |
+		  <a href = "/"> Send Joe a message! </a>
+		</li>
+      <% end %>
     </ul>
 	<hr>
 	<h2>Recent Messages</h2>
