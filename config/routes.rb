@@ -22,6 +22,7 @@ HappinessApp::Application.routes.draw do
   get '/goals', to: 'goals#index'
   get '/goals/:username', to: 'goals#index'
   post '/goals/new', to: 'goals#new_goal'
+  get '/goals/abandon/:id', to: 'goals#abandon_goal'
   get '/guides', to: 'guides#index'
   get '/guides/:username', to: 'guides#index'
   get '/inbox', to: 'messages#inbox'
