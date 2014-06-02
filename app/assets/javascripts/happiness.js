@@ -1,6 +1,6 @@
 var ready = function setStartingParam() {
-    console.log("happiness page is loaded");
     if(!document.getElementById('happiness')) return;
+    console.log("happiness page is loaded");
     Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
         return {
             linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
