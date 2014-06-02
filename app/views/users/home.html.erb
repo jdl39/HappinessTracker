@@ -110,7 +110,7 @@
 	<hr>
 	<ul>
 	  <% @recommended_activities.each do |recommended_activity| %>
-		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity %></a></li>
+		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity.capitalize %></a></li>
 	  <% end %>
 	</ul>
 
