@@ -6,8 +6,20 @@ class MessagesController < ApplicationController
 
     # Renders page based on whether user/friend/non-friend
 	def inbox
-        @message_items = recently_sent_messages(current_user.id)
-        @message_items += recently_received_messages(current_user.id)
+        messages = recently_sent_messages(current_user.id)
+        messages += recently_received_messages(current_user.id)
+		messages = messages.uniq
+		pairs = []
+		@message_items = []
+		messages.each do |message|
+          pair = {:sender => message[:sender_sig], :receiver => message[:receiver_sig]}
+          reverse_pair = {:sender => message[:receiver_sig], :receiver => message[:sender_sig]}
+		  if (!pairs.include?(pair) && !pairs.include?(reverse_pair))
+			  pairs << pair
+			  pairs << reverse_pair
+			  @message_items << message
+		  end
+		end
 	    @message_items.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
         render 'my_inbox'
 	end

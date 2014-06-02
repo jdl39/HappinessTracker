@@ -12,7 +12,7 @@ class Goal < ActiveRecord::Base
   # Triggers the goals for the user, which allows it to be rescheduled if necessary.
   def Goal.setup_goals_for(user)
     user.activities.each do |act|
-      act.goals.each do |goal|
+      Goal.where(activity: act, active: true).each do |goal|
         goal.touch
       end
     end
@@ -38,7 +38,7 @@ class Goal < ActiveRecord::Base
   end
 
   def check_for_rescheduling
-  	if Time.now > self.time_due
+  	if Time.now > self.time_due and self.active
   		self.active = false
   		self.save
   		if self.goal_type.is_repeated
