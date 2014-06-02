@@ -30,6 +30,7 @@ class GoalsController < ApplicationController
 		@active_goal_hashs = []
 		active_goals.each do |g|
 			g_hash = {}
+			g_hash[:id] = g.id
 			g_hash[:activity_name] = g.goal_type.activity_type.name
 			g_hash[:measurement_name] = g.goal_type.measurement_type.name
 			g_hash[:measurement_value] = g.goal_type.measurement_value
@@ -40,6 +41,7 @@ class GoalsController < ApplicationController
 		@completed_goal_hashs = []
 		completed_goals.each do |g|
 			g_hash = {}
+			g_hash[:id] = g.id
 			g_hash[:activity_name] = g.goal_type.activity_type.name
 			g_hash[:measurement_name] = g.goal_type.measurement_type.name
 			g_hash[:measurement_value] = g.goal_type.measurement_value
@@ -65,6 +67,14 @@ class GoalsController < ApplicationController
 		new_goal.start_time = Time.now
 		new_goal.active = true
 		new_goal.save
+		redirect_to action: 'index'
+	end
+
+	def abandon_goal
+		goal = Goal.find(params[:id])
+		if goal.activity.user = current_user and goal.time_due > Time.now
+			goal.destroy
+		end
 		redirect_to action: 'index'
 	end
 

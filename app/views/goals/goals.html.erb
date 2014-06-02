@@ -4,11 +4,12 @@
 
 <table id="activeGoalTable" class="goalTable">
 	<tr>
-		<td>Activity</td><td>Measurement</td><td>Due</td>
+		<td>Activity</td><td>Measurement</td><td>Due</td><td>Abandon</td>
 	</tr>
 	<% @active_goal_hashs.each do |hash| %>
 		<tr>
 			<td><%= hash[:activity_name] %></td><td><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></td><td><%= hash[:due] %></td>
+			<td><a href="/goals/abandon/<%= hash[:id] %>"><button>Abandon</button></a>
 		</tr>
 	<% end %>
 </table>
