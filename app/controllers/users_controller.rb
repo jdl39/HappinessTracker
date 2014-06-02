@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   include ChallengesHelper
   include FriendsHelper
+  include MessagesHelper
 
   skip_before_action :require_login, only: [:index, :create]
 
@@ -84,7 +85,8 @@ class UsersController < ApplicationController
     # Render landing page
     # Set recent challenges received by user
 	@my_received_challenges = recently_received_challenges(current_user.id)
-    @my_friends_recently_updated = get_friend_info(current_user.id, true)	
+    @my_friends_recently_updated = get_friend_info(current_user.id, true)
+    @recently_received_message_threads = recently_received_messages(current_user.id)	
   end
 
   def create

@@ -9,10 +9,6 @@
 	width:450px;
   }
 
-  .home_body a { 
-	  color: #00aadd;
-  }
-
   hr {
 	height:1px;
 	background-color:#7f8381;
@@ -125,8 +121,8 @@
 	  <% @my_friends_recently_updated.each do |friend| %>
 		  <li> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
-		  <%= friend.is_happy ? 'Happy' : 'Sad' %> |
-		  <a href = "/"> Ping </a>
+		  <%= friend.is_happy ? 'Happy' : 'Sad' %> 
+		  <button type = "button"> Ping </button>
 		</li>
       <% end %>
     </ul>
@@ -134,8 +130,12 @@
 	<h2>Recent Messages</h2>
 	<hr>
 	<ul>
-	  <li> Joe: "Hi!...." <a href="">View more</a></li>
-      <li> Bob: "Yo!...." <a href="">View more</a></li>
+	  <% @recently_received_message_threads.each do |message| %>
+		<li> 
+		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <%= message[:content] %> 
+		  <button type="button">View more</button>
+		</li>
+      <% end %>
     </ul>
 	<hr>
 	<h2>Recent Challenges</h2>
