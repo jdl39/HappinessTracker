@@ -5,8 +5,8 @@ str = '';
 doNotUpdateSearchMore = false;
 
 var ready = function setStartingParam() {
-    console.log("page is loaded");
     if(!document.getElementById('search')) return;
+    console.log("search page is loaded");
     var len = document.getElementById('search').value.length;
     document.getElementById('search').focus();
     document.getElementById('search').setSelectionRange(len, len);
@@ -50,8 +50,8 @@ var ready = function setStartingParam() {
         return {
             linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
              stops: [
-                [0, Highcharts.Color(color).brighten(-0.3).get('rgb')], // darken
-                [1, Highcharts.Color(color).brighten(0.1).get('rgb')]
+                [0, color], // darken
+                [1, Highcharts.Color(color).brighten(0.2).get('rgb')]
             ]
         };
     });
@@ -455,7 +455,7 @@ function setChart(recent_measurements, measurement_types) {
                 type: 'category',
                 categories: categories,
                 title: {
-                    text: 'Date'
+                    text: 'Dates of Exercises'
                 }
             },
             yAxis: {
@@ -465,7 +465,7 @@ function setChart(recent_measurements, measurement_types) {
                 min: 0
             },
             series: [{
-                name: measurement_types[0][1].capitalize(),
+                name: str.capitalize(),
                 color: Highcharts.getOptions().colors[3],
                 data: graph_data
             }]
