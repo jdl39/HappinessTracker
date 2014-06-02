@@ -2,14 +2,30 @@ module MessagesHelper
 
   # Recently sent challenges
   def recently_sent_messages(user_id)
-	messages = Message.where(sender_id:user_id).recent
-	return populate_messages(messages)
+	messages = Message.where(sender_id:user_id)
+	reduced_messages = []
+	found_ids = []
+	messages.each do |message|
+      if (!found_ids.include?(message.receiver_id))
+	    found_ids << message.receiver_id
+	    reduced_messages << message	
+	  end
+	end
+	return populate_messages(reduced_messages)
   end
 
   # Recently received challenges
   def recently_received_messages(user_id)
-	messages = Message.where(receiver_id:user_id).recent
-	return populate_messages(messages)
+	messages = Message.where(receiver_id:user_id)
+	reduced_messages = []
+	found_ids = []
+	messages.each do |message|
+      if (not found_ids.include?(message.sender_id))
+	    found_ids << message.sender_id
+	    reduced_messages << message	
+	  end
+	end
+	return populate_messages(reduced_messages)
   end 
 
   # Populates the messages
