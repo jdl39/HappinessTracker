@@ -497,3 +497,36 @@ footer {
 }
 #completedGoalTable {
 }
+
+/*==================================================
+  INBOX
+  ================================================= */
+.inbox-header {
+	text-align: center;
+	/*background-color: rgb(123,214,190);*/
+	border-left-style: solid;
+    border-right-style: solid;
+    border-top-style: solid;
+	border-bottom-style: solid;
+	border-width: 1px;
+	border-color: #ddd;
+}
+
+.inbox-header h1 {
+    font-weight: bold;
+}
+
+.inbox-recent li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  /*background-color: rgb(123,214,190);*/
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+.inbox-recent-messages a {
+  color: #00aadd;
+}
