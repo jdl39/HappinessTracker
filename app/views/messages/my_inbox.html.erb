@@ -1,18 +1,80 @@
-<h1>My Inbox</h1>
-<ul>
-<% @message_items.each do |item| %>
-  <% sender = item[:sender_sig]
-     receiver = item[:receiver_sig]
-     quote = item[:quote]
-	 content = item[:content]
-	 timestamp = item[:timestamp] %>
+<style type="text/css">
+  .send_button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:65px;
+	line-height:65px;
+	width:131px;
+    text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #ffffff;
+    vertical-align:bottom;
+  }
+	
+  .send_button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+  }
+  
+  .send_button:active {
+    position:relative;
+	top:1px;
+  }
 
-  <li>
-	<div>Sender: <%= sender %></div>
-	<div>Receiver: <%= receiver %></div>
-	<div>Quote: <%= quote %></div>
-	<div>Content: <%= content %></div>
-	<div>Timestamp: <%= timestamp %></div>
-  </li>
-<% end %>
+  textarea {
+	height: 65px;
+	width: 422px;
+	resize: none;
+	vertical-align:bottom;
+  }
+
+</style>
+
+<div class = "inbox-header">
+  <h1> Inbox </h1>
+</div>
+	
+<div class = "inbox-recent">
+  <ul>
+  <div class = "inbox-recent-messages">
+  <% @message_items.each do |message| %>
+	<li>
+	  <p>
+	    <% sender = message[:sender_sig] %>  
+		<% receiver = message[:receiver_sig] %>
+		<a href = "/profile/<%= sender %>"> <%=sender %></a>  >  <a href = "/profile/<%= receiver %>"> <%= receiver %> </a>
+	  </p>
+	  <p><%= message[:content] %></p>
+	  <p class="time"><%= message[:timestamp].strftime("%b %d, %l:%M %P") %></p>
+	</li>
+  <% end %>
+</div>
+</div>
 </ul>

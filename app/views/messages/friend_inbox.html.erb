@@ -49,8 +49,10 @@
   }
 
   textarea {
+	border-color: #ddd;
+	border-width: 3px;  
 	height: 65px;
-	width: 422px;
+	width: 530px;
 	resize: none;
 	vertical-align:bottom;
   }
@@ -62,12 +64,14 @@
 </div>
 	
 <div class = "inbox-recent">
-  <ul>
-	<li>
+	<ul>
+		<li>
+	<message_submission>
       <textarea cols="50" rows="4" name="comment"></textarea>	
       <a href="#" class = "send_button"> Send </a>
-	</li>
-  <div class = "inbox-recent-messages">
+	  </message_submission>
+	  </li>
+	<div class = "inbox-recent-messages">
   <% @messages.each do |message| %>
 	<li>
 	  <p>

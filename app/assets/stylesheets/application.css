@@ -523,8 +523,20 @@ footer {
   border-left-style: solid;
   border-right-style: solid;
   /*background-color: rgb(123,214,190);*/
-  padding-left: 200px;
-  padding-right: 200px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+
+.inbox-recent message_submission {
+  border-color: #ddd;
+  border-width: 1px;
+  /*background-color: rgb(123,214,190);*/
+  padding-left: 150px;
+  padding-right: 150px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .inbox-recent-messages a {
