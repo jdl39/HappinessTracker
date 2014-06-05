@@ -78,9 +78,9 @@ class ChallengesController < ApplicationController
 	end	
 	# Parameters: None
 	def new
-       challenge = Challenge.new(:sender_id => params[:sender_id],
+       challenge = Challenge.new(:sender_id => params[:sender_id], # param should be look upable/ don't want to pass for multiple reasons
 							 :receiver_id => params[:receiver_id],
-							 :challenge_id => params[:challenge_id],
+							 :challenge_id => params[:challenge_id], # how would I know this?
 							 :activity_id => params[:activity_id],
 							 :content => params[:content])
 	   if challenge.save

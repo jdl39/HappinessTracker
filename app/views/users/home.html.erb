@@ -174,13 +174,80 @@
 
 <script>
 	$(document).ready(function() {
-	  toggleHeaderLayout();
-	  $('#myonoffswitch').change (function(e) {
-		  happiness_status = $('#myonoffswitch').prop("checked");
-		  console.log($("myonoffswitch").prop("checked"));
-		 togglePageLayout();
-		 toggleHeaderLayout();
-		 $.post('/happiness_status/set', {'is_happy': happiness_status}); 
-	  });
-  });
+	   toggleHeaderLayout();
+       $('#myonoffswitch').change (function(e) {
+	      happiness_status = $('#myonoffswitch').prop("checked");
+	      console.log($("myonoffswitch").prop("checked"));
+	      togglePageLayout();
+	      toggleHeaderLayout();
+	      $.post('/happiness_status/set', {'is_happy': happiness_status}); 
+       });
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = xhrHandler;
+    var url = '/happiness_scores';
+    xhr.open("GET", url, true); 
+    xhr.send();
+    function xhrHandler() {
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        json  = this.responseText;
+        json = JSON.parse(json);
+        var scores = [];
+        for(score in json) {
+            scores.push(parseFloat(json[score]['value']));
+        }
+        var cur = new Date(), start = cur.setDate(cur.getDate() -90);       
+        new Highcharts.Chart({
+            chart: {
+                renderTo: 'happiness_graph',
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Happiness Scores'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                'Click and drag in the plot area to zoom in' :
+                'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                title: {
+                    text: 'Scores Over Last 90 Days'
+                },
+                type: 'datetime',
+                minRange: 1 * 24 * 3600000 // 1 day
+            },
+            yAxis: {
+                title: {
+                    text: "Happiness Score %",
+                }
+            },
+            legend: {
+                floating: false,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                name: "Score",
+                type: 'areaspline',
+                color: {
+                    linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
+                    stops: [
+                        [0, '#b27300'], // darken
+                        [1, '#FFA500']
+                    ]
+                },
+                pointInterval: 24 * 3600 * 1000,
+                pointStart: start,
+                data: scores
+            }]
+        });
+        console.log("happiness scores returned");
+    }
 </script>

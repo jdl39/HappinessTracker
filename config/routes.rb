@@ -72,7 +72,7 @@ HappinessApp::Application.routes.draw do
   get '/messages/:user_id', to: 'messages#inbox'
 
   # CHALLENGES
-  match '/challenges/new', to: 'challenges#new', via: 'post'
+  get '/new_challenge', to: 'challenges#new'
   match '/challenges/accept', to: 'challenges#accept', via: 'post' #challenge_id
   match '/challenges/decline', to: 'challenges#decline', via: 'post' #challenge_id
   match '/challenges/complete', to: 'challenges#complete', via: 'post' #challenge_id

@@ -23,7 +23,7 @@ class HappinessController < ApplicationController
 
     def get_happiness_scores
         num_days = params[:num_days]
-        num_days = 90 if num_days.nil?
+        num_days = 15 if num_days.nil?
 
         happiness_values = []
         (0...num_days).each do |days_ago|

@@ -53,7 +53,35 @@
             </form>
             <!--   render 'shared/goal_form'   -->    
         </div>
+        <div id="challenge_form">
+            <form class="activity_form no_display">
+                <input type="text" name="friends" placeholder="challenge a friend" autocomplete="off"><br>
+                <div id="challenge_no_friend_error" class="no_display">You must choose a friend to give the challenge to.</div>
+                <input type="text" name="message" placeholder="Message for challenge." autocomplete="off"><br>
+                <div id="challenge_no_message_error" class="no_display">You must specify a message for each challenge.</div>
+                <button type="button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
+            </form>
+        </div>
         <%= render 'shared/goal_form' %>
         <%= render 'shared/comment_area' %>
     </div>
 </div>
+
+<style>
+#search {
+    border: 5px solid white; 
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    padding: 15px;
+    width: 300px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 0 10px 0;
+}
+</style> 

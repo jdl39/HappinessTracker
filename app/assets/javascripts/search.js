@@ -3,6 +3,8 @@ prev = '';
 displayed_results = [];
 str = '';
 doNotUpdateSearchMore = false;
+searchTimeoutFn = null;
+activity_id = 0;
 
 var ready = function setStartingParam() {
     if(!document.getElementById('search')) return;
@@ -46,15 +48,6 @@ var ready = function setStartingParam() {
             document.getElementById('commit_add_measurement_button').disabled = true;
         }
     }
-    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-        return {
-            linearGradient: { x1: 0, x2: 0, y1: 0, y1: 1 },
-             stops: [
-                [0, color], // darken
-                [1, Highcharts.Color(color).brighten(0.2).get('rgb')]
-            ]
-        };
-    });
 }
 
 $(document).ready(ready);
@@ -66,13 +59,17 @@ function search() {
         console.log("still same string", str);
         return;
     }
+    if(typeof searchTimeoutFn != 'undefined') {
+        console.log("skip previous one.", str);
+        clearTimeout(searchTimeoutFn);
+    }
     str = document.getElementById('search').value.trim();
     // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     if(str) {
         set_headers();
     }
     show_form('');
-    searchInitial();
+    searchTimeoutFn = setTimeout(searchInitial, 200);
 }
 
 function pickIfMatching() {
@@ -100,6 +97,7 @@ function searchInitial() {
         document.getElementsByClassName("loading-indicator")[0].style.display = "none";
         return;
     }
+    document.getElementById('results').innerHTML = '';
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_data?str=';
@@ -116,7 +114,7 @@ function searchInitial() {
         }
         console.log("starting");
         console.log(this.responseText);
-        json  = this.responseText;
+        json = this.responseText;
         json = JSON.parse(json);
         update_results(json['search_results'], true);
         searchMore();
@@ -133,7 +131,7 @@ function searchMore() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = xhrHandler;
     var url = '/search_more_data?str=';
-    xhr.open("GET", url+encodeURIComponent(str), true); 
+    xhr.open("GET", url  +encodeURIComponent(str), true); 
     xhr.send();
     function xhrHandler() {
         if(str != cur_str) return;
@@ -145,7 +143,7 @@ function searchMore() {
         }
         console.log("starting");
         console.log(this.responseText);
-        json  = this.responseText;
+        json = this.responseText;
         json = JSON.parse(json);
         if(!doNotUpdateSearchMore) {
             update_results(json['search_results'], false);
@@ -239,7 +237,7 @@ function get_data_for_activity(selected_str) {
         }
         console.log("starting");
         console.log(this.responseText);
-        json  = this.responseText;
+        json = this.responseText;
         json = JSON.parse(json);
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
@@ -548,7 +546,7 @@ function commit_new_measurement_form() {
         }
         console.log("starting");
         console.log(this.responseText);
-        json  = this.responseText;
+        json = this.responseText;
         json = JSON.parse(json);
         data = null;
         show_form('add');
@@ -601,7 +599,7 @@ function commit_add_measurement_form() {
         }
         console.log("starting");
         console.log(this.responseText);
-        json  = this.responseText;
+        json = this.responseText;
         json = JSON.parse(json);
         console.log('new measure to add', data[0], json['new_measurements']);
         if(data[0].length == 0) {
@@ -613,6 +611,38 @@ function commit_add_measurement_form() {
         console.log("new data", data[0]);
         document.getElementById('commit_add_measurement_button').disabled = false;
         update_graph();
+    }
+    xhr.send();
+}
+
+function commit_challenge_form() {
+    var measurements = validate_challenge_form();
+    console.log("measurements", measurements);
+    if(measurements == null) return; // form was not properly filled out
+    console.log("Submitting new challenge");
+    document.getElementById('commit_challenge_button').disabled = true;
+    var cur_str = str;
+    var xhr = new XMLHttpRequest();
+    var url = "/new_challenge?";
+    var params = "receiver_id=" + encodeURIComponent(receiver_id) + "&challenge_id=" + encodeURIComponent(challenge_id) + '&activity_id=' + encodeURIComponent(activity_id) + "&content=" + encodeURIComponent(content);
+    xhr.open("GET", url + params, true);
+    console.log(url + params);
+    xhr.onreadystatechange = xhrHandler;
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting");
+        console.log(this.responseText);
+        json = this.responseText;
+        json = JSON.parse(json);
+
+
+        document.getElementById('commit_challenge_button').disabled = false;
     }
     xhr.send();
 }
@@ -693,6 +723,10 @@ function validate_add_form() {
     }
 }
 
+function validate_challenge_form() {
+
+}
+
 // Update suggested // for now we are not using a suggestion for user input
 function update_suggested(suggestedName) {
     console.log(suggestedName);
@@ -731,18 +765,3 @@ function hide_comment_area() {
     reset_comment_area();
     document.getElementById("comment_system").style.display = "none";
 }
-
-// SAMPLE RESPONSE
-
-// {"query_activity_exists":true,
-// "user_does_activity":true,
-// "search_results":[{"id":1,"name":"running","num_users":2,"created_at":"2014-05-15T03:09:07.591Z","updated_at":"2014-05-15T03:09:09.507Z"},
-// {"id":7,"name":"playing guitar","num_users":3,"created_at":"2014-05-15T03:09:07.781Z","updated_at":"2014-05-15T03:09:09.420Z"},
-// {"id":11,"name":"playing video games","num_users":1,"created_at":"2014-05-15T03:09:07.881Z","updated_at":"2014-05-15T03:09:09.401Z"},
-// {"id":14,"name":"playing pool","num_users":0,"created_at":"2014-05-15T03:09:07.955Z","updated_at":"2014-05-15T03:09:07.955Z"},
-// {"id":45,"name":"going for walks","num_users":0,"created_at":"2014-05-15T03:09:08.902Z","updated_at":"2014-05-15T03:09:08.902Z"},
-// {"id":47,"name":"made work enjoyable","num_users":0,"created_at":"2014-05-15T03:09:08.954Z","updated_at":"2014-05-15T03:09:08.954Z"}],
-// "friends":[],
-// "measurement_types":[],
-// "recent_measurements":[],
-// "spellings_sugs":[null]}
