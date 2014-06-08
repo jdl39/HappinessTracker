@@ -89,8 +89,7 @@
 
 <script>
 	$("#send_button_id").click(function() {
-		var text_content = $("#comment_area").val();
-		console.log("Content: " + text_content);
+	  var text_content = $("#comment_area").val();
       $.post("/messages/new",
 	  {
         sender_id:<%= current_user.id %>,
@@ -98,7 +97,7 @@
 	    content:text_content	
 	  },
 	  function(data,status) {
-		  alert("Data: " + data + "\nStatus: " + status);
+	    location.reload();
 	  });
 	});
 </script>

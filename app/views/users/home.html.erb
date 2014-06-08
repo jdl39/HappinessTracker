@@ -122,7 +122,7 @@
 		  <li> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
 		  <%= friend.is_happy ? 'Happy' : 'Sad' %> 
-		  <button type = "button"> Ping </button>
+		  <button type = "button" class = "ping_button" receiver_id = "<%= friend.id %>"> Ping </button>
 		</li>
       <% end %>
     </ul>
@@ -249,5 +249,18 @@
             }]
         });
         console.log("happiness scores returned");
-    }
+	}
+
+	$(".ping_button").click(function() {
+	  var curr_button = $(this);
+	  $.post("/messages/new",
+	  {
+	    sender_id:<%= current_user.id %>,
+		receiver_id: curr_button.attr("receiver_id"),
+		content: "Hey! How's it going?"
+	  },
+	  function(data, status) {
+		  curr_button.disabled = true;
+	 });
+	});
 </script>
