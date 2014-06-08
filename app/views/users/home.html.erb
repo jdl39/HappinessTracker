@@ -2,11 +2,13 @@
   #left_col {
     float:left;
 	width:450px;
+    overflow: hidden;
   }
 
   #right_col {
     float:right;
 	width:450px;
+	overflow: hidden;
   }
 
   hr {
@@ -119,11 +121,15 @@
 	<hr>
 	<ul class = "home_list">
 	  <% @my_friends_recently_updated.each do |friend| %>
-		  <li> 
+		  <li>
+		  <left_col> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
 		  <%= friend.is_happy ? 'Happy' : 'Sad' %> 
+		  </left_col>
+		  <right_col>
 		  <button type = "button" class = "ping_button" receiver_id = "<%= friend.id %>"> Ping </button>
-		</li>
+		  </right_col>
+		  </li>
       <% end %>
     </ul>
 	<hr>
@@ -132,9 +138,13 @@
 	<ul class = "home_list">
       <% @recently_received_message_threads.each do |message| %>
 		<% if message[:sender_sig] != current_user.username %>
-		<li> 
+		<li>
+          <left_col>
 		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <%= message[:content] %> 
+		  </left_col>
+		  <right_col>
 		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>
+		  </right_col>
 		</li>
 	    <% end %>
       <% end %>
@@ -244,6 +254,7 @@
 
 	$(".ping_button").click(function() {
 	  var curr_button = $(this);
+	  var div_container = curr_button.parent();
 	  $.post("/messages/new",
 	  {
 	    sender_id:<%= current_user.id %>,
@@ -252,6 +263,8 @@
 	  },
 	  function(data, status) {
 		  curr_button.disabled = true;
+		  curr_button.hide();
+		  div_container.append("<p>Ping sent</p>");
 	 });
 	});
 </script>
