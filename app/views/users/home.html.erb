@@ -124,7 +124,7 @@
 		  <li>
 		  <left_col> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
-		  <%= friend.is_happy ? 'Happy' : 'Sad' %> 
+		  <mood><%= friend.is_happy ? 'Happy' : 'Sad' %></mood> 
 		  </left_col>
 		  <right_col>
 		  <button type = "button" class = "ping_button" receiver_id = "<%= friend.id %>"> Ping </button>
@@ -140,7 +140,7 @@
 		<% if message[:sender_sig] != current_user.username %>
 		<li>
           <left_col>
-		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <%= message[:content] %> 
+		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <message>"<%= message[:content] %>"</message> 
 		  </left_col>
 		  <right_col>
 		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>

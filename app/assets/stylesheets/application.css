@@ -639,6 +639,7 @@ footer {
 
 .home_list a {
   color: #00aadd;
+  font-style: normal;
 }
 
 .challenge_content {
@@ -680,4 +681,13 @@ footer {
 .home_list right_col p {
   display: table-cell;
   font-style: italic;
+}
+
+.home_list message {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.home_list mood {
+  font-size: 16px;
 }
