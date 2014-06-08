@@ -18,7 +18,16 @@
 	<p>
 	<%= user_1.username %> and <%= user_2.username %> are now friends!
 	</p>
-  <% elsif type == 'activity' %>
+  <% elsif type == 'measurement' %>
+    <% user = entry[:user] %>
+	<% activity_type = entry[:activity_type] %>
+	<% measurement = entry[:measurement] %>
+	<% measurement_type = entry[:measurement_type] %>
+	<p><a href = "/profile/<%= user.username %>"><%= user.username %></a> logged a measurement:</p>
+	<p>
+	  <a href = "/track?str=<%= activity_type.name %>"><%= activity_type.name.capitalize %></a> :
+      <%= measurement.value %> <%= measurement_type.name %>
+	</p> 
   <% else %>
   <% end %>
   <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p> 
