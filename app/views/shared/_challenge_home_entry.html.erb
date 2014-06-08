@@ -16,12 +16,14 @@
 		  <a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
       </p>
 	  <% if status == 2 %>
-	  <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
+	  <p class = "challenge_content">Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
 	  <% elsif status == 4 %>
-	  <p>Completed</p>
-	  <% else %>
+	  <p class = "challenge_content">Completed</p>
+      <% else %>
+	  <div class = "challenge_content">
 	  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
 	  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
+      </div>
       <% end %>
 </div>
 
