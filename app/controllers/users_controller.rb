@@ -86,9 +86,9 @@ class UsersController < ApplicationController
 	@recommended_activities = current_user.activity_recommendations.first 4
     # Render landing page
     # Set recent challenges received by user
-	@my_received_challenges = recently_received_challenges(current_user.id)
-    @my_friends_recently_updated = get_friend_info(current_user.id, true)
-    @recently_received_message_threads = recently_received_messages(current_user.id)
+	@my_received_challenges = recently_received_challenges(current_user.id).take(3)
+    @my_friends_recently_updated = get_friend_info(current_user.id, true).take(3)
+    @recently_received_message_threads = recently_received_messages(current_user.id).take(3)
 
     # Find friends' info
 	@my_friends = get_friend_info(current_user.id, true)
@@ -97,6 +97,7 @@ class UsersController < ApplicationController
       @newsfeed_entry_info += gather_newsfeed_entries(my_friend.id)
 	end
     @newsfeed_entry_info.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }	
+    @newsfeed_entry_info = @newsfeed_entry_info.take(20)
   end
 
   def create

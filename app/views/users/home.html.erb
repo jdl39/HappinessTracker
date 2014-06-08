@@ -165,7 +165,7 @@
 <div id = "left_col">
 	<h2>News Feed</h2>
 	<hr>
-	<% @newsfeed_entry_info.take(10).each do |newsfeed_entry| %>
+	<% @newsfeed_entry_info.each do |newsfeed_entry| %>
 	<article>
       <%= render partial: "shared/newsfeed_entry", locals: {newsfeed_entry: newsfeed_entry} %>
 	</article><!-- /article -->
