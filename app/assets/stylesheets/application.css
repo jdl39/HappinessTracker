@@ -306,10 +306,6 @@ footer {
   top:1px;
 }
 
-.goalTable td {
-  padding: 5px;
-}
-
 /* ============================================================
   LOGIN FORM
 ============================================================ */
@@ -479,6 +475,7 @@ footer {
   color: #00aadd;
 }
 
+
 /* ============================================================
   COMMENT STUFF
   ============================================================ */
@@ -524,6 +521,36 @@ footer {
   ================================================================ */
 
 /* GOAL FORM IN ACTIVITIES PAGE */
+.goals-heading {
+  text-align: center;
+}
+
+.goals-heading h1 {
+  font-weight: bold;
+}
+
+.table-div {
+  width: 50%;
+  float: left;
+  background: rgb(200,200,200);
+}
+
+.table-div h1 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.column-headings {
+  margin-left: 4px;
+}
+
+.column-headings li {
+  float: left;
+  display: block;
+  background: rgb(220,220,220);
+  padding-right: 40px;
+}
+
 .goal-area {
 }
 .goalHeader {
