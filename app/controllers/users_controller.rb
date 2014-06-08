@@ -86,7 +86,15 @@ class UsersController < ApplicationController
     # Set recent challenges received by user
 	@my_received_challenges = recently_received_challenges(current_user.id)
     @my_friends_recently_updated = get_friend_info(current_user.id, true)
-    @recently_received_message_threads = recently_received_messages(current_user.id)	
+    @recently_received_message_threads = recently_received_messages(current_user.id)
+
+    # Find friends' info
+	@my_friends = get_friend_info(current_user.id, true)
+	@newsfeed_entry_info = []
+    @my_friends.each do |my_friend| 
+      @newsfeed_entry_info += recently_received_challenges(my_friend.id)
+      @newsfeed_entry_info += recent_friendships(my_friend.id) 	  
+	end	
   end
 
   def create

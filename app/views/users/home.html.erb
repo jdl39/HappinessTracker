@@ -155,19 +155,11 @@
 <div id = "left_col">
 	<h2>News Feed</h2>
 	<hr>
+	<% @newsfeed_entry_info.take(5).each do |newsfeed_entry| %>
 	<article>
-		<h3>Story 1</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+      <%= render partial: "shared/newsfeed_entry", locals: {newsfeed_entry: newsfeed_entry} %>
 	</article><!-- /article -->
-	<article>
-		<h3>Story 2</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-	</article><!-- /article -->
-	<article>
-		<h3>Story 3</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-	</article><!-- /article -->
-
+	<% end %>
 	<button>Load More News</button>
 </div><!-- /section -->
 </section>

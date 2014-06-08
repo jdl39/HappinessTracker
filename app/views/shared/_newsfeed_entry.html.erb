@@ -1,0 +1,25 @@
+<div class = "newsfeed_entry">
+  <% entry = newsfeed_entry %>
+  <% type = entry[:type] %>
+  <% time = entry[:timestamp] %>
+  <% if type == 'challenge' %> 
+    <% sender = entry[:sender] %>
+	<% receiver = entry[:receiver] %>
+	<% challenge = entry[:challenge] %>
+	<p>
+	<a href = "/profile/<%= sender.username %>"><%= sender.username %></a>
+     	challenged 
+	<a href = "/profile/<%= receiver.username %>"> <%= receiver.username %></a>:
+	</p>
+	<p class = "challenge_content" ><%= challenge.content %></p>
+  <% elsif type == 'friendship' %>
+    <% user_1 = entry[:user_1] %>
+	<% user_2 = entry[:user_2] %>
+	<p>
+	<%= user_1.username %> and <%= user_2.username %> are now friends!
+	</p>
+  <% elsif type == 'activity' %>
+  <% else %>
+  <% end %>
+  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p> 
+</div>
