@@ -275,12 +275,9 @@ happiness_question_data = [
 ]
 
 frienddata = [
-	{'user_id' => 1, 'friend_id' => 2},
-	{'user_id' => 2, 'friend_id' => 1},
-	{'user_id' => 1, 'friend_id' => 3},
-	{'user_id' => 3, 'friend_id' => 1},
-	{'user_id' => 2, 'friend_id' => 3},
-	{'user_id' => 3, 'friend_id' => 2},
+	{'user_id' => 1, 'friend_id' => 2, 'accepted' => true},
+	{'user_id' => 1, 'friend_id' => 3, 'accepted' => true},
+	{'user_id' => 2, 'friend_id' => 3, 'accepted' => true},
 ]
 
 for friend in frienddata do
