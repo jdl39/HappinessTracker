@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   include ChallengesHelper
   include FriendsHelper
   include MessagesHelper
+  include MeasurementsHelper
 
   skip_before_action :require_login, only: [:index, :create]
 
@@ -56,7 +57,8 @@ class UsersController < ApplicationController
     newsfeed_hashes = recently_sent_challenges(user_id)
 	newsfeed_hashes += recently_received_challenges(user_id)
 	newsfeed_hashes += recent_friendships(user_id)
-    newsfeed_hashes.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+    newsfeed_hashes += get_recent_measurement_hashes(user_id)
+	newsfeed_hashes.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 	return newsfeed_hashes
   end
 
@@ -86,7 +88,15 @@ class UsersController < ApplicationController
     # Set recent challenges received by user
 	@my_received_challenges = recently_received_challenges(current_user.id)
     @my_friends_recently_updated = get_friend_info(current_user.id, true)
-    @recently_received_message_threads = recently_received_messages(current_user.id)	
+    @recently_received_message_threads = recently_received_messages(current_user.id)
+
+    # Find friends' info
+	@my_friends = get_friend_info(current_user.id, true)
+	@newsfeed_entry_info = []
+    @my_friends.each do |my_friend| 
+      @newsfeed_entry_info += gather_newsfeed_entries(my_friend.id)
+	end
+    @newsfeed_entry_info.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }	
   end
 
   def create
