@@ -10,19 +10,19 @@
 	    <a href = "/profile/<%= sender.username %>"><%= sender.username %></a>
 		challenged 
         <a href = "/profile/<%= receiver.username %>"> <%= receiver.username %></a>:
-	  </p>
-	  <p class = "challenge_content" >
+		</p>
+	  <div class = "challenge_content">
+	  <p>
 		"<%= challenge.content.capitalize %><% if activity_type != nil %>
 		  <a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
       </p>
 	  <% if status == 2 %>
-	  <p class = "challenge_content">Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
+		  <button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
       <% elsif status == 3 %>
-	  <p class = "challenge_content">Declined</p>
+	  <p>Declined</p>
       <% elsif status == 4 %>
-	  <p class = "challenge_content">Completed</p>
+	  <p>Completed</p>
       <% else %>
-	  <div class = "challenge_content">
 	  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
 	  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
       </div>
@@ -33,10 +33,8 @@
 <script>
   $(document).ready(function() {
 	$(".accept-challenge-btn").click(function(e) {
-	  alert("accepting");
 	  var id = $(this).attr("id");  
 	  var challenge_id = $(this).data("challengeid");
-	  alert(challenge_id);
 	  $.ajax({
 		url: "/challenges/accept",
 		type: "post",
