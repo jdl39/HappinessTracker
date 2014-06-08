@@ -15,14 +15,14 @@
       <li>Activity</li>
       <li>Measurement</li>
       <li>Due</li>
-      <li>Abandon</li>
+      <li>Abandon goal</li>
     </ul>
     <% @active_goal_hashs.each do |hash| %>
     <ul class="goal-list">
 			<li><%= hash[:activity_name] %></li>
       <li><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></li>
       <li><%= hash[:due].strftime("%b %d, %l:%M %P") %></li>
-			<li><a href="/goals/abandon/<%= hash[:id] %>"><button>Abandon</button></a></li>
+			<li><a href="/goals/abandon/<%= hash[:id] %>"><button class="secondary-button">Abandon</button></a></li>
 		</ul>
     <% end %>
   </div>
