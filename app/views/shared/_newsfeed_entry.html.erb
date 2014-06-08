@@ -1,0 +1,41 @@
+<div class = "newsfeed_entry">
+  <% entry = newsfeed_entry %>
+  <% type = entry[:type] %>
+  <% time = entry[:timestamp] %>
+  <% if type == 'challenge' %> 
+    <% sender = entry[:sender] %>
+	<% receiver = entry[:receiver] %>
+	<% challenge = entry[:challenge] %>
+	<% activity_type = entry[:activity_type] %>
+	<p>
+	<a href = "/profile/<%= sender.username %>"><%= sender.username %></a>
+     	challenged 
+	<a href = "/profile/<%= receiver.username %>"> <%= receiver.username %></a>:
+	</p>
+	<p class = "challenge_content" >
+	  "<%= challenge.content.capitalize %><% if activity_type != nil %>
+		<a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>"
+	</p>
+  <% elsif type == 'friendship' %>
+    <% user_1 = entry[:user_1].username %>
+	<% user_2 = entry[:user_2].username %>
+	<p>
+	<a href = "/profile/<%= user_1 %>"><%=user_1 %></a>
+     	and 
+	<a href = "/profile/<%= user_2 %>"><%= user_2 %></a>
+	   	are now friends!
+	</p>
+  <% elsif type == 'measurement' %>
+    <% user = entry[:user] %>
+	<% activity_type = entry[:activity_type] %>
+	<% measurement = entry[:measurement] %>
+	<% measurement_type = entry[:measurement_type] %>
+	<p><a href = "/profile/<%= user.username %>"><%= user.username %></a> logged a measurement:</p>
+	<p class = "measurement_content">
+	  <a href = "/track?str=<%= activity_type.name %>"><%= activity_type.name.capitalize %></a> :
+      <%= measurement.value %> <%= measurement_type.name %>
+	</p> 
+  <% else %>
+  <% end %>
+  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p> 
+</div>

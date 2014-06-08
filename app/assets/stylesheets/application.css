@@ -802,3 +802,88 @@ li#create-account-button {
   top:1px;
 }
 /* This button was generated using CSSButtonGenerator.com */
+
+/* ============
+ * Home
+ * ============
+ */
+.newsfeed_entry {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+}
+
+.newsfeed_entry a {
+  color: #00aadd;
+}
+
+.home_list li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+  vertical-align: bottom;
+  padding-bottom: 2px;
+  overflow: hidden;
+ }
+
+.home_list li:last-child {
+  border:none;
+  padding-bottom: 0px;
+  border-width: 0px;
+  vertical-align: bottom;
+}
+
+.home_list a {
+  color: #00aadd;
+  font-style: normal;
+}
+
+.challenge_content {
+  padding-left: 50px;
+  font-size: 16px;    
+  font-style: italic;
+  border-color: #ddd;
+  border-width: 1px;
+  border-right-style: solid;
+}
+
+.measurement_content {
+  padding-left: 50px;
+  font-size: 16px;
+  border-color: #ddd;
+  border-width: 1px;
+  border-right-style: solid;
+}
+
+.home_list button {
+	padding:5px;
+    background-color: #dcdcdc;
+    border: 1px solid #ddd; 
+	color:#000;
+	text-decoration:none;
+}
+
+.home_list left_col {
+  float:left;
+}
+
+.home_list right_col {
+  float:right;
+  font-size: 16px;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.home_list right_col p {
+  display: table-cell;
+  font-style: italic;
+}
+
+.home_list message {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.home_list mood {
+  font-size: 16px;
+}

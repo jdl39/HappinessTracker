@@ -5,7 +5,6 @@
             <div id="results"></div>
             <div class="loading-indicator no_display"></div>
         </div>
-        <!-- <div id="suggested"></div> -->
 
         <div id="friends-panel" class="no_display">
             <h4>Friends who also <span class="activity_header"></span></h4>
@@ -51,13 +50,13 @@
                 </div>
                 <button type="button" id="commit_add_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
             </form>
-            <!--   render 'shared/goal_form'   -->    
         </div>
-        <div id="challenge_form">
-            <form class="activity_form no_display">
-                <input type="text" name="friends" placeholder="challenge a friend" autocomplete="off"><br>
-                <div id="challenge_no_friend_error" class="no_display">You must choose a friend to give the challenge to.</div>
-                <input type="text" name="message" placeholder="Message for challenge." autocomplete="off"><br>
+        <div>
+            <form class="activity_form no_display" id="challenge_form">
+                <h3>Challenge a friend to <span class="activity_header"></span>!</h3>
+                <input type="text" name="friends" placeholder="Pick a friend" autocomplete="off" id="friends_search"><br>
+                <div id="friends_for_challenge_list"></div>
+                <input type="text" name="message" placeholder="Message for challenge." autocomplete="off" id="challenge_message"><br>
                 <div id="challenge_no_message_error" class="no_display">You must specify a message for each challenge.</div>
                 <button type="button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
             </form>
@@ -68,20 +67,20 @@
 </div>
 
 <style>
-#search {
-    border: 5px solid white; 
-    -webkit-box-shadow: 
-      inset 0 0 8px  rgba(0,0,0,0.1),
-            0 0 16px rgba(0,0,0,0.1); 
-    -moz-box-shadow: 
-      inset 0 0 8px  rgba(0,0,0,0.1),
-            0 0 16px rgba(0,0,0,0.1); 
-    box-shadow: 
-      inset 0 0 8px  rgba(0,0,0,0.1),
-            0 0 16px rgba(0,0,0,0.1); 
-    padding: 15px;
-    width: 300px;
-    background: rgba(255,255,255,0.5);
-    margin: 0 0 10px 0;
-}
+    #search {
+        border: 5px solid white; 
+        -webkit-box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        -moz-box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        padding: 15px;
+        width: 300px;
+        background: rgba(255,255,255,0.5);
+        margin: 0 0 10px 0;
+    }
 </style> 

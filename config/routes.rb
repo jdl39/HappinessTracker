@@ -32,6 +32,7 @@ HappinessApp::Application.routes.draw do
   get '/friends/', to: 'friends#index'
   get '/friends/:username', to: 'friends#index'
   get '/friends/:username/json', to: 'friends#get_friends'
+  get '/get_my_friends', to: 'friends#get_my_friends'
 
   get '/happiness_scores', to: 'happiness#get_happiness_scores'
 

@@ -1,3 +1,4 @@
+// Global Variables
 inputs = [];
 prev = '';
 displayed_results = [];
@@ -5,7 +6,9 @@ str = '';
 doNotUpdateSearchMore = false;
 searchTimeoutFn = null;
 activity_id = 0;
+all_friends = null;
 
+// Page initiation function
 var ready = function setStartingParam() {
     if(!document.getElementById('search')) return;
     console.log("search page is loaded");
@@ -48,11 +51,15 @@ var ready = function setStartingParam() {
             document.getElementById('commit_add_measurement_button').disabled = true;
         }
     }
+    document.getElementById('friends_search').onkeyup = function(e) {
+        update_friends_list();
+    }
 }
 
 $(document).ready(ready);
 $(document).on('page:load', ready);
 
+// Main search function that controlls flow of search
 function search() {
     console.log("str", str);
     if(str && str == document.getElementById('search').value.trim()) {
@@ -64,14 +71,14 @@ function search() {
         clearTimeout(searchTimeoutFn);
     }
     str = document.getElementById('search').value.trim();
-    // updateMeasurementNames(["Miles", "Hours"]) // TODO: make this update actually work.
     if(str) {
         set_headers();
     }
-    show_form('');
+    set_form('');
     searchTimeoutFn = setTimeout(searchInitial, 200);
 }
 
+// Will select first available option from choices presented
 function pickIfMatching() {
     if(displayed_results[0]) {
         get_data_for_activity(displayed_results[0]);
@@ -80,14 +87,16 @@ function pickIfMatching() {
     }
 }
 
+// Sets all headers in page that reference the selected activity
 function set_headers(header) {
     var elements = document.getElementsByClassName('activity_header');
     for (var element in elements) {
-        if(header) (elements[element]).innerHTML = header;
-        else (elements[element]).innerHTML = str;
+        if(header) (elements[element]).innerHTML = header.capitalize();
+        else (elements[element]).innerHTML = str.capitalize();
     }
 }
 
+// Preforms the initial function for quick search
 function searchInitial() {
     console.log("initial search started");
     doNotUpdateSearchMore = false;
@@ -122,6 +131,7 @@ function searchInitial() {
     }
 }
 
+// A more complete search that finds other options
 function searchMore() {
     console.log("more search started");
 
@@ -154,6 +164,7 @@ function searchMore() {
     }
 }
 
+// Will update drop down list of available options
 function update_results(results, initial) {
     console.log("results", results);
     if(initial) {
@@ -202,11 +213,11 @@ function update_results(results, initial) {
     }
 }
 
+// Clears drop down list and sets the new measurement list
 function create_new_activity(new_activity_str) {
-    console.log("hey there once again.", new_activity_str);
     selectedStr = new_activity_str;
     doNotUpdateSearchMore = true;
-    show_form('new');
+    set_form('new');
     document.getElementById('results').innerHTML = '';
 }
 
@@ -239,9 +250,10 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json = this.responseText;
         json = JSON.parse(json);
+        activity_id = json['activity_id'];
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
-            show_form('add');
+            set_form('add');
             measurements = [];
             if(json['measurement_types'][0]) {
                 measurements.push(json['measurement_types'][0][1]);
@@ -254,11 +266,12 @@ function get_data_for_activity(selected_str) {
             update_graph();
             display_goal_form(selected_str, measurements);
         } else {
-            show_form('new');
+            set_form('new');
         }
     }
 }
 
+// Controls if graph is shown or not based on whether there is any data to show
 function update_graph() {
     console.log("data", data);
     if(data[0].length > 0) {
@@ -271,6 +284,7 @@ function update_graph() {
     }
 }
 
+// Chart configurations for each of three different measurement options
 function setChart(recent_measurements, measurement_types) {
     // console.log("final data", recent_measurements);
     console.log("measurement_types", measurement_types);
@@ -471,27 +485,29 @@ function setChart(recent_measurements, measurement_types) {
     }
 }
 
-function show_form(option) {
-    if(option == "add") {
+//controlls which of the forms to show and resets any forms not visible
+function set_form(option) {
+    clear_form_values();
+    if(option == "new") {
+        document.forms["add_activity"].style.display = "none";
+        document.forms["new_activity"].style.display = "block";
+        document.forms["new_activity"][0].focus();
+        document.getElementById('second_measurement').style.display = 'none';
+        document.getElementById('add_new_measurement_button').style.display = 'block';
+        document.getElementById('graph_box').style.display = 'none';
+    } else if(option == "add") { // shows the rest of the forms
         console.log('add');
         document.forms["add_activity"].style.display = "block";
         document.forms["add_activity"][0].focus();
         document.forms["new_activity"].style.display = "none";
-        clear_form_values();
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('add_new_measurement_button').style.display = 'block';
-    } else if(option == "new") {
-        document.forms["add_activity"].style.display = "none";
-        document.forms["new_activity"].style.display = "block";
-        document.forms["new_activity"][0].focus();
-        clear_form_values();
-        document.getElementById('second_measurement').style.display = 'none';
-        document.getElementById('add_new_measurement_button').style.display = 'block';
-        document.getElementById('graph_box').style.display = 'none';
+        document.getElementById('challenge_form').style.display = 'block';
+        document.getElementById('commit_challenge_button').disabled = true;
     } else if(option == '') {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "none";
-        clear_form_values();
+        document.forms["challenge_form"].style.display = "none";
         document.getElementById('add_new_measurement_button').style.display = 'none';
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
@@ -504,6 +520,7 @@ function clear_form_values() {
     document.forms["add_activity"][1].value = "";
     document.forms["new_activity"][0].value = "";
     document.forms["new_activity"][1].value = "";
+    clear_challenge_form_on_success();
     document.getElementById('measure1_error').style.display = "none";
     document.getElementById('measure2_error').style.display = "none";
 }
@@ -524,6 +541,10 @@ function add_measurement_form() {
     document.forms["new_activity"][1].focus();
     document.getElementById('add_new_measurement_button').style.display = 'none';
 }
+
+//--------------------------//
+// New Activty Form         //
+//--------------------------//
 
 // AJAX request that will submit the new activity measurements for a tracked activity
 function commit_new_measurement_form() {
@@ -549,7 +570,8 @@ function commit_new_measurement_form() {
         json = this.responseText;
         json = JSON.parse(json);
         data = null;
-        show_form('add');
+        set_form('add');
+        activity_id = json['activity_id'];
 
         measurements = [];
         if(json['measurement_types'][0]) {
@@ -567,6 +589,15 @@ function commit_new_measurement_form() {
     xhr.send();
 }
 
+// method that will check the two measurement forms that are submitted through ajax on this page
+function validate_new_form() {
+    if(!document.forms["new_activity"][0].value && document.forms["new_activity"][1].value) {
+       document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
+       document.forms["new_activity"][1].value = '';
+    }
+    return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
+}
+
 function parseMeasurements(measurements) {
     console.log("measurements", measurements);
     if(!measurements) return ['', ''];
@@ -574,6 +605,10 @@ function parseMeasurements(measurements) {
     if(measurements[1][0]) parseFloat(measurements[1][0]);
     return measurements;
 }
+
+//--------------------------//
+// Add Activity Form        //
+//--------------------------//
 
 // AJAX request to backend that will submit the measurements
 function commit_add_measurement_form() {
@@ -615,75 +650,6 @@ function commit_add_measurement_form() {
     xhr.send();
 }
 
-function commit_challenge_form() {
-    var measurements = validate_challenge_form();
-    console.log("measurements", measurements);
-    if(measurements == null) return; // form was not properly filled out
-    console.log("Submitting new challenge");
-    document.getElementById('commit_challenge_button').disabled = true;
-    var cur_str = str;
-    var xhr = new XMLHttpRequest();
-    var url = "/new_challenge?";
-    var params = "receiver_id=" + encodeURIComponent(receiver_id) + "&challenge_id=" + encodeURIComponent(challenge_id) + '&activity_id=' + encodeURIComponent(activity_id) + "&content=" + encodeURIComponent(content);
-    xhr.open("GET", url + params, true);
-    console.log(url + params);
-    xhr.onreadystatechange = xhrHandler;
-    function xhrHandler() {
-        if(str != cur_str) return;
-        if (this.readyState != 4) {
-            return;
-        }
-        if (this.status != 200) {
-            return;
-        }
-        console.log("starting");
-        console.log(this.responseText);
-        json = this.responseText;
-        json = JSON.parse(json);
-
-
-        document.getElementById('commit_challenge_button').disabled = false;
-    }
-    xhr.send();
-}
-
-function update_add_form_inputs(measurements) {
-    console.log("measurements to be displayed", measurements);
-    document.getElementById('commit_new_measurement_button').disabled = false;
-    if(measurements[0] != '') {
-        if(measurements[0] != "") {
-            console.log("show first add input");
-            document.getElementById('input_measure1').innerHTML = measurements[0];
-            document.getElementById('measure_input1').style.display = 'block';
-        } else {
-            document.getElementById('measure_input1').style.display = 'none';
-        }
-        if(measurements[1] && measurements[1] != "") {
-            console.log("show second add input");
-            document.getElementById('input_measure2').innerHTML = measurements[1];
-            document.getElementById('measure_input2').style.display = 'block';        
-        } else {
-            document.getElementById('measure_input2').style.display = 'none';
-        }
-    } else {
-        console.log("no measurements to show");
-        document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
-        document.getElementById('measure_input1').style.display = 'none';
-        document.getElementById('measure_input2').style.display = 'none';
-        document.getElementById('measure1_error').style.display = 'none';
-        document.getElementById('measure2_error').style.display = 'none';
-    }
-}
-
-// method that will check the two measurement forms that are submitted through ajax on this page
-function validate_new_form() {
-    if(!document.forms["new_activity"][0].value && document.forms["new_activity"][1].value) {
-       document.forms["new_activity"][0].value = document.forms["new_activity"][1].value;
-       document.forms["new_activity"][1].value = '';
-    }
-    return [document.forms["new_activity"][0].value, document.forms["new_activity"][1].value];
-}
-
 // check if form is properly filled out and returns form data if completed
 function validate_add_form() {
     console.log("data at add form", data);
@@ -723,25 +689,168 @@ function validate_add_form() {
     }
 }
 
-function validate_challenge_form() {
-
-}
-
-// Update suggested // for now we are not using a suggestion for user input
-function update_suggested(suggestedName) {
-    console.log(suggestedName);
-    if(suggestedName) {
-        console.log(suggestedName);
-        document.getElementById('suggested').innerHTML = "Did you mean "+suggestedName+"?";
-    } else if(suggestedName == str) {
-        document.getElementById('suggested').innerHTML = "";
+function update_add_form_inputs(measurements) {
+    console.log("measurements to be displayed", measurements);
+    document.getElementById('commit_new_measurement_button').disabled = false;
+    if(measurements[0] != '') {
+        if(measurements[0] != "") {
+            console.log("show first add input");
+            document.getElementById('input_measure1').innerHTML = measurements[0];
+            document.getElementById('measure_input1').style.display = 'block';
+        } else {
+            document.getElementById('measure_input1').style.display = 'none';
+        }
+        if(measurements[1] && measurements[1] != "") {
+            console.log("show second add input");
+            document.getElementById('input_measure2').innerHTML = measurements[1];
+            document.getElementById('measure_input2').style.display = 'block';        
+        } else {
+            document.getElementById('measure_input2').style.display = 'none';
+        }
     } else {
-        document.getElementById('suggested').innerHTML = "";
+        console.log("no measurements to show");
+        document.getElementById('no_measure').innerHTML = 'This activity requires no measurements.';
+        document.getElementById('measure_input1').style.display = 'none';
+        document.getElementById('measure_input2').style.display = 'none';
+        document.getElementById('measure1_error').style.display = 'none';
+        document.getElementById('measure2_error').style.display = 'none';
     }
 }
 
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+//--------------------------//
+// Challenge Form           //
+//--------------------------//
+
+// Accepts the user submitting a challenge and processes it.
+function commit_challenge_form() {
+    var cur_str = str;
+    if(validate_challenge_form() == null) return; // form was not properly filled out
+    console.log("Submitting new challenge");
+    document.getElementById('commit_challenge_button').disabled = true;
+    var xhr = new XMLHttpRequest();
+    var url = "/new_challenge?";
+    var params = "receiver_id=" + encodeURIComponent(receiver_id) + "&activity_id=" + encodeURIComponent(activity_id) + "&content=" + encodeURIComponent(document.forms["challenge_form"][1].value);
+    xhr.open("GET", url + params, true);
+    console.log(url + params);
+    xhr.onreadystatechange = xhrHandler;
+    function xhrHandler() {
+        if(str != cur_str) return;
+        if (this.readyState != 4) {
+            return;
+        }
+        if (this.status != 200) {
+            return;
+        }
+        console.log("starting", this.responseText);
+        clear_challenge_form_on_success();
+        document.getElementById('commit_challenge_button').disabled = true;
+    }
+    xhr.send();
+}
+
+function clear_challenge_form_on_success() {
+    document.forms["challenge_form"][0].value = "";
+    document.forms["challenge_form"][1].value = "";
+    document.getElementById('challenge_no_message_error').style.display = "none";
+    clear_friends_results();
+}
+
+function friend_selected(selected_name, selected_id) {
+    console.log("friend name clicked", selected_name, selected_id);
+    document.getElementById('commit_challenge_button').disabled = false;
+    document.getElementById('friends_search').value = selected_name;
+    receiver_id = selected_id;
+}
+
+function validate_challenge_form() {
+    console.log("activity_id", activity_id);
+    if(document.forms["challenge_form"][1].value == "") {
+        document.getElementById('challenge_no_message_error').style.display = "block";
+        return null;
+    } else {
+        document.getElementById('challenge_no_message_error').style.display = "none";
+    }
+    if(typeof receiver_id === 'undefined') {
+        console.log("no friend selected");
+        return null;
+    }
+    return false;
+}
+
+function update_friends_list() {
+    clear_friends_results();
+    if(all_friends) {
+        update_friend_results(available_friends());
+    } else {
+        get_friends();
+    }
+}
+
+function clear_friends_results() {
+    document.getElementById('commit_challenge_button').disabled = true;
+    var friends_displayed = document.getElementById('friends_for_challenge_list'); 
+    friends_displayed.innerHTML = '';
+}
+
+function get_friends() {
+    console.log("all_friends before", all_friends);
+    if(all_friends == null) {
+        console.log("Checking for all friends");
+        var xhr = new XMLHttpRequest();
+        var url = "/get_my_friends?";
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = xhrHandler;
+        function xhrHandler() {
+            if (this.readyState != 4) {
+                return;
+            }
+            if (this.status != 200) {
+                return;
+            }
+            console.log("starting: friends", this.responseText);
+            json = this.responseText;
+            json = JSON.parse(json)
+            all_friends = json;
+            update_friend_results(available_friends());
+        }
+        xhr.send();
+    }
+}
+
+function available_friends() {
+    var search_str = document.getElementById('friends_search').value.trim();
+    if(search_str.trim() == '') {
+        return [];
+    }
+    console.log("all_friends", all_friends, "search_str", search_str);
+    var available_friends = [];
+    for(friends in all_friends) {
+        var cur_friend = all_friends[friends];
+        if(cur_friend.fullname.toLowerCase().indexOf(search_str.toLowerCase()) != -1) {
+            available_friends.push([cur_friend.fullname, cur_friend.id]);
+        }
+    }
+    console.log("available_friends from fn", available_friends);
+    return available_friends;
+}
+
+function update_friend_results(available_friends) {
+    console.log("available_friends", available_friends);
+
+    var results_div = document.getElementById('friends_for_challenge_list');
+    for (var friend in available_friends) {
+        !function outer(friend) {
+            console.log("friend name", available_friends[friend]);
+            var newDiv = document.createElement('div');
+            newDiv.innerHTML = available_friends[friend][0].capitalize();
+            newDiv.className = newDiv.className + ' friend_result';
+            var i = available_friends[friend];
+            newDiv.addEventListener('click', function() {
+                friend_selected(i[0], i[1]);
+            });
+            results_div.appendChild(newDiv);
+        }(friend);
+    }
 }
 
 //--------------------------//
@@ -764,4 +873,11 @@ function display_comment_area(displayed_activity_id) {
 function hide_comment_area() {
     reset_comment_area();
     document.getElementById("comment_system").style.display = "none";
+}
+
+//--------------------------//
+// MISC.                    //
+//--------------------------//
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
 }

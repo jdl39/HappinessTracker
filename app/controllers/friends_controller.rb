@@ -21,21 +21,41 @@ class FriendsController < ApplicationController
 
    # Retrieves a user's accepted friends
    # Params:
-	#        username
+   #        username
    def get_friends
-	  results = []
-	  user = User.find_by_username(params[:username])
+     results = []
+     user = User.find_by_username(params[:username])
       friends = Friend.where(user_id: user.id, accepted: true)
-	  friends.each do |friend_rel|
-	    friend = User.find(friend_rel.friend_id)
-		results << {id:friend.id, username: friend.username}
-	  end
-	  friends = Friend.where(friend_id: user.id, accepted: true)
-	  friends.each do |friend_rel|
+     friends.each do |friend_rel|
+       friend = User.find(friend_rel.friend_id)
+      results << {id:friend.id, username: friend.username}
+     end
+     friends = Friend.where(friend_id: user.id, accepted: true)
+     friends.each do |friend_rel|
         friend = User.find(friend_rel.user_id)
-	    results << {id:friend.id, username: friend.username}
-	  end
-	  render json:results
+       results << {id:friend.id, username: friend.username}
+     end
+     render json:results
+   end
+
+   # Retrieves a current user's accepted friends and returns fullname additionally
+   def get_my_friends
+     remember_token = User.digest(cookies[:remember_token])
+     current_user ||= User.find_by(remember_token: remember_token)
+     p "current_user", current_user
+     results = []
+     # user = User.find_by_username(current_user.id)
+     friends = Friend.where(user_id: current_user.id, accepted: true)
+     friends.each do |friend_rel|
+        friend = User.find(friend_rel.friend_id)
+        results << {id: friend.id, username: friend.username, fullname: friend.first_name.capitalize + ' ' + friend.last_name.capitalize}
+     end
+     friends = Friend.where(friend_id: current_user.id, accepted: true)
+     friends.each do |friend_rel|
+        friend = User.find(friend_rel.user_id)
+        results << {id: friend.id, username: friend.username, fullname: friend.first_name.capitalize + ' ' + friend.last_name.capitalize}
+     end
+     render json:results
    end
 
    # Creates a friend request if it does not yet exist

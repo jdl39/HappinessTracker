@@ -2,11 +2,13 @@
   #left_col {
     float:left;
 	width:450px;
+    overflow: hidden;
   }
 
   #right_col {
     float:right;
 	width:450px;
+	overflow: hidden;
   }
 
   hr {
@@ -108,7 +110,7 @@
     <hr>
 	<h2>Recommended Activities</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	  <% @recommended_activities.each do |recommended_activity| %>
 		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity.capitalize %></a></li>
 	  <% end %>
@@ -117,24 +119,32 @@
 	<hr>
 	<h2>Friends' Moods</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	  <% @my_friends_recently_updated.each do |friend| %>
-		  <li> 
+		  <li>
+		  <left_col> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
-		  <%= friend.is_happy ? 'Happy' : 'Sad' %> 
+		  <mood><%= friend.is_happy ? 'Happy' : 'Sad' %></mood> 
+		  </left_col>
+		  <right_col>
 		  <button type = "button" class = "ping_button" receiver_id = "<%= friend.id %>"> Ping </button>
-		</li>
+		  </right_col>
+		  </li>
       <% end %>
     </ul>
 	<hr>
 	<h2>Recent Messages</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
       <% @recently_received_message_threads.each do |message| %>
 		<% if message[:sender_sig] != current_user.username %>
-		<li> 
-		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <%= message[:content] %> 
+		<li>
+          <left_col>
+		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <message>"<%= message[:content] %>"</message> 
+		  </left_col>
+		  <right_col>
 		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>
+		  </right_col>
 		</li>
 	    <% end %>
       <% end %>
@@ -142,7 +152,7 @@
 	<hr>
 	<h2>Recent Challenges</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	<% @my_received_challenges.each do |challenge| %>
 		<li><%= render :partial => 'shared/challenge_home_entry', :locals => {:item=>challenge} %></li>
 	<% end %>
@@ -155,20 +165,11 @@
 <div id = "left_col">
 	<h2>News Feed</h2>
 	<hr>
+	<% @newsfeed_entry_info.each do |newsfeed_entry| %>
 	<article>
-		<h3>Story 1</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
+      <%= render partial: "shared/newsfeed_entry", locals: {newsfeed_entry: newsfeed_entry} %>
 	</article><!-- /article -->
-	<article>
-		<h3>Story 2</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-	</article><!-- /article -->
-	<article>
-		<h3>Story 3</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, rem, debitis, sunt dolores aliquam veritatis laudantium cupiditate dolor ullam id laboriosam quas quisquam officiis tenetur earum at voluptatem velit optio.</p>
-	</article><!-- /article -->
-
-	<button>Load More News</button>
+	<% end %>
 </div><!-- /section -->
 </section>
 
@@ -253,6 +254,7 @@
 
 	$(".ping_button").click(function() {
 	  var curr_button = $(this);
+	  var div_container = curr_button.parent();
 	  $.post("/messages/new",
 	  {
 	    sender_id:<%= current_user.id %>,
@@ -261,6 +263,8 @@
 	  },
 	  function(data, status) {
 		  curr_button.disabled = true;
+		  curr_button.hide();
+		  div_container.append("<p>Ping sent</p>");
 	 });
 	});
 </script>
