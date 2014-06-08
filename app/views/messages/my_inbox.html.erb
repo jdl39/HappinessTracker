@@ -65,14 +65,18 @@
   <ul>
   <div class = "inbox-recent-messages">
   <% @message_items.each do |message| %>
-	<li>
+	<% sender = message[:sender_sig] %>  
+    <% receiver = message[:receiver_sig] %>
+	<% other_user = sender == current_user.username ? receiver : sender %>
+    <li>
 	  <p>
-	    <% sender = message[:sender_sig] %>  
-		<% receiver = message[:receiver_sig] %>
 		<a href = "/profile/<%= sender %>"> <%=sender %></a>  >  <a href = "/profile/<%= receiver %>"> <%= receiver %> </a>
 	  </p>
 	  <p><%= message[:content] %></p>
-	  <p class="time"><%= message[:timestamp].strftime("%b %d, %l:%M %P") %></p>
+	  <p class="time">
+	    <%= message[:timestamp].strftime("%b %d, %l:%M %P") %>
+	    <a href = "/inbox/<%= other_user %>">View Discussion</a>	
+	  </p>
 	</li>
   <% end %>
 </div>

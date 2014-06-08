@@ -67,8 +67,8 @@
 	<ul>
 		<li>
 	<message_submission>
-      <textarea cols="50" rows="4" name="comment"></textarea>	
-      <a href="#" class = "send_button"> Send </a>
+      <textarea cols="50" rows="4" name="comment" id="comment_area"></textarea>	
+      <a href="#" class = "send_button" id = "send_button_id"> Send </a>
 	  </message_submission>
 	  </li>
 	<div class = "inbox-recent-messages">
@@ -86,3 +86,18 @@
 </div>
 </div>
 </ul>
+
+<script>
+	$("#send_button_id").click(function() {
+	  var text_content = $("#comment_area").val();
+      $.post("/messages/new",
+	  {
+        sender_id:<%= current_user.id %>,
+		receiver_id: <%= @viewed_user.id %>,
+	    content:text_content	
+	  },
+	  function(data,status) {
+	    location.reload();
+	  });
+	});
+</script>

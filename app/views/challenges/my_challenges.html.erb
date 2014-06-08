@@ -1,5 +1,7 @@
-<h1><u>My Challenges</u></h1>
-<ul class="my-challenges">
+<div class="challenge-list-heading">
+  <h1>My Challenges</h1>
+</div>
+<ul class="challenge-list">
   <% @challenges.each do |item| %>
   <li>
     <% challenge = item[:challenge]
@@ -15,15 +17,15 @@
     # 4 = completed
 
     if sender.id == current_user.id %>
-      <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
+      <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a>
       <% if status == 2 %>
-        <p><%= receiver.first_name %> accepted your challenge!</p>
+        <%= receiver.first_name %> accepted your challenge!</p>
       <% elsif status == 3 %>
-        <p><%= receiver.first_name %> declined your challenge.</p>
+        <%= receiver.first_name %> declined your challenge.</p>
       <% elsif status == 4 %>
-        <p><%= receiver.first_name %> completed your challenge!</p>
+        <%= receiver.first_name %> completed your challenge!</p>
       <% else %>
-        <p>Challenge pending</p>
+        (pending)</p>
       <% end %>
     <% else %>
       <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
@@ -36,8 +38,8 @@
         <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
       <% end %>
     <% end%>
+    <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
     <p><%= challenge.content %></p>
-    <p><%= time %></p>
   </li>
   <% end %>
 </ul>

@@ -195,6 +195,11 @@ header .logo {
   background-repeat: no-repeat;*/
 }
 
+header .logo a img {
+  width: 100%;
+  height: 100%;
+}
+
 
 /* ============================================================
   PRIMARY NAVIGATION
@@ -299,10 +304,6 @@ footer {
 .result:active {
   position:relative;
   top:1px;
-}
-
-.goalTable td {
-  padding: 5px;
 }
 
 /* ============================================================
@@ -420,6 +421,41 @@ footer {
 }
 
 /* ============================================================
+  CHALLENGE STYLES
+============================================================ */
+
+.challenge-list-heading {
+  text-align: center;
+  /*background-color: rgb(123,214,190);*/
+  border-left-style: solid;
+  border-right-style: solid;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ddd;
+}
+
+.challenge-list-heading h1 {
+  font-weight: bold;
+}
+
+.challenge-list li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  /*background-color: rgb(123,214,190);*/
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.challenge-list a {
+  color: #00aadd;
+}
+
+
+/* ============================================================
   FRIEND LIST
 ============================================================ */
 
@@ -434,9 +470,11 @@ footer {
   font-weight: bold;
 }
 
-.friend-list a {
+.friend-list a,
+.non-friend-list a {
   color: #00aadd;
 }
+
 
 /* ============================================================
   COMMENT STUFF
@@ -483,6 +521,36 @@ footer {
   ================================================================ */
 
 /* GOAL FORM IN ACTIVITIES PAGE */
+.goals-heading {
+  text-align: center;
+}
+
+.goals-heading h1 {
+  font-weight: bold;
+}
+
+.table-div {
+  width: 50%;
+  float: left;
+  background: rgb(200,200,200);
+}
+
+.table-div h1 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.column-headings {
+  margin-left: 4px;
+}
+
+.column-headings li {
+  float: left;
+  display: block;
+  background: rgb(220,220,220);
+  padding-right: 40px;
+}
+
 .goal-area {
 }
 .goalHeader {
