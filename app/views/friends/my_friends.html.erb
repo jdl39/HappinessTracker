@@ -1,47 +1,14 @@
-<h1>
-  <% if @unaccepted_friends.length == 1 %>
-    1 friend has added you
-  <% elsif @unaccepted_friends.length != 0 %>
-    <%= @unaccepted_friends.length %> friends have added you
-  <% end %>
-</h1>
-<ul>
+<div class="friend-list-heading">  
+  <h1>
+    <% if @unaccepted_friends.length == 1 %>
+      1 friend has added you
+    <% elsif @unaccepted_friends.length != 0 %>
+      <%= @unaccepted_friends.length %> friends have added you
+    <% end %>
+  </h1>
+</div>
+<ul class="non-friend-list">
   <% @unaccepted_friends.each do |friend| %>
-
-  <script>
-  /*
-    $(document).ready(function() {
-      $("#accept-friend<%= friend.id %>").click(function(e) {
-        _this = this;
-        alert(_this.value);
-        $.ajax({
-          url: "/friend_request/accept",
-          type: "post",
-          async: false,
-          data: {
-            request_id: "<%= friend.request_id %>"
-          }
-        });
-        e.preventDefault();
-        location.reload();
-      });
-    });
-
-    $(document).ready(function() {
-      $("#decline-friend<%= friend.id %>").click(function(e) {
-        alert();
-        $.ajax({
-          url: "/friend_request/decline",
-          type: "post",
-          data: {
-            request_id: "<%= friend.request_id %>"
-          }
-        });
-      });
-    });
-*/
-  </script>
-
   <li>
     <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a>
     <button id="accept-friend<%= friend.id %>" class="accept-friend-btn" data-friendid="<%= friend.request_id %>">Accept</button>
@@ -95,6 +62,8 @@
             request_id: friend_id
           }
       });
+      e.preventDefault();
+      location.reload();
     });
   });
 </script>

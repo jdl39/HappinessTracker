@@ -1,28 +1,48 @@
-<h1><% if @user == current_user %>My<% else %><%= @user.username %>'s<% end %> Goals</h1>
+<div class="goals-heading">
+  <h1>
+    <% if @user == current_user %>
+      My
+    <% else %><%= @user.username %>'s
+  <% end %> 
+    Goals
+  </h1>
+</div>
 
-<h2>Active</h2>
-
-<table id="activeGoalTable" class="goalTable">
-	<tr>
-		<td>Activity</td><td>Measurement</td><td>Due</td><td>Abandon</td>
-	</tr>
-	<% @active_goal_hashs.each do |hash| %>
-		<tr>
-			<td><%= hash[:activity_name] %></td><td><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></td><td><%= hash[:due] %></td>
-			<td><a href="/goals/abandon/<%= hash[:id] %>"><button>Abandon</button></a>
-		</tr>
-	<% end %>
-</table>
-
-<h2>Complete</h2>
-
-<table id="completedGoalTable" class="goalTable">
-	<tr>
-		<td>Activity</td><td>Measurement</td><td>Due</td><td>Completed</td>
-	</tr>
-	<% @completed_goal_hashs.each do |hash| %>
-		<tr>
-			<td><%= hash[:activity_name] %></td><td><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></td><td><%= hash[:due] %></td><td><%= hash[:completed_on] %></td>
-		</tr>
-	<% end %>
-</table>
+<div class="table-div">
+  <h1>Active</h1>
+  <div id="activeGoalTable" class="goalTable">
+    <ul class="column-headings">
+      <li>Activity</li>
+      <li>Measurement</li>
+      <li>Due</li>
+      <li>Abandon</li>
+    </ul>
+    <% @active_goal_hashs.each do |hash| %>
+    <ul>
+			<li><%= hash[:activity_name] %></li>
+      <li><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></li>
+      <li><%= hash[:due] %></li>
+			<li><a href="/goals/abandon/<%= hash[:id] %>"><button>Abandon</button></a></li>
+		</ul>
+    <% end %>
+  </div>
+</div>
+<div class="table-div">
+  <h1>Complete</h1>
+  <div id="completedGoalTable" class="goalTable">
+    <ul class="column-headings">
+      <li>Activity</li>
+      <li>Measurement</li>
+      <li>Due</li>
+      <li>Completed</li>
+    </ul>
+    <% @completed_goal_hashs.each do |hash| %>
+    <ul>
+			<li><%= hash[:activity_name] %></li>
+      <li><%= hash[:measurement_value] %> <%= hash[:measurement_name] %></li>
+      <li><%= hash[:due] %></li>
+      <li><%= hash[:completed_on] %></li>
+		</ul>
+    <% end %>
+  </div>
+</div>
