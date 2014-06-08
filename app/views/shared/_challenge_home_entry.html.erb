@@ -17,7 +17,9 @@
       </p>
 	  <% if status == 2 %>
 	  <p class = "challenge_content">Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
-	  <% elsif status == 4 %>
+      <% elsif status == 3 %>
+	  <p class = "challenge_content">Declined</p>
+      <% elsif status == 4 %>
 	  <p class = "challenge_content">Completed</p>
       <% else %>
 	  <div class = "challenge_content">
@@ -48,14 +50,23 @@
 	});
 
 	$(".decline-challenge-btn").click(function(e) {
-	  alert("declining");
+	  var id = $(this).attr("id");
+	  var challenge_id = $(this).data("challengeid");
+	  $.ajax({
+		url: "/challenges/decline",
+		type: "post",
+		async: false,
+		data: {
+		  challenge_id: challenge_id
+		}
+	  });
+	  e.preventDefault();
+	  location.reload();
 	});
 
 	$(".completed-challenge-btn").click(function(e) {
-	  alert("completed");
 	  var id = $(this).attr("id");
 	  var challenge_id = $(this).data("challengeid");
-	  alert(challenge_id);
 	  $.ajax({
 		url: "/challenges/complete",
 		type: "post",
