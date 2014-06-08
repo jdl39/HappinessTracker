@@ -64,6 +64,7 @@ class ActivitiesController < ApplicationController
             return
     	end
         to_return["measurement_types"] = activity.measurement_types.pluck(:id,:name,:is_quantifiable)
+        to_return["activity_id"] = activity.id
         # TODO: Build the json to return.
         render json: to_return
     end

@@ -250,6 +250,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json = this.responseText;
         json = JSON.parse(json);
+        activity_id = json['activity_id'];
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             set_form('add');
@@ -506,6 +507,7 @@ function set_form(option) {
     } else if(option == '') {
         document.forms["add_activity"].style.display = "none";
         document.forms["new_activity"].style.display = "none";
+        document.forms["challenge_form"].style.display = "none";
         document.getElementById('add_new_measurement_button').style.display = 'none';
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
@@ -518,12 +520,9 @@ function clear_form_values() {
     document.forms["add_activity"][1].value = "";
     document.forms["new_activity"][0].value = "";
     document.forms["new_activity"][1].value = "";
-    document.forms["challenge_form"][0].value = "";
-    document.forms["challenge_form"][1].value = "";
+    clear_challenge_form_on_success();
     document.getElementById('measure1_error').style.display = "none";
     document.getElementById('measure2_error').style.display = "none";
-    document.getElementById('challenge_no_friend_error').style.display = "none";
-    document.getElementById('challenge_no_message_error').style.display = "none";
 }
 
 function update_friends(friends) {
@@ -572,6 +571,7 @@ function commit_new_measurement_form() {
         json = JSON.parse(json);
         data = null;
         set_form('add');
+        activity_id = json['activity_id'];
 
         measurements = [];
         if(json['measurement_types'][0]) {
@@ -724,14 +724,12 @@ function update_add_form_inputs(measurements) {
 // Accepts the user submitting a challenge and processes it.
 function commit_challenge_form() {
     var cur_str = str;
-    var form_data = validate_challenge_form();
-    console.log("challenge data", form_data);
-    if(form_data == null) return; // form was not properly filled out
+    if(validate_challenge_form() == null) return; // form was not properly filled out
     console.log("Submitting new challenge");
     document.getElementById('commit_challenge_button').disabled = true;
     var xhr = new XMLHttpRequest();
     var url = "/new_challenge?";
-    var params = "receiver_id=" + encodeURIComponent(form_data['receiver_id']) + "&activity_id=" + encodeURIComponent(form_data['activity_id']) + "&content=" + encodeURIComponent(['content']);
+    var params = "receiver_id=" + encodeURIComponent(receiver_id) + "&activity_id=" + encodeURIComponent(activity_id) + "&content=" + encodeURIComponent(document.forms["challenge_form"][1].value);
     xhr.open("GET", url + params, true);
     console.log(url + params);
     xhr.onreadystatechange = xhrHandler;
@@ -753,25 +751,30 @@ function commit_challenge_form() {
 function clear_challenge_form_on_success() {
     document.forms["challenge_form"][0].value = "";
     document.forms["challenge_form"][1].value = "";
+    document.getElementById('challenge_no_message_error').style.display = "none";
+    clear_friends_results();
 }
 
-
-// document.getElementById('challenge_no_friend_error').style.display = "none";
-// document.getElementById('challenge_no_message_error').style.display = "none";
-
 function friend_selected(selected_name, selected_id) {
+    console.log("friend name clicked", selected_name, selected_id);
     document.getElementById('commit_challenge_button').disabled = false;
     document.getElementById('friends_search').value = selected_name;
+    receiver_id = selected_id;
 }
 
 function validate_challenge_form() {
-
-
-
-
-
-
-    return null;
+    console.log("activity_id", activity_id);
+    if(document.forms["challenge_form"][1].value == "") {
+        document.getElementById('challenge_no_message_error').style.display = "block";
+        return null;
+    } else {
+        document.getElementById('challenge_no_message_error').style.display = "none";
+    }
+    if(typeof receiver_id === 'undefined') {
+        console.log("no friend selected");
+        return null;
+    }
+    return false;
 }
 
 function update_friends_list() {
@@ -816,6 +819,9 @@ function get_friends() {
 
 function available_friends() {
     var search_str = document.getElementById('friends_search').value.trim();
+    if(search_str.trim() == '') {
+        return [];
+    }
     console.log("all_friends", all_friends, "search_str", search_str);
     var available_friends = [];
     for(friends in all_friends) {
