@@ -190,9 +190,6 @@ header .logo {
   width: 120px;
   height: 120px;
   background-color: #fff;
-  /*background-image: url("happiness.jpg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;*/
 }
 
 header .logo a img {
@@ -236,6 +233,31 @@ nav.primary-nav li.active a {
 ============================================================ */
 footer {
   padding: 20px 0;
+  font-family: 'Oswald', sans-serif;
+}
+
+nav.footer-nav {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+nav.footer-nav ul {
+
+}
+
+nav.footer-nav li {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+nav.footer-nav a {
+  display: block;
+  color: #fff;
+}
+
+.copyright {
+  text-align: center;
+  color: #fff;
 }
 
 
@@ -319,7 +341,7 @@ footer {
   margin-left: auto;
   margin-right: auto;
   width: 56%;
-  padding: 16px;
+  padding: 24px 16px 24px 16px;
   /*background-color: rgb(200,200,200);*/
 }
 
@@ -328,6 +350,8 @@ footer {
   margin-right: auto;
   width: 32%;
   margin-bottom: 42px;
+  font-weight: bold;
+  color: #ff9933;
 }
 
 #login-form ul li {
@@ -337,6 +361,7 @@ footer {
 #login-form input[type=text],
 #login-form input[type=password] {
   height: 24px;
+  width: 30%;
 }
 
 #login-form a {
@@ -366,6 +391,8 @@ footer {
   margin-right: auto;
   width: 44%;
   margin-bottom: 42px;
+  font-weight: bold;
+  color: #ff9933;
 }
 
 #create-account-form label {
@@ -382,6 +409,21 @@ footer {
   width: 193px;
 }
 
+#create-account-form input[type=submit] {
+
+}
+
+li#create-account-button {
+  margin-left: 35%;
+  padding-left: 13px;
+  text-align: left;
+}
+
+#create-account-form p {
+  margin-top: 14px;
+  text-align: center;
+}
+
 #create-account-form a {
   color: #00aadd;
 }
@@ -393,24 +435,62 @@ footer {
 .profile-name {
   text-align: center;
   /*background-color: rgb(123,214,190);*/
-  border-left-style: solid;
-  border-right-style: solid;
-  border-top-style: solid;
   border-bottom-style: solid;
   border-width: 1px;
-  border-color: #ddd;
+  border-color: #ff9933;
+  color: #ff9933;
 }
 
 .profile-name h1 {
   font-weight: bold;
 }
 
+.profile-left-column {
+  width: 31%;
+  float: left;
+}
+
+.profile-left-column div {
+  margin-top: 14px;
+  /*
+  -moz-box-shadow: inset 0px 0px 1px 1px #eee;
+  -webkit-box-shadow: inset 0px 0px 1px 1px #eee;
+  box-shadow: inset 0px 0px 1px 1px #eee;
+  */
+}
+
+.profile-left-column div h1 {
+  text-align: center;
+  color: #ff9933;
+  font-weight: bold;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #ff9933;
+}
+
+.profile-left-column div h1 a {
+  color: #ff9933;
+}
+
+.profile-right-column {
+  width: 61%;
+  float: right;
+}
+
+.profile-right-column h1 {
+  margin-top: 14px;
+  text-align: center;
+  color: #ff9933;
+  font-weight: bold;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #ff9933;
+}
+
 .profile-recent li {
   border-color: #ddd;
   border-width: 1px;
   border-bottom-style: solid;
-  border-left-style: solid;
-  border-right-style: solid;
   /*background-color: rgb(123,214,190);*/
   padding-left: 7px;
   padding-right: 7px;
@@ -520,7 +600,6 @@ footer {
   GOAL STUFF
   ================================================================ */
 
-/* GOAL FORM IN ACTIVITIES PAGE */
 .goals-heading {
   text-align: center;
 }
@@ -530,25 +609,54 @@ footer {
 }
 
 .table-div {
-  width: 50%;
+  display: block;
+  margin-bottom: 28px;
   float: left;
-  background: rgb(200,200,200);
+}
+
+.table-div:last-child {
+  margin-bottom: 0px;
 }
 
 .table-div h1 {
   font-weight: bold;
-  text-align: center;
+  margin-left: 4px;
+}
+
+.goalTable {
+}
+
+#activeGoalTable {
+}
+
+#completedGoalTable {
 }
 
 .column-headings {
-  margin-left: 4px;
+
 }
 
 .column-headings li {
   float: left;
   display: block;
-  background: rgb(220,220,220);
-  padding-right: 40px;
+  width: 238px;
+  background-color: #ff9933;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.goal-list {
+
+}
+
+.goal-list li {
+  float: left;
+  display: block;
+  width: 238px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .goal-area {
@@ -556,14 +664,6 @@ footer {
 .goalHeader {
 }
 .goalFormTable {
-}
-
-/* GOAL PAGE */
-.goalTable {
-}
-#activeGoalTable {
-}
-#completedGoalTable {
 }
 
 /*==================================================
@@ -610,3 +710,95 @@ footer {
 .inbox-recent-messages a {
   color: #00aadd;
 }
+
+/*==================================================
+  BUTTONS
+  ================================================= */
+
+.main-button {
+  -moz-box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  -webkit-box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25) );
+  background:-moz-linear-gradient( center top, #ffc477 5%, #fb9e25 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25');
+  background-color:#ffc477;
+  -webkit-border-top-left-radius:10px;
+  -moz-border-radius-topleft:10px;
+  border-top-left-radius:10px;
+  -webkit-border-top-right-radius:10px;
+  -moz-border-radius-topright:10px;
+  border-top-right-radius:10px;
+  -webkit-border-bottom-right-radius:10px;
+  -moz-border-radius-bottomright:10px;
+  border-bottom-right-radius:10px;
+  -webkit-border-bottom-left-radius:10px;
+  -moz-border-radius-bottomleft:10px;
+  border-bottom-left-radius:10px;
+  text-indent:0px;
+  border:1px solid #eeb44f;
+  display:inline-block;
+  color:#ffffff;
+  font-size:16px;
+  font-weight:bold;
+  font-style:normal;
+  height:28px;
+  text-decoration:none;
+  text-align:center;
+  text-shadow:1px 2px 0px #cc9f52;
+}
+.main-button:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fb9e25), color-stop(1, #ffc477) );
+  background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
+  background-color:#fb9e25;
+}.main-button:active {
+  position:relative;
+  top:1px;
+}
+
+.secondary-button {
+  -moz-box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  -webkit-box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  box-shadow:inset 1px 1px 2px -1px #fce2c1;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25) );
+  background:-moz-linear-gradient( center top, #ffc477 5%, #fb9e25 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25');
+  background-color:#ffc477;
+  -webkit-border-top-left-radius:10px;
+  -moz-border-radius-topleft:10px;
+  border-top-left-radius:10px;
+  -webkit-border-top-right-radius:10px;
+  -moz-border-radius-topright:10px;
+  border-top-right-radius:10px;
+  -webkit-border-bottom-right-radius:10px;
+  -moz-border-radius-bottomright:10px;
+  border-bottom-right-radius:10px;
+  -webkit-border-bottom-left-radius:10px;
+  -moz-border-radius-bottomleft:10px;
+  border-bottom-left-radius:10px;
+  text-indent:0px;
+  border:1px solid #eeb44f;
+  display:inline-block;
+  color:#ffffff;
+  font-size:16px;
+  font-weight:bold;
+  font-style:normal;
+  height:24px;
+  text-decoration:none;
+  text-align:center;
+  text-shadow:1px 2px 0px #cc9f52;
+}
+
+.secondary-button:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fb9e25), color-stop(1, #ffc477) );
+  background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
+  background-color:#fb9e25;
+}
+
+.secondary-button:active {
+  position:relative;
+  top:1px;
+}
+/* This button was generated using CSSButtonGenerator.com */

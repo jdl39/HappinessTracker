@@ -83,8 +83,8 @@
   <header>
     <div class="container clearfix">
       <div class="logo">
-        <a href="#">
-          <img src="" alt="HapApp">
+        <a href="">
+          <img src="/happiness.jpg" alt="HapApp">
         </a>
       </div><!-- /.logo -->
     </div><!-- ./container -->
@@ -114,7 +114,7 @@
             <%= f.password_field :password, :required => true  %>
           </li>
 
-          <li><%= f.submit "Sign in", class: "btn btn-large btn-primary" %></li>
+          <li><%= f.submit "Sign in", class: "main-button" %></li>
         </ul>
         <% end %>
         <p>Not a member? <a href="#create" onclick="toggleCreateAccountForm()">Get happy now!</a></p>
@@ -156,9 +156,9 @@
       		      <%= f.password_field :password_confirmation, :required => true %>
               </li>
 
-      		    <li>
-      		     <%= f.submit "Get Happy!", class: "btn btn-large btn-primary" %>
-      	      </li>	 
+      		    <li id="create-account-button">
+      		     <%= f.submit "Get Happy!", class: "main-button" %>
+      	      </li>
       	   </ul>
           <% end %>
           <p>Already a member? <a href="#login" onclick="toggleLoginForm()">Login!</a></p>
@@ -169,7 +169,7 @@
 
   <footer>
     <div class="container">
-      <nav>
+      <nav class="footer-nav">
         <ul>
           <li><a href="#">About</a></li>
           <li><a href="#">Other Info?</a></li>
