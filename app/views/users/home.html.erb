@@ -108,7 +108,7 @@
     <hr>
 	<h2>Recommended Activities</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	  <% @recommended_activities.each do |recommended_activity| %>
 		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity.capitalize %></a></li>
 	  <% end %>
@@ -117,7 +117,7 @@
 	<hr>
 	<h2>Friends' Moods</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	  <% @my_friends_recently_updated.each do |friend| %>
 		  <li> 
 		  <a href = "/profile/<%= friend.username %>"> <%= friend.username %></a>:
@@ -129,7 +129,7 @@
 	<hr>
 	<h2>Recent Messages</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
       <% @recently_received_message_threads.each do |message| %>
 		<% if message[:sender_sig] != current_user.username %>
 		<li> 
@@ -142,7 +142,7 @@
 	<hr>
 	<h2>Recent Challenges</h2>
 	<hr>
-	<ul>
+	<ul class = "home_list">
 	<% @my_received_challenges.each do |challenge| %>
 		<li><%= render :partial => 'shared/challenge_home_entry', :locals => {:item=>challenge} %></li>
 	<% end %>

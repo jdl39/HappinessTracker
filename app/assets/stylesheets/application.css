@@ -610,3 +610,45 @@ footer {
 .inbox-recent-messages a {
   color: #00aadd;
 }
+
+/* ============
+ * Home
+ * ============
+ */
+.newsfeed_entry {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+}
+
+.newsfeed_entry a {
+  color: #00aadd;
+}
+
+.home_list li {
+  border-color: #ddd;
+  border-width: 1px;
+  border-bottom-style: solid;
+ }
+
+.home_list li:last-child {
+  border:none;
+}
+
+.home_list a {
+  color: #00aadd;
+}
+
+.challenge_content {
+  padding-left: 50px;
+  font-size: 16px;    
+  font-style: italic;
+  border-color: #ddd;
+  border-width: 1px;
+  border-right-style: solid;
+}
+
+.measurement_content {
+  padding-left: 50px;
+  font-size: 16px;
+} 

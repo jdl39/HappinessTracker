@@ -18,9 +18,18 @@ module ChallengesHelper
 	challenges.each do |challenge|
       sender = User.find(challenge.sender_id) 
 	  receiver = User.find(challenge.receiver_id)
+	  if (challenge.activity_id != nil)
+	    activity = Activity.find(challenge.activity_id)
+	    activity_type = ActivityType.find(activity.activity_type_id)
+	  else
+		 activity = nil
+		 activity_type = nil
+	  end 
 	  result = {:sender => sender, 
 		        :receiver => receiver, 
-				:challenge =>challenge, 
+				:challenge =>challenge,
+			    :activity =>activity,
+			    :activity_type => activity_type,	
 				:type => 'challenge',
 	  			:timestamp => challenge.created_at
 	  }
