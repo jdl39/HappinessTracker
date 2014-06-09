@@ -232,6 +232,7 @@ class ActivitiesController < ApplicationController
             recent_measurements: recent_measurement_hashs,
             recent_measurement_notes: recent_measurement_notes,
             activity_id: top_result_id
+            user_activity_id: user_activity.id
         }
     end
 

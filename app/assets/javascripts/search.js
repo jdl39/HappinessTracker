@@ -250,7 +250,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json = this.responseText;
         json = JSON.parse(json);
-        activity_id = json['activity_id'];
+        activity_id = json['user_activity_id'];
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             set_form('add');
@@ -583,7 +583,7 @@ function commit_new_measurement_form() {
         update_add_form_inputs(measurements);
         data = [[], parseMeasurements(json['measurement_types'])];
 
-        console.log("jeremy's new data");
+        console.log("jeremy's new data", json['activity_id']);
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
