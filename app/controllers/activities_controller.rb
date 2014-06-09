@@ -225,14 +225,18 @@ class ActivitiesController < ApplicationController
             recent_measurement_hashs << measurement.to_javascript_measurement
         end
         p recent_measurement_hashs
+        user_activity_id = nil
+        unless user_activity.nil?
+            user_activity_id = user_activity.id
+        end
         render json:  {
             user_does_activity: user_does_activity,
             friends: friends,
             measurement_types: measurement_types,
             recent_measurements: recent_measurement_hashs,
             recent_measurement_notes: recent_measurement_notes,
-            activity_id: top_result_id
-            user_activity_id: user_activity.id
+            activity_id: top_result_id,
+            user_activity_id: user_activity_id
         }
     end
 

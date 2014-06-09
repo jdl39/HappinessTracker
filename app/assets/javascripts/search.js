@@ -842,6 +842,7 @@ function update_friend_results(available_friends) {
         !function outer(friend) {
             console.log("friend name", available_friends[friend]);
             var newDiv = document.createElement('div');
+            newDiv.style.cursor = "pointer";
             newDiv.innerHTML = available_friends[friend][0].capitalize();
             newDiv.className = newDiv.className + ' friend_result';
             var i = available_friends[friend];
