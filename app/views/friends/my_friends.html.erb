@@ -1,9 +1,14 @@
+<div class="friend-heading">
+  <h1>My Friendships</h1>
+</div>
 <div class="friend-list-heading">  
   <h1>
     <% if @unaccepted_friends.length == 1 %>
       1 friend has added you
     <% elsif @unaccepted_friends.length != 0 %>
       <%= @unaccepted_friends.length %> friends have added you
+    <% else %>
+      No new friend requests
     <% end %>
   </h1>
 </div>

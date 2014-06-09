@@ -507,12 +507,10 @@ li#create-account-button {
 .challenge-list-heading {
   text-align: center;
   /*background-color: rgb(123,214,190);*/
-  border-left-style: solid;
-  border-right-style: solid;
-  border-top-style: solid;
   border-bottom-style: solid;
   border-width: 1px;
-  border-color: #ddd;
+  border-color: #ff9933;
+  color: #ff9933;
 }
 
 .challenge-list-heading h1 {
@@ -523,8 +521,6 @@ li#create-account-button {
   border-color: #ddd;
   border-width: 1px;
   border-bottom-style: solid;
-  border-left-style: solid;
-  border-right-style: solid;
   /*background-color: rgb(123,214,190);*/
   padding-left: 7px;
   padding-right: 7px;
@@ -539,11 +535,24 @@ li#create-account-button {
   FRIEND LIST
 ============================================================ */
 
+.friend-heading {
+  text-align: center;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ff9933;
+  color: #ff9933;
+}
+
+.friend-heading h1 {
+  font-weight: bold;
+}
+
 .friend-list-heading {
   /*background-color: rgb(123,214,190);*/
   border-bottom-style: solid;
   border-width: 1px;
   border-color: #ddd;
+  margin-top: 28px;
 }
 
 .friend-list-heading h1 {
@@ -602,6 +611,10 @@ li#create-account-button {
 
 .goals-heading {
   text-align: center;
+  color: #ff9933;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: #ff9933;
 }
 
 .goals-heading h1 {
@@ -610,7 +623,7 @@ li#create-account-button {
 
 .table-div {
   display: block;
-  margin-bottom: 28px;
+  margin-top: 28px;
   float: left;
 }
 
@@ -672,12 +685,10 @@ li#create-account-button {
 .inbox-header {
 	text-align: center;
 	/*background-color: rgb(123,214,190);*/
-	border-left-style: solid;
-    border-right-style: solid;
-    border-top-style: solid;
 	border-bottom-style: solid;
 	border-width: 1px;
-	border-color: #ddd;
+	border-color: #ff9933;
+  color: #ff9933;
 }
 
 .inbox-header h1 {
@@ -688,9 +699,6 @@ li#create-account-button {
   border-color: #ddd;
   border-width: 1px;
   border-bottom-style: solid;
-  border-left-style: solid;
-  border-right-style: solid;
-  /*background-color: rgb(123,214,190);*/
   padding-left: 7px;
   padding-right: 7px;
   padding-bottom: 7px;
