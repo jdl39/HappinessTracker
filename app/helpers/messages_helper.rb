@@ -34,7 +34,7 @@ module MessagesHelper
 	messages.each do |message|
 	  sender = User.find(message.sender_id) 
 	  receiver = User.find(message.receiver_id)
-      if sender.users.include? receiver
+      if Friend.exists?(user_id:sender.id, friend_id:receiver.id, accepted:true) || Friend.exists?(user_id:receiver.id, friend_id:sender.id, accepted:true)
           sender_sig = sender.username
           receiver_sig = receiver.username
       else
