@@ -35,7 +35,7 @@
           <% if sender.id == current_user.id %>
             <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
           <% else %>
-            <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
+            <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
           <% end%>
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
           <p><%= challenge.content %></p>
