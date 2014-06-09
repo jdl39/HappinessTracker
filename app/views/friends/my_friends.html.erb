@@ -11,8 +11,8 @@
   <% @unaccepted_friends.each do |friend| %>
   <li>
     <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a>
-    <button id="accept-friend<%= friend.id %>" class="accept-friend-btn" data-friendid="<%= friend.request_id %>">Accept</button>
-    <button id="decline-friend<%= friend.id %>" class="decline-friend-btn" data-friendid="<%= friend.request_id %>">Decline</button>
+    <button id="accept-friend<%= friend.id %>" class="accept-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Accept</button>
+    <button id="decline-friend<%= friend.id %>" class="decline-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Decline</button>
   </li>
   <% end %>
 </ul>

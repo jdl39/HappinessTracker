@@ -22,7 +22,6 @@
   <h1>My Recent</h1>
   <ul class="profile-recent" id="my-profile-recent">
     <% @newsfeed_hashes.each do |item| %>
-    <li>
       <% time = item[:timestamp] %>
 
       <% case item[:type]
@@ -30,31 +29,34 @@
 
         challenge = item[:challenge]
         sender = item[:sender]
-        receiver = item[:receiver]
+        receiver = item[:receiver] %>
         
-        if sender.id == current_user.id %>
-          <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
-        <% else %>
-          <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
-        <% end%>
-        <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
-        <p><%= challenge.content %></p>
+        <li>
+          <% if sender.id == current_user.id %>
+            <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
+          <% else %>
+            <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
+          <% end%>
+          <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+          <p><%= challenge.content %></p>
+        </li>
         
         <% when 'friendship'
           user1 = item[:user_1]
-          user2 = item[:user_2]
+          user2 = item[:user_2] %>
 
-          if user1.id == current_user.id %>
+        <li>
+          <% if user1.id == current_user.id %>
             <p>You became friends with <a href="/profile/<%= user2.username %>"><%= user2.first_name %> <%= user2.last_name %></a></p>
           <% else %>
             <p>You became friends with <a href="/profile/<%= user1.username %>"><%= user1.first_name %> <%= user1.last_name %></a></p>
           <% end %>
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+        </li>
 
         <% else %>
 
       <% end %>
-    </li>
     <% end %>
   </ul>
 </div>

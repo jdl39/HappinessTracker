@@ -30,14 +30,14 @@
     <% else %>
       <p><a href="/profile/<%= receiver.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challeneged you!</p>
       <% if status == 2 %>
-        <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
+        <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed!</button>
 	  <% elsif status == 3 %>
 		<p>Declined</p>
 	  <% elsif status == 4 %>
         <p>Completed</p>
       <% else %>
-        <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
-        <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
+        <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Accept</button>
+        <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Decline</button>
       <% end %>
     <% end%>
     <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
