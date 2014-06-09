@@ -863,14 +863,6 @@ li#create-account-button {
   border-right-style: solid;
 }
 
-.home_list button {
-	padding:5px;
-    background-color: #dcdcdc;
-    border: 1px solid #ddd; 
-	color:#000;
-	text-decoration:none;
-}
-
 .home_list left_col {
   float:left;
 }

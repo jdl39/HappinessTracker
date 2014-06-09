@@ -15,14 +15,14 @@
 		  <a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
       </p>
 	  <% if status == 2 %>
-		  <button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn" data-challengeid="<%= challenge.id %>">Completed!</button>
+		  <button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed!</button>
       <% elsif status == 3 %>
 	  <p>Declined</p>
       <% elsif status == 4 %>
 	  <p>Completed</p>
       <% else %>
-	  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn" data-challengeid="<%= challenge.id %>">Accept</button>
-	  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn" data-challengeid="<%= challenge.id %>">Decline</button>
+	  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Accept</button>
+	  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Decline</button>
       </div>
       <% end %>
 </div>
