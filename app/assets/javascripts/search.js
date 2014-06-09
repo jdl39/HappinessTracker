@@ -250,7 +250,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json = this.responseText;
         json = JSON.parse(json);
-        activity_id = json['activity_id'];
+        activity_id = json['user_activity_id'];
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             set_form('add');
@@ -583,7 +583,7 @@ function commit_new_measurement_form() {
         update_add_form_inputs(measurements);
         data = [[], parseMeasurements(json['measurement_types'])];
 
-        console.log("jeremy's new data");
+        console.log("jeremy's new data", json['activity_id']);
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
@@ -842,6 +842,7 @@ function update_friend_results(available_friends) {
         !function outer(friend) {
             console.log("friend name", available_friends[friend]);
             var newDiv = document.createElement('div');
+            newDiv.style.cursor = "pointer";
             newDiv.innerHTML = available_friends[friend][0].capitalize();
             newDiv.className = newDiv.className + ' friend_result';
             var i = available_friends[friend];
