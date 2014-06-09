@@ -679,6 +679,22 @@ li#create-account-button {
 .goalFormTable {
 }
 
+/*================================================
+ ACTIVITIES
+ ================================================ */
+
+.activities-header {
+	text-align: center;
+	/*background-color: rgb(123,214,190);*/
+	border-bottom-style: solid;
+	border-width: 1px;
+	border-color: #ff9933;
+  color: #ff9933;
+}
+
+.activities-header h1 {
+    font-weight: bold;
+}
 /*==================================================
   INBOX
   ================================================= */
