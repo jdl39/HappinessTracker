@@ -362,7 +362,8 @@ class ActivitiesController < ApplicationController
     def new_comment
         comment = Comment.create(author: current_user, activity_type_id: params[:activity_type_id], content: params[:content])
         comment.signature = params[:anonymous] ? "anonymous" : current_user.username
-        new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+        initial_spread_amount = User.all.size / 5
+        new_readers = User.limit(initial_spread_amount).where.not(id: current_user).order("RANDOM()")
         new_readers |= current_user.friends
         comment.readers.concat new_readers
         comment.save
@@ -385,7 +386,8 @@ class ActivitiesController < ApplicationController
         if params[:is_public] == "true"
             response = Response.create(author: current_user, comment: comment, content: params[:content])
             response.signature = signature
-            new_readers = User.limit($spread_amount).where.not(id: current_user).order("RANDOM()")
+            initial_spread_amount = User.all.size / 5
+            new_readers = User.limit(initial_spread_amount).where.not(id: current_user).order("RANDOM()")
             new_readers |= current_user.users
             response.readers.concat new_readers
             response.save
