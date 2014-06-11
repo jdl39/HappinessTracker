@@ -206,10 +206,12 @@ activity_data = [
 	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'weight lifting'), 'measurement_types' => MeasurementType.where(name: 'sets')},
 	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'hanging out with friends'), 'measurement_types' => MeasurementType.where(name: '')},
 	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'reading'), 'measurement_types' => MeasurementType.where(name: 'pages')},
+	{'user' => User.find(1), 'activity_type' => ActivityType.find_by(name: 'mindful eating'), 'measurement_types' => MeasurementType.where(name: '')},
 	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'meditation'), 'measurement_types' => MeasurementType.where(name: 'minutes')},
 	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'mindful eating'), 'measurement_types' => MeasurementType.where(name: '')},
 	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'playing guitar'), 'measurement_types' => MeasurementType.where(name: 'songs')},
 	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'reading'), 'measurement_types' => MeasurementType.where(name: '')},
+	{'user' => User.find(2), 'activity_type' => ActivityType.find_by(name: 'running'), 'measurement_types' => MeasurementType.where(name: ['miles','minutes'])},
 	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'playing guitar'), 'measurement_types' => MeasurementType.where(name: '')},
 	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'singing'), 'measurement_types' => MeasurementType.where(name: 'minutes')},
 	{'user' => User.find(3), 'activity_type' => ActivityType.find_by(name: 'acting for theater'), 'measurement_types' => MeasurementType.where(name: '')},
@@ -313,10 +315,10 @@ end
 
 
 challengedata = [ 
-	    {'sender_id' => 1, 'receiver_id' => 2, 'content'=> 'Eat a banana!'}, 
-		{'sender_id' => 1, 'receiver_id' => 3, 'content'=> 'Buy food!'}, 
-	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'Play the guitar!'},
-	    {'sender_id' => 2, 'receiver_id' => 1, 'content'=> 'You staying fit? #running'}
+	    {'sender_id' => 1, 'receiver_id' => 2, 'content'=> 'Eat a banana!', 'activity_id'=>5}, 
+		{'sender_id' => 1, 'receiver_id' => 3, 'content'=> 'Buy food!', 'activity_id'=>5}, 
+	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'Play the guitar!', 'activity_id'=>8},
+	    {'sender_id' => 2, 'receiver_id' => 1, 'content'=> 'You staying fit?', 'activity_id'=>10}
 ]
 
 for challenge in challengedata do

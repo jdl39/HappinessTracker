@@ -100,6 +100,7 @@ class UsersController < ApplicationController
     @my_friends.each do |my_friend| 
       @newsfeed_entry_info += gather_newsfeed_entries(my_friend.id)
 	end
+	@newsfeed_entry_info = @newsfeed_entry_info.uniq
     @newsfeed_entry_info.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }	
     @newsfeed_entry_info = @newsfeed_entry_info.take(20)
   end
