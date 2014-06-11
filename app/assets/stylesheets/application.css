@@ -142,6 +142,7 @@ a {
 a:hover {
   background:transparent; 
   text-decoration:underline;
+  cursor: pointer;
 }
 
 .hidden {
@@ -742,6 +743,7 @@ li#create-account-button {
   background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
   background-color:#fb9e25;
+  cursor: pointer;
 }.main-button:active {
   position:relative;
   top:1px;
@@ -785,6 +787,7 @@ li#create-account-button {
   background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
   background-color:#fb9e25;
+  cursor: pointer;
 }
 
 .secondary-button:active {
