@@ -630,6 +630,9 @@ li#create-account-button {
   padding-right: 4px;
 }
 
+.goal-list li a {
+  color: #00aadd
+}
 .goal-area {
 }
 .goalHeader {
