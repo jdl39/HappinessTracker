@@ -133,10 +133,8 @@
 <script>
   $(document).ready(function() {
     $(".accept-challenge-btn").click(function(e) {
-      //alert("accepting");
       var id = $(this).attr("id");  
       var challenge_id = $(this).data("challengeid");
-      //alert(challenge_id);
 
       $.ajax({
         url: "/challenges/accept",
@@ -151,7 +149,6 @@
     });
 
     $(".decline-challenge-btn").click(function(e) {
-      alert("declining");
       var id = $(this).attr("id");
       var challenge_id = $(this).data("challengeid");
 
@@ -168,10 +165,8 @@
     });
 
     $(".completed-challenge-btn").click(function(e) {
-      //alert("completed");
       var id = $(this).attr("id");
       var challenge_id = $(this).data("challengeid");
-      //alert(challenge_id);
 
       $.ajax({
         url: "/challenges/complete",
