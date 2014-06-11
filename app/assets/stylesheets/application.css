@@ -533,11 +533,27 @@ li#create-account-button {
     display: none;
 }
 
-/* Divs surrounding comments / responses */
-.comment_box {
+.add_text_area, .show_responses, .show_more_responses {
+        background-color:#57A957;
+        color:white;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        font-size: small;
+        border-color: white;
+        padding: 10px;
+        margin-bottom: 20px;
 }
 
+/* Divs surrounding comments / responses */
 .response_box {
+    color:white;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  font-size: medium;
+  border-color: white;
+  padding: 5px;
+  margin-left: 50px;
+  background-color: #00aadd;
 }
 
 /* Div surrounding vote buttons */
@@ -552,17 +568,42 @@ li#create-account-button {
 }
 
 /* Buttons for up / down voting. */
-.up_comment {
-}
 
-.down_comment {
-}
+    .add_comment_button {
+        background-color:#57A957;
+        color:white;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        font-size: large;
+        border-color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
 
-.up_response {
-}
+    .up_comment, .up_response {
+        background-color: LightGreen;
+    }
 
-.down_response {
-}
+    .down_comment, .down_response {
+        background-color: Tomato;
+    }
+
+    .up_comment, .down_comment, .up_response, .down_response {
+        color:white;
+        -webkit-border-radius: 8px;
+        border-radius: 8px;
+        font-size: medium;
+        border-color: white;
+        padding: 5px;
+    }
+
+    .comment_box {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: solid;
+        border-bottom-width: 1px;
+    }
 
 /* ===============================================================
   GOAL STUFF

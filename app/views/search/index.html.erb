@@ -48,7 +48,7 @@
                         Numbers only please.
                     </div>
                 </div>
-                <button type="button" id="commit_add_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
+                <button type="button" id="commit_add_measurement_button" class="secondary-button" onclick="commit_add_measurement_form()">Submit</button>
             </form>
         </div>
         <div>
@@ -63,7 +63,7 @@
                 <div id="challenge_no_message_error" class="no_display form-error-message">
                     You must specify a message for each challenge.
                 </div>
-                <button type="button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
+                <button type="button" id="commit_challenge_button" class="secondary-button" onclick="commit_challenge_form()">Submit</button>
             </form>
         </div>
         <%= render 'shared/goal_form' %>
@@ -138,42 +138,6 @@
         border-width: 1px;
         padding-left: 15px;
         width: 300px;
-    }
-
-    .add_comment_button {
-        background-color:#57A957;
-        color:white;
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-        font-size: large;
-        border-color: white;
-        padding: 10px;
-        margin-bottom: 20px;
-    }
-
-    .up_comment {
-        background-color: LightGreen;
-    }
-
-    .down_comment {
-        background-color: Tomato;
-    }
-
-    .up_comment, .down_comment {
-        color:white;
-        -webkit-border-radius: 8px;
-        border-radius: 8px;
-        font-size: medium;
-        border-color: white;
-        padding: 5px;
-    }
-
-    .comment_box {
-        margin-top: 10px;
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: solid;
-        border-bottom-width: 1px;
     }
 
 </style> 
