@@ -533,7 +533,7 @@ li#create-account-button {
     display: none;
 }
 
-.add_text_area, .show_responses, .show_more_responses {
+/*.add_text_area, .show_responses, .show_more_responses {
         background-color:#57A957;
         color:white;
         -webkit-border-radius: 10px;
@@ -542,7 +542,7 @@ li#create-account-button {
         border-color: white;
         padding: 10px;
         margin-bottom: 20px;
-}
+}*/
 
 /* Divs surrounding comments / responses */
 .response_box {
