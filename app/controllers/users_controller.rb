@@ -40,10 +40,14 @@ class UsersController < ApplicationController
 	      if (params[:username] == nil || is_current_user(@viewed_user.username))
 		      # Render user's personal profile page
 			  @newsfeed_hashes = gather_newsfeed_entries(current_user.id)
+			  @newsfeed_hashes += recent_threads(current_user.id)
+			  @newsfeed_hashes.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 			  render 'my_profile' 
 		  elsif (are_friends(current_user.id, @viewed_user.id))
 			  # Show friend-permissable view
 			  @newsfeed_hashes = gather_newsfeed_entries(@viewed_user.id)
+			  @newsfeed_hashes += get_shared_messages(current_user.id, @viewed_user.id)
+			  @newsfeed_hashes.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 			  render 'friend_profile'
 		  else
 			  # Render non-friend page
@@ -96,6 +100,7 @@ class UsersController < ApplicationController
     @my_friends.each do |my_friend| 
       @newsfeed_entry_info += gather_newsfeed_entries(my_friend.id)
 	end
+	@newsfeed_entry_info = @newsfeed_entry_info.uniq
     @newsfeed_entry_info.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }	
     @newsfeed_entry_info = @newsfeed_entry_info.take(20)
   end

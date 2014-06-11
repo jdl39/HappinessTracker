@@ -115,7 +115,7 @@
 		  <li><a href = "/track?str=<%= recommended_activity %>"><%= recommended_activity.capitalize %></a></li>
 	  <% end %>
 	</ul>
-
+    <% if not @my_friends_recently_updated.empty? %>
 	<hr>
 	<h2>Friends' Moods</h2>
 	<hr>
@@ -131,7 +131,9 @@
 		  </right_col>
 		  </li>
       <% end %>
-    </ul>
+  </ul>
+    <% end %>
+	<% if not @recently_received_message_threads.empty? %>
 	<hr>
 	<h2>Recent Messages</h2>
 	<hr>
@@ -143,13 +145,15 @@
 		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <message>"<%= message[:content] %>"</message> 
 		  </left_col>
 		  <right_col>
-		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>
+		  <a href = "/profile/<%= message[:sender_sig] %>?mode=inbox">View more</a>
 		  </right_col>
 		</li>
 	    <% end %>
-      <% end %>
-    </ul>
-	<hr>
+	<% end %>
+   </ul>
+   <% end %>
+	<% if not @my_received_challenges.empty? %>
+	<hr>	
 	<h2>Recent Challenges</h2>
 	<hr>
 	<ul class = "home_list">
@@ -157,6 +161,7 @@
 		<li><%= render :partial => 'shared/challenge_home_entry', :locals => {:item=>challenge} %></li>
 	<% end %>
     </ul>	
+    <% end %>
 	<!--<ul>
 	  <li> Joe challenged you to, "Eat a banana!" Accept, decline, etc.</li>
 	  <--> 

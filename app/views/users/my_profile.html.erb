@@ -1,25 +1,25 @@
 <div class="profile-name">
-  <h1><%= current_user.first_name %> <%= current_user.last_name %></h1>
+  <h1>My Profile</h1>
 </div>
 <div class="profile-left-column">
-  <div id="profile-mood">
-    <h1>Happiness</h1>
+  <div id="profile-mood" class = "filter_header" elem_type = "happiness" header_val = "My Recent">
+    <h1>Main</h1>
   </div>
-  <div id="profile-activities">
+  <div id="profile-activities" class = "filter_header" elem_type = "measurement" header_val = "Activities">
     <h1>Activities</h1>
   </div>
-  <div id="profile-friends">
-    <h1><a href="/friends">Friends</a></h1>
+  <div id="profile-friends" class = "filter_header" elem_type = "friendship" header_val = "Friends">
+    <h1>Friends</h1>
   </div>
-  <div id="profile-challenges">
-    <h1><a href="/challenges">Challenges</a></h1>
+  <div id="profile-challenges" class = "filter_header" elem_type = "challenge" header_val = "Challenges">
+    <h1>Challenges</h1>
   </div>
-  <div id="profile-messages">
-    <h1><a href="/inbox">Messages</a></h1>
+  <div id="profile-messages" class = "filter_header" elem_type = "message" header_val = "My Inbox">
+  <h1>Messages</h1>
   </div>
 </div>
 <div class="profile-right-column">
-  <h1>My Recent</h1>
+  <h1 id = "profile-header">My Recent</h1>
   <ul class="profile-recent" id="my-profile-recent">
     <% @newsfeed_hashes.each do |item| %>
       <% time = item[:timestamp] %>
@@ -29,23 +29,28 @@
 
         challenge = item[:challenge]
         sender = item[:sender]
-        receiver = item[:receiver] %>
+		receiver = item[:receiver]
+	    activity_type = item[:activity_type]	
+	  %>
         
-        <li>
+	    <li elem_type = "challenge" class ="profile-feed-list-item">
           <% if sender.id == current_user.id %>
             <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
           <% else %>
             <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
           <% end%>
-          <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
-          <p><%= challenge.content %></p>
-        </li>
+		  <p class = "challenge_content" >
+		    "<%= challenge.content.capitalize %><% if activity_type != nil %>
+			<a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
+		  </p>
+	   	  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+		</li>
         
         <% when 'friendship'
           user1 = item[:user_1]
           user2 = item[:user_2] %>
 
-        <li>
+		<li elem_type = "friendship" class = "profile-feed-list-item">
           <% if user1.id == current_user.id %>
             <p>You became friends with <a href="/profile/<%= user2.username %>"><%= user2.first_name %> <%= user2.last_name %></a></p>
           <% else %>
@@ -54,9 +59,77 @@
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
         </li>
 
+	<% when 'measurement'
+	     user = item[:user] 
+		 activity_type = item[:activity_type] 
+		 measurement = item[:measurement] 
+		 measurement_type = item[:measurement_type]
+	 %>
+	     <li elem_type = "measurement" class = "profile-feed-list-item"> 
+		   <p>You logged a measurement:</p>
+		   <p class = "measurement_content">
+		     <a href = "/track?str=<%= activity_type.name %>"><%= activity_type.name.capitalize %></a> :
+		     <%= measurement.value %> <%= measurement_type.name %>
+		   </p>
+		   <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p> 
+		   </li>
+
+	   <% when 'message'
+		  sender = item[:sender_sig] 
+		  receiver = item[:receiver_sig] 
+		  content = item[:content]
+		  other_user = sender == current_user.username ? receiver : sender 
+	   %>	 
+		  <li elem_type = "message" class = "profile-feed-list-item">
+			<p> 
+			  <a href = "/profile/<%= sender %>"> <%=sender %></a>  >  <a href = "/profile/<%= receiver %>"> <%= receiver %> </a>
+			</p>
+			<p class = "challenge-content"><%= content %></p>
+			<p class="time"><%= time.strftime("%b %d, %l:%M %P") %>
+			<a href = "/profile/<%= other_user %>?mode=inbox">View Discussion</a>    
+			</p>
+		 </li>
         <% else %>
 
       <% end %>
     <% end %>
   </ul>
 </div>
+
+<script>
+	function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	  results = regex.exec(location.search);
+	  return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+    $(document).ready(function() {
+		var mode = getParameterByName('mode')
+		console.log("Mode: " + mode);
+	  if (mode == 'inbox') {
+        console.log($("#profile-header").text("My Inbox"));  
+		$(".profile-feed-list-item").each(function (i, elem) {
+			var list_elem_type = $(this).attr("elem_type");
+			$(this).show();
+		    if (list_elem_type != 'message') {
+			  $(this).hide();
+		    }
+		});	
+	  }
+	});
+
+	$(".filter_header").click(function() {
+		var elem_type = $(this).attr("elem_type");
+		console.log(elem_type);
+		var header_val = $(this).attr("header_val");
+		console.log($("#profile-header").text(header_val));
+		$(".profile-feed-list-item").each(function (i, elem) {
+			var list_elem_type = $(this).attr("elem_type");
+			$(this).show();
+		    if (list_elem_type != elem_type && elem_type != 'happiness') {
+			  $(this).hide();
+		    }
+		});	
+	});
+</script>

@@ -12,6 +12,21 @@ module ChallengesHelper
     return populate_challenges(challenges)
   end
 
+  def active_challenges(user_id)
+    challenges = Challenge.where(receiver_id:user_id, status:2)
+	return populate_challenges(challenges)
+  end
+
+  def pending_challenges(user_id)
+	challenges = Challenge.where(receiver_id:user_id, status:1)
+	return populate_challenges(challenges)
+  end
+
+  def completed_challenges(user_id)
+	challenges = Challenge.where(receiver_id:user_id, status:4)
+	return populate_challenges(challenges)
+  end
+
   # Populates the challenges
   def populate_challenges(challenges)
     results = []

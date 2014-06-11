@@ -1,51 +1,135 @@
 <div class="challenge-list-heading">
   <h1>My Challenges</h1>
 </div>
-<ul class="challenge-list">
-  <% @challenges.each do |item| %>
-  <li>
+
+<div class="table-div">
+	<h1> Pending Challenges </h1>
+	<div id="pendingChallengesTable" class="goalTable">
+	  <ul class = "column-headings">
+	    <li>Username</li>
+		<li>Message</li>
+		<li>Activity</li>
+		<li>Accept/Decline</li>
+	  </ul>	  
+	  <ul class="goal-list">
+      <% @pending_challenges.each do |item| %>
     <% challenge = item[:challenge]
     sender = item[:sender]
     receiver = item[:receiver]
     time = item[:timestamp]
-    status = challenge.status
-
+	status = challenge.status
+	activity_type = item[:activity_type].name.capitalize()
     # status:
     # 1 = pending
     # 2 = accepted
     # 3 = declined
-    # 4 = completed
+	# 4 = completed
+    %>
 
-    if sender.id == current_user.id %>
-      <p>You challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a>
-      <% if status == 2 %>
-        <%= receiver.first_name %> accepted your challenge!</p>
-      <% elsif status == 3 %>
-        <%= receiver.first_name %> declined your challenge.</p>
-      <% elsif status == 4 %>
-        <%= receiver.first_name %> completed your challenge!</p>
-      <% else %>
-        (pending)</p>
-      <% end %>
-    <% else %>
-      <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
-      <% if status == 2 %>
-        <p>Currently active</p><button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed!</button>
-	  <% elsif status == 3 %>
-		<p>Declined</p>
-	  <% elsif status == 4 %>
-        <p>Completed</p>
-      <% else %>
+    <li>
+	  <a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a></p>
+	  </li>
+	  <li>
+	    <%= challenge.content %>
+		</li>
+		<li>
+		<% if activity_type != nil %>
+			<a href = "/track?str=<%= activity_type %>"> <%= activity_type %> </a>
+		<% else %>
+			--
+		<% end %>
+		</li>
+		<li>
         <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Accept</button>
         <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Decline</button>
-      <% end %>
-    <% end%>
-    <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
-    <p><%= challenge.content %></p>
-  </li>
+	    </li>
   <% end %>
 </ul>
 
+<div class="table-div">
+	<h1> Active Challenges </h1>
+	<div id="pendingChallengesTable" class="goalTable">
+	  <ul class = "column-headings">
+	    <li>Username</li>
+		<li>Message</li>
+		<li>Activity</li>
+		<li>Completed</li>
+	  </ul>	  
+	  <ul class="goal-list">
+      <% @active_challenges.each do |item| %>
+    <% challenge = item[:challenge]
+    sender = item[:sender]
+    receiver = item[:receiver]
+    time = item[:timestamp]
+	status = challenge.status
+	activity_type = item[:activity_type].name.capitalize()
+    # status:
+    # 1 = pending
+    # 2 = accepted
+    # 3 = declined
+	# 4 = completed
+    %>
+
+    <li>
+	  <a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a></p>
+	  </li>
+	  <li>
+	    <%= challenge.content %>
+		</li>
+		<li>
+		<% if activity_type != nil %>
+			<a href = "/track?str=<%= activity_type %>"> <%= activity_type %> </a>
+		<% else %>
+			--
+		<% end %>
+		</li>
+		<li>
+		<button id="complete-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed</button>
+		</li>
+  <% end %>
+</ul>
+<div class="table-div">
+	<h1> Completed Challenges </h1>
+	<div id="completedChallengesTable" class="goalTable">
+	  <ul class = "column-headings">
+	    <li>Username</li>
+		<li>Message</li>
+		<li>Activity</li>
+		<li>Date Completed</li>
+	  </ul>	  
+	  <ul class="goal-list">
+      <% @completed_challenges.each do |item| %>
+    <% challenge = item[:challenge]
+    sender = item[:sender]
+    receiver = item[:receiver]
+    time = item[:timestamp]
+	status = challenge.status
+	activity_type = item[:activity_type].name.capitalize()
+    # status:
+    # 1 = pending
+    # 2 = accepted
+    # 3 = declined
+	# 4 = completed
+    %>
+
+    <li>
+	  <a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a></p>
+	  </li>
+	  <li>
+	    <%= challenge.content %>
+		</li>
+		<li>
+		<% if activity_type != nil %>
+			<a href = "/track?str=<%= activity_type %>"> <%= activity_type %> </a>
+		<% else %>
+			--
+		<% end %>
+		</li>
+		<li>
+		  <%= time.strftime("%b %d, %l:%M %P") %>
+		</li>
+  <% end %>
+</ul>
 <script>
   $(document).ready(function() {
     $(".accept-challenge-btn").click(function(e) {

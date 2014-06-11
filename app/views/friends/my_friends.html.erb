@@ -1,35 +1,55 @@
 <div class="friend-heading">
   <h1>My Friendships</h1>
 </div>
-<div class="friend-list-heading">  
-  <h1>
-    <% if @unaccepted_friends.length == 1 %>
-      1 friend has added you
-    <% elsif @unaccepted_friends.length != 0 %>
-      <%= @unaccepted_friends.length %> friends have added you
-    <% else %>
-      No new friend requests
-    <% end %>
-  </h1>
-</div>
-<ul class="non-friend-list">
+<div class = "table-div">
+	<h1> Pending Friend Requests </h1>	
+<div id="pendingFriendsTable" class="friendTable">
+  <ul class = "column-headings">
+	  <li> Username </li>
+	  <li> Date Requested </li>
+	  <li> Accept </li>
+	  <li> Decline </li>
+  </ul>
+  
+  <ul class = "goal-list">
   <% @unaccepted_friends.each do |friend| %>
   <li>
     <a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a>
-    <button id="accept-friend<%= friend.id %>" class="accept-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Accept</button>
-    <button id="decline-friend<%= friend.id %>" class="decline-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Decline</button>
+	</li>
+	<li>
+	<%= friend.created_at.strftime("%b %d, %l:%M %P") %>
+	</li>
+	<li>
+	<button id="accept-friend<%= friend.id %>" class="accept-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Accept</button>
+	</li>
+	<li>
+	<button id="decline-friend<%= friend.id %>" class="decline-friend-btn secondary-button" data-friendid="<%= friend.request_id %>">Decline</button>
   </li>
   <% end %>
 </ul>
-
-<div class="friend-list-heading">
-  <h1>My Friends</h1>
 </div>
-<ul class="friend-list">
-  <% @accepted_friends.each do |friend| %>
-  <li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
-  <% end %>
-</ul>
+</div>
+
+<div class = "table-div">
+	<h1> Accepted Friend Requests </h1>
+<div id= "acceptedFriendsTable" class = "friendTable">
+  <ul class="column-headings">
+	  <li>Username</li>
+	  <li>--</li>
+	  <li>--</li>
+	  <li>--</li>
+  </ul>
+
+  <ul class="goal-list">
+	<% @accepted_friends.each do |friend| %>
+		<li><a href="/profile/<%= friend.username %>"><%= friend.first_name %> <%= friend.last_name %></a></li>
+		<li>--</li>
+		<li>--</li>
+		<li>--</li>
+    <% end %>
+  </ul>
+</div>
+</div>
 
 <script>
   $(document).ready(function() {
@@ -37,8 +57,6 @@
 
       var id = $(this).attr("id");                // fetch the id of pressed button
       var friend_id = $(this).data("friendid");   // fetch the id of the friend
-
-      alert(friend_id);
 
       /* run the ajax */
 
@@ -57,8 +75,6 @@
     $(".decline-friend-btn").click(function(e) {
       var id = $(this).attr("id");
       var friend_id = $(this).data("friendid");
-
-      alert("declining");
 
       $.ajax({
           url: "/friend_request/decline",

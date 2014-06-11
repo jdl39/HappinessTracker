@@ -173,7 +173,7 @@ function update_results(results, initial) {
     } else {
         var div = document.getElementById('create_activity_div');
         if(div) {
-            div.parentNode.removeChild(div.nextSibling);
+            // div.parentNode.removeChild(div.nextSibling);
             div.parentNode.removeChild(div);
         }
     }
@@ -184,14 +184,13 @@ function update_results(results, initial) {
             if(displayed_results.length <= 10 && displayed_results.indexOf(results[element][1]) == -1) {
                 displayed_results.push(results[element][1]);
                 var newDiv = document.createElement('div');
-                newDiv.innerHTML = results[element][1];
+                newDiv.innerHTML = results[element][1].capitalize();
                 newDiv.className = newDiv.className + ' result';
                 var i = results[element][1];
                 newDiv.addEventListener('click', function() {
                     get_data_for_activity(i);
                 });
                 results_div.appendChild(newDiv);
-                results_div.appendChild(document.createElement('br'));
             }
         }(element);
     }
@@ -209,7 +208,7 @@ function update_results(results, initial) {
         });
         newDiv.id = "create_activity_div";
         results_div.appendChild(newDiv);
-        results_div.appendChild(document.createElement('br'));
+        // results_div.appendChild(document.createElement('br'));
     }
 }
 
@@ -250,7 +249,7 @@ function get_data_for_activity(selected_str) {
         console.log(this.responseText);
         json = this.responseText;
         json = JSON.parse(json);
-        activity_id = json['activity_id'];
+        activity_id = json['user_activity_id'];
         display_comment_area(json.activity_id);
         if(json['user_does_activity']) {
             set_form('add');
@@ -511,6 +510,8 @@ function set_form(option) {
         document.getElementById('add_new_measurement_button').style.display = 'none';
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
+        hide_goal_form();
+        hide_comment_area();
     }
     document.getElementById('commit_new_measurement_button').disabled = false;
 }
@@ -583,7 +584,7 @@ function commit_new_measurement_form() {
         update_add_form_inputs(measurements);
         data = [[], parseMeasurements(json['measurement_types'])];
 
-        console.log("jeremy's new data");
+        console.log("jeremy's new data", json['activity_id']);
         document.getElementById('commit_new_measurement_button').disabled = false;
     }
     xhr.send();
@@ -859,7 +860,7 @@ function update_friend_results(available_friends) {
 function display_goal_form(activity_name, measurement_names) {
     updateActivityName(activity_name)
     updateMeasurementNames(measurement_names)
-    document.getElementsByClassName("goal-area")[0].style.display = "inline";
+    document.getElementsByClassName("goal-area")[0].style.display = "block";
 
 }
 function hide_goal_form() {
@@ -867,7 +868,7 @@ function hide_goal_form() {
 }
 
 function display_comment_area(displayed_activity_id) {
-    document.getElementById("comment_system").style.display = "inline";
+    document.getElementById("comment_system").style.display = "block";
     load_new_comments(displayed_activity_id);
 }
 function hide_comment_area() {
