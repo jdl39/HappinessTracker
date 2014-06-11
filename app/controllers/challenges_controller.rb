@@ -11,9 +11,12 @@ class ChallengesController < ApplicationController
 	   viewed_user = User.find_by_username(params[:username])
 	   if (params[:username] == nil || is_current_user(viewed_user.username))
 	      #Renders user's personal challenges page
-		  @challenges = recently_sent_challenges(current_user.id)
-		  @challenges += recently_received_challenges(current_user.id)
-		  @challenges.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+		  @pending_challenges = pending_challenges(current_user.id)
+		  @pending_challenges.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+		  @active_challenges = active_challenges(current_user.id)
+		  @active_challenges.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+		  @completed_challenges = completed_challenges(current_user.id)
+		  @completed_challenges.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 		  render 'my_challenges'
 	   elsif (are_friends(current_user.id, viewed_user.id))
 		  #Renders friend-view of challenges page
