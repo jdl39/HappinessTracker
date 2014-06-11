@@ -188,7 +188,10 @@ function submit_new_r_response(box) {
 
 function reset_comment_area() {
     // TODO: Implement.
-    $("#comment_system").html('<button class="add_text_area add_comment_button" onclick="add_text_area(comment_system)">\
+    $("#comment_system").html('<hr>\
+        <h3>Comments for Activity</h3>\
+        <hr>\
+        <button class="add_text_area add_comment_button" onclick="add_text_area(comment_system)">\
         Add comment\
     </button>\
     <div class="new_text_area">\

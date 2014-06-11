@@ -184,7 +184,7 @@ function update_results(results, initial) {
             if(displayed_results.length <= 10 && displayed_results.indexOf(results[element][1]) == -1) {
                 displayed_results.push(results[element][1]);
                 var newDiv = document.createElement('div');
-                newDiv.innerHTML = results[element][1];
+                newDiv.innerHTML = results[element][1].capitalize();
                 newDiv.className = newDiv.className + ' result';
                 var i = results[element][1];
                 newDiv.addEventListener('click', function() {
@@ -841,7 +841,6 @@ function update_friend_results(available_friends) {
         !function outer(friend) {
             console.log("friend name", available_friends[friend]);
             var newDiv = document.createElement('div');
-            newDiv.style.cursor = "pointer";
             newDiv.innerHTML = available_friends[friend][0].capitalize();
             newDiv.className = newDiv.className + ' friend_result';
             var i = available_friends[friend];
@@ -859,7 +858,7 @@ function update_friend_results(available_friends) {
 function display_goal_form(activity_name, measurement_names) {
     updateActivityName(activity_name)
     updateMeasurementNames(measurement_names)
-    document.getElementsByClassName("goal-area")[0].style.display = "inline";
+    document.getElementsByClassName("goal-area")[0].style.display = "block";
 
 }
 function hide_goal_form() {
@@ -867,7 +866,7 @@ function hide_goal_form() {
 }
 
 function display_comment_area(displayed_activity_id) {
-    document.getElementById("comment_system").style.display = "inline";
+    document.getElementById("comment_system").style.display = "block";
     load_new_comments(displayed_activity_id);
 }
 function hide_comment_area() {

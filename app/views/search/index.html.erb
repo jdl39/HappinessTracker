@@ -59,7 +59,7 @@
                 <input type="text" name="friends" placeholder="Pick a friend" autocomplete="off" id="friends_search"><br>
                 <div id="friends_for_challenge_list"></div>
                 <br>
-                <input type="text" name="message" placeholder="Message for challenge." autocomplete="off" id="challenge_message" style="width:300px; height:50px;"><br>
+                <input type="text" name="message" placeholder="Message for challenge." autocomplete="off" id="challenge_message"><br>
                 <div id="challenge_no_message_error" class="no_display form-error-message">
                     You must specify a message for each challenge.
                 </div>
@@ -67,7 +67,11 @@
             </form>
         </div>
         <%= render 'shared/goal_form' %>
-        <%= render 'shared/comment_area' %>
+        <div id="comment_system" class="no_display">
+            <hr>
+            <h3>Comments for Activity</h3>
+            <hr>
+        </div>
     </div>
 </div>
 
@@ -124,6 +128,7 @@
         display: block;
         background-color: #cc6600;
         color: #fff;
+        cursor: pointer;
     }
 
     #create_activity_div {
