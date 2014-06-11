@@ -2,25 +2,20 @@
 	  <h1>My Activities</h1>
 </div>
 <div id="content">
-    <div id="left-panel">
+    <div>
         <input id="search" type="text" name="activity" placeholder="What activity did you just do?" autocomplete="off" value="<%= @startingStr %>">
         <div class="result-area">
             <div id="results"></div>
             <div class="loading-indicator no_display"></div>
         </div>
-
-        <div id="friends-panel" class="no_display">
-            <h4>Friends who also <span class="activity_header"></span></h4>
-            <div id="friends-list"></div>
-        </div>
-    </div>
-    <div id="right-panel">
         <div id="graph_box" class="no_display">
             <div id="activity_chart" style="width:760px; height:500px; margin: 0 auto"></div>
         </div>
         <div>
             <form class="activity_form no_display" id="new_activity">
+                <hr>
                 <h3>Track a new activity!</h3>
+                <hr>
                 <p>How do you want to measure <span class="activity_header"></span>?</p>
                 <p>If you don't need to track anything specific about <span class="activity_header"></span>, please leave the field blank.</p>
                 <input class="measurements" type="text" name="measure1" placeholder="first measurement" autocomplete="off"><br>
@@ -31,23 +26,25 @@
         </div>
         <div>
             <form class="activity_form no_display" id="add_activity">
+                <hr>
                 <h3>Track <span class="activity_header"></span>!</h3>
+                <hr>
                 <span id="no_measure"></span>
                 <div id="measure_input1">
                     <span id="input_measure1"></span>: <input class="measurements" type="text" name="measure1" id="add_activity_1" autocomplete="off">
-                    <div id="measure1_error" class="no_display">
+                    <div id="measure1_error" class="no_display form-error-message">
                         You must input a measurement.
                     </div>
-                    <div id="measure1_num_only" class="no_display">
+                    <div id="measure1_num_only" class="no_display form-error-message">
                         Numbers only please.
                     </div>
                 </div>
                 <div id="measure_input2">
                     <span id="input_measure2"></span>: <input class="measurements" type="text" name="measure2" id="add_activity_2" autocomplete="off">
-                    <div id="measure2_error" class="no_display">
+                    <div id="measure2_error" class="no_display form-error-message">
                         You must input a measurement.
                     </div>
-                    <div id="measure2_num_only" class="no_display">
+                    <div id="measure2_num_only" class="no_display form-error-message">
                         Numbers only please.
                     </div>
                 </div>
@@ -56,11 +53,16 @@
         </div>
         <div>
             <form class="activity_form no_display" id="challenge_form">
+                <hr>
                 <h3>Challenge a friend to <span class="activity_header"></span>!</h3>
+                <hr>
                 <input type="text" name="friends" placeholder="Pick a friend" autocomplete="off" id="friends_search"><br>
                 <div id="friends_for_challenge_list"></div>
+                <br>
                 <input type="text" name="message" placeholder="Message for challenge." autocomplete="off" id="challenge_message" style="width:300px; height:50px;"><br>
-                <div id="challenge_no_message_error" class="no_display">You must specify a message for each challenge.</div>
+                <div id="challenge_no_message_error" class="no_display form-error-message">
+                    You must specify a message for each challenge.
+                </div>
                 <button type="button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
             </form>
         </div>
@@ -70,7 +72,7 @@
 </div>
 
 <style>
-    #search {
+    #search, #friends_search, #challenge_message {
         border: 5px solid white; 
         -webkit-box-shadow: 
           inset 0 0 8px  rgba(0,0,0,0.1),
@@ -86,4 +88,51 @@
         background: rgba(255,255,255,0.5);
         margin: 0 0 10px 0;
     }
+
+    .activity_form input[type=text] {
+        border: 2px solid white; 
+        -webkit-box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        -moz-box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        box-shadow: 
+          inset 0 0 8px  rgba(0,0,0,0.1),
+                0 0 16px rgba(0,0,0,0.1); 
+        padding: 3px;
+        width: 150px;
+        background: rgba(255,255,255,0.5);
+        margin: 0 0 15px 0;
+    }
+
+    hr {
+        height:1px;
+        background-color:#ff9933;
+        border:none;
+    }
+
+    .friend_result, .result {
+        border-style: solid;
+        border-color: #ff9933;
+        border-width: 1px;
+        padding-left: 15px;
+        width: 300px;
+    }
+
+    .friend_result:hover, .result:hover, #create_activity_div:hover {
+        display: block;
+        background-color: #cc6600;
+        color: #fff;
+    }
+
+    #create_activity_div {
+        border-style: solid;
+        border-color: #ff9933;
+        background-color: #eee;
+        border-width: 1px;
+        padding-left: 15px;
+        width: 300px;
+    }
+
 </style> 

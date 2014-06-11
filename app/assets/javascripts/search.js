@@ -173,7 +173,7 @@ function update_results(results, initial) {
     } else {
         var div = document.getElementById('create_activity_div');
         if(div) {
-            div.parentNode.removeChild(div.nextSibling);
+            // div.parentNode.removeChild(div.nextSibling);
             div.parentNode.removeChild(div);
         }
     }
@@ -191,7 +191,6 @@ function update_results(results, initial) {
                     get_data_for_activity(i);
                 });
                 results_div.appendChild(newDiv);
-                results_div.appendChild(document.createElement('br'));
             }
         }(element);
     }
@@ -209,7 +208,7 @@ function update_results(results, initial) {
         });
         newDiv.id = "create_activity_div";
         results_div.appendChild(newDiv);
-        results_div.appendChild(document.createElement('br'));
+        // results_div.appendChild(document.createElement('br'));
     }
 }
 
