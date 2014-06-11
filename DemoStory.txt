@@ -1,0 +1,12 @@
+1) Xandra Martinez comes to hap app and logs in.
+2) She sees what her friends are up to.
+3) She's feeling sad, so switches to "sad mode". Now her friends can see her mood.
+4) She also answers a few happiness questions. She's been answering a few each day for a few months, and
+so she can see that her happiness is steadily improving, but she still has a ways to go.
+5) She goes to the activity page. She's been running recently, and wants to log the fact that she just completed a run.
+6) She logs some data.
+7) She also wants to push herself to keep running, so sets a goal for herself. If she logs a measurement that completes the goal in the allotted time, it will be marked as complete and reschedule itself (if it's repeated)
+8) She can see some comments that people have been making about running. She sees that someone is asking about proper shoes, so she decides to upvote their comment and give some advice.
+9) She saw on the home page that her friends are feeling happy, and thinks that chatting with them could cheer her up. So she goes to the messages portion of her profile and decides to continue a conversation she was having with AlistairMonkey.
+10) Alistair reminds her that he challenged her to run. Since she feels she's met this challenge, she goes to her challenge page and marks it complete.
+11) Xandra wants to expand her ideas on what makes her happy, so she goes to the home page where recommendations are intelligently offered depending on activities she does.
