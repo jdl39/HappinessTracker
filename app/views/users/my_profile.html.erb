@@ -30,7 +30,8 @@
         challenge = item[:challenge]
         sender = item[:sender]
 		receiver = item[:receiver]
-	    activity_type = item[:activity_type]	
+		activity_type = item[:activity_type]
+	    status = challenge.status	
 	  %>
         
 	    <li elem_type = "challenge" class ="profile-feed-list-item">
@@ -39,10 +40,20 @@
           <% else %>
             <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
           <% end%>
-		  <p class = "challenge_content" >
+		  <div class = "challenge_content" >
 		    "<%= challenge.content.capitalize %><% if activity_type != nil %>
 			<a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
-		  </p>
+		  <% if status == 2 %>
+			  <button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed!</button>
+		  <% elsif status == 3 %>
+		      <p>Declined</p>
+		  <% elsif status == 4 %>
+			  <p>Completed</p>
+		  <% else %>
+			  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Accept</button>
+			  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Decline</button>
+	      <% end %>
+	      </div>
 	   	  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
 		</li>
         
@@ -84,7 +95,7 @@
 			<p> 
 			  <a href = "/profile/<%= sender %>"> <%=sender %></a>  >  <a href = "/profile/<%= receiver %>"> <%= receiver %> </a>
 			</p>
-			<p class = "challenge-content"><%= content %></p>
+			<p class = "challenge_content">"<%= content %>"</p>
 			<p class="time"><%= time.strftime("%b %d, %l:%M %P") %>
 			<a href = "/profile/<%= other_user %>?mode=inbox">View Discussion</a>    
 			</p>
@@ -132,4 +143,48 @@
 		    }
 		});	
 	});
+
+	$(".accept-challenge-btn").click(function(e) {
+      var id = $(this).attr("id");  
+	  var challenge_id = $(this).data("challengeid");
+	  $.ajax({
+	    url: "/challenges/accept",
+		type: "post",
+		async: false,
+		data: {
+		  challenge_id: challenge_id
+		}
+	  });
+	  e.preventDefault();
+	  location.reload();
+	});
+
+	$(".decline-challenge-btn").click(function(e) {
+	  var id = $(this).attr("id");
+	  var challenge_id = $(this).data("challengeid");
+	    $.ajax({
+		  url: "/challenges/decline",
+		  type: "post",
+		  async: false,
+		  data: {
+		    challenge_id: challenge_id
+		  }
+		});
+	  e.preventDefault();
+	  location.reload();
+	});
+																																												  $(".completed-challenge-btn").click(function(e) {
+	  var id = $(this).attr("id");
+	  var challenge_id = $(this).data("challengeid");
+      $.ajax({
+	    url: "/challenges/complete",
+		type: "post",
+		async: false,
+		data: {
+		  challenge_id: challenge_id
+		}
+	  });
+	e.preventDefault();
+    location.reload();
+  });
 </script>
