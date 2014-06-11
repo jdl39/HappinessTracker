@@ -510,6 +510,8 @@ function set_form(option) {
         document.getElementById('add_new_measurement_button').style.display = 'none';
         document.getElementById('second_measurement').style.display = 'none';
         document.getElementById('graph_box').style.display = 'none';
+        hide_goal_form();
+        hide_comment_area();
     }
     document.getElementById('commit_new_measurement_button').disabled = false;
 }
