@@ -43,13 +43,13 @@
 		  <div class = "challenge_content" >
 		    "<%= challenge.content.capitalize %><% if activity_type != nil %>
 			<a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
-		  <% if status == 2 %>
+		  <% if status == 2 and receiver.id == current_user.id %>
 			  <button id="completed-challenge<%= challenge.id %>" class="completed-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Completed!</button>
 		  <% elsif status == 3 %>
 		      <p>Declined</p>
 		  <% elsif status == 4 %>
 			  <p>Completed</p>
-		  <% else %>
+		  <% elsif receiver.id == current_user.id %>
 			  <button id="accept-challenge<%= challenge.id %>" class="accept-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Accept</button>
 			  <button id="decline-challenge<%= challenge.id %>" class="decline-challenge-btn secondary-button" data-challengeid="<%= challenge.id %>">Decline</button>
 	      <% end %>
