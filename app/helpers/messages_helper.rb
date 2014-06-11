@@ -36,21 +36,26 @@ module MessagesHelper
 
 
   def recent_threads(user_id)
-    messages = recently_sent_messages(user_id)
-	messages += recently_received_messages(user_id)
-	messages = messages.uniq
-	messages.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
-	pairs = []
+	friend_ids = []
+	friends = Friend.where(user_id: user_id, accepted: true)
+    friends.each do |friend|
+	  friend_ids << friend.friend_id
+    end
+
+    friends = Friend.where(friend_id:user_id, accepted: true)
+	friends.each do |friend|
+      friend_ids << friend.user_id
+	end
+
 	message_items = []
-	messages.each do |message|
-	  pair = {:sender => message[:sender_sig], :receiver => message[:receiver_sig]}
-	  reverse_pair = {:sender => message[:receiver_sig], :receiver => message[:sender_sig]}
-	  if (!pairs.include?(pair) && !pairs.include?(reverse_pair))
-	    pairs << pair
-	    pairs << reverse_pair
-	    message_items << message
+	friend_ids.each do |friend_id|
+      messages = get_shared_messages(user_id, friend_id)
+	  if not messages.empty?
+        messages.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
+		message_items << messages.first()
 	  end
 	end
+	message_items.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
     return message_items	
   end 
 
