@@ -747,7 +747,12 @@ li#create-account-button {
   top:1px;
 }
 
-.secondary-button {
+.secondary-button,
+.comment_area .add_text_area,
+.comment_area .show_responses,
+#show_more_comments,
+.submit_new_text,
+.comment_box .show_more_responses {
   -moz-box-shadow:inset 1px 1px 2px -1px #fce2c1;
   -webkit-box-shadow:inset 1px 1px 2px -1px #fce2c1;
   box-shadow:inset 1px 1px 2px -1px #fce2c1;
@@ -780,14 +785,20 @@ li#create-account-button {
   text-shadow:1px 2px 0px #cc9f52;
 }
 
-.secondary-button:hover {
+.secondary-button:hover,
+.comment_area .add_text_area:hover,
+.comment_area .show_responses:hover,
+#show_more_comments:hover {
   background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fb9e25), color-stop(1, #ffc477) );
   background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
   background-color:#fb9e25;
 }
 
-.secondary-button:active {
+.secondary-button:active,
+.comment_area .add_text_area:active,
+.comment_area .show_responses:active,
+#show_more_comments:active {
   position:relative;
   top:1px;
 }

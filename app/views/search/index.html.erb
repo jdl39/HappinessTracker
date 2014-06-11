@@ -20,8 +20,8 @@
                 <p>If you don't need to track anything specific about <span class="activity_header"></span>, please leave the field blank.</p>
                 <input class="measurements" type="text" name="measure1" placeholder="first measurement" autocomplete="off"><br>
                 <input class="measurements no_display" type="text" name="measure2" id="second_measurement" placeholder="second measurement" autocomplete="off">
-                <button type="button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
-                <button type="button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
+                <button type="button" class="secondary-button" id="add_new_measurement_button" onclick="add_measurement_form()">Add Another Measurement</button>
+                <button type="button" class="secondary-button" id="commit_new_measurement_button" onclick="commit_new_measurement_form()">Submit</button>
             </form>
         </div>
         <div>
@@ -48,7 +48,7 @@
                         Numbers only please.
                     </div>
                 </div>
-                <button type="button" id="commit_add_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
+                <button type="button" class="secondary-button" id="commit_add_measurement_button" onclick="commit_add_measurement_form()">Submit</button>
             </form>
         </div>
         <div>
@@ -63,7 +63,7 @@
                 <div id="challenge_no_message_error" class="no_display form-error-message">
                     You must specify a message for each challenge.
                 </div>
-                <button type="button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
+                <button type="button" class="secondary-button" id="commit_challenge_button" onclick="commit_challenge_form()">Submit</button>
             </form>
         </div>
         <%= render 'shared/goal_form' %>
@@ -110,6 +110,13 @@
         margin: 0 0 15px 0;
     }
 
+    .activity_form h3,
+    .goal-area h3,
+    #comment_system h3 {
+      color: #ff9933;
+      font-weight: bold;
+    }
+
     hr {
         height:1px;
         background-color:#ff9933;
@@ -151,15 +158,18 @@
         margin-bottom: 20px;
     }
 
-    .up_comment {
+    .up_comment,
+    .up_response {
         background-color: LightGreen;
     }
 
-    .down_comment {
+    .down_comment,
+    .down_response {
         background-color: Tomato;
     }
 
-    .up_comment, .down_comment {
+    .up_comment, .down_comment,
+    .up_response, .down_response {
         color:white;
         -webkit-border-radius: 8px;
         border-radius: 8px;
