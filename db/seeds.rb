@@ -8,7 +8,7 @@
 
 userdata = [
 	{'email' => 'non.enim.Mauris@Suspendisse.edu', 'first_name' => 'Xandra', 'last_name' => 'Martinez', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'XandraMartinez'},
-	{'email' => 'a@gmail.com', 'first_name' => 'a', 'last_name' => 'a', 'password' => 'a', 'password_confirmation' => 'a', 'username' => 'a'},
+	{'email' => 'a@gmail.com', 'first_name' => 'Alistair', 'last_name' => 'Monkey', 'password' => 'a', 'password_confirmation' => 'a', 'username' => 'AlistairMonkey'},
 	{'email' => 'sit.amet@iaculislacuspede.net', 'first_name' => 'Alec', 'last_name' => 'Donaldson', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'AlecDonaldson'},
 	{'email' => 'tristique.neque.venenatis@semperNamtempor.co.uk', 'first_name' => 'Price', 'last_name' => 'Kelley', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'PriceKelley'},
 	{'email' => 'vitae.aliquam@molestie.org', 'first_name' => 'Slade', 'last_name' => 'Rojas', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'SladeRojas'},
@@ -107,7 +107,7 @@ userdata = [
 	{'email' => 'Aliquam@ridiculusmusDonec.com', 'first_name' => 'Lynn', 'last_name' => 'Crane', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'LynnCrane'},
 	{'email' => 'Nulla.facilisi.Sed@nectempusscelerisque.org', 'first_name' => 'Cedric', 'last_name' => 'Leblanc', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'CedricLeblanc'},
 	{'email' => 'non.massa@nibhPhasellus.org', 'first_name' => 'Ferdinand', 'last_name' => 'Mccullough', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'FerdinandMccullough'},
-	{'email' => 'fermentum@mauris.ca', 'first_name' => 'Janna', 'last_name' => 'Allen', 'password' => 'password', 'password_confirmation' => 'password', 'username' => 'JannaAllen'}
+	{'email' => 'fermentum@mauris.ca', 'first_name' => 'a', 'last_name' => 'a', 'password' => 'a', 'password_confirmation' => 'a', 'username' => 'a'}
 ];
 
 for datum in userdata do
@@ -235,6 +235,21 @@ for datum in activity_data do
 	act.save
 end
 
+(1..21).each { |days_ago|
+	m = Measurement.new
+	m2 = Measurement.new
+	m.measurement_type = MeasurementType.where(name: "miles").take
+	m2.measurement_type = MeasurementType.where(name: "minutes").take
+	m.value = (21 - days_ago) / 21.0 * 5.0 * ((rand + rand))
+	m2.value = (21 - days_ago) / 21.0 * 120.0 * ((rand + rand))
+	m.activity = Activity.find(1)
+	m2.activity = Activity.find(1)
+	m.created_at = days_ago.days.ago
+	m2.created_at = days_ago.days.ago
+	m.save
+	m2.save
+}
+
 measure_data = [
     {'value' => 1, 'measurement_type_id' => 1, 'activity_id' => 1}
 ]
@@ -300,7 +315,8 @@ end
 challengedata = [ 
 	    {'sender_id' => 1, 'receiver_id' => 2, 'content'=> 'Eat a banana!'}, 
 		{'sender_id' => 1, 'receiver_id' => 3, 'content'=> 'Buy food!'}, 
-	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'Play the guitar!'}, 
+	    {'sender_id' => 2, 'receiver_id' => 3, 'content'=> 'Play the guitar!'},
+	    {'sender_id' => 2, 'receiver_id' => 1, 'content'=> 'You staying fit? #running'}
 ]
 
 for challenge in challengedata do
@@ -373,13 +389,16 @@ hc_humor.save
 hc_humor.happiness_questions << HappinessQuestion.find(10)
 hc_humor.happiness_questions << HappinessQuestion.find(14)
 
+(1..90).each { |days_ago|
 (1..20).each { |num|
 	hr = HappinessResponse.new
+	hr.created_at = days_ago.days.ago
 	hr.user = User.find(1)
 	hr.happiness_question = HappinessQuestion.find(num)
-	hr.value = 1 + rand(6)
+	hr.value = 1 + ((((90 - days_ago) / 90.0) * 4 + 1) * rand).to_i
 	puts hr.user.username + " answered Q" + num.to_s + " with " + hr.value.to_s
 	hr.save
+}
 }
 
 # need readables, upvotes, downvotes
