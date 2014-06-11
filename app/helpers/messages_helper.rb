@@ -39,6 +39,7 @@ module MessagesHelper
     messages = recently_sent_messages(user_id)
 	messages += recently_received_messages(user_id)
 	messages = messages.uniq
+	messages.sort! {|a,b| b[:timestamp] <=> a[:timestamp] }
 	pairs = []
 	message_items = []
 	messages.each do |message|
