@@ -27,8 +27,8 @@
     font-size:15px;
     font-weight:bold;
     font-style:normal;
-    height:65px;
-    line-height:65px;
+    height:40px;
+    line-height:40px;
     width:131px;
     text-decoration:none;
     text-align:center;
@@ -51,8 +51,8 @@
   textarea {
     border-color: #ddd;
     border-width: 3px;  
-    height: 65px;
-    width: 500px;
+    height: 40px;
+    width: 450px;
     resize: none;
     vertical-align:bottom;
   }
@@ -62,24 +62,32 @@
   <h1><%= @viewed_user.first_name %> <%= @viewed_user.last_name %> (friends)</h1>
 </div>
 <div class="profile-left-column">
-  <div id="profile-mood" class = "filter_header" elem_type = "happiness">
+  <div id="profile-mood" class = "filter_header" elem_type = "happiness" header_val = "Recent">
     <h1>Happiness</h1>
   </div>
-  <div id="profile-activities" class = "filter_header" elem_type = "measurement">
+  <div id="profile-activities" class = "filter_header" elem_type = "measurement" header_val = "Activities">
     <h1>Activities</h1>
   </div>
-  <div id="profile-friends" class = "filter_header" elem_type = "friendship">
+  <div id="profile-friends" class = "filter_header" elem_type = "friendship" header_val = "Friends">
     <h1>Friends</h1>
   </div>
-  <div id="profile-challenges" class = "filter_header" elem_type = "challenge">
+  <div id="profile-challenges" class = "filter_header" elem_type = "challenge" header_val = "Challenges">
     <h1>Challenges</h1>
   </div>
-  <div id="profile-messages">
-	<h1><a href = "/inbox/<%= @viewed_user.username %>">Messages</a></h1>
+  <div id="profile-messages" class = "filter_header" elem_type = "message" header_val = "Messages">
+	<h1>Messages</h1>
   </div>
 </div>
 <div class="profile-right-column">
-  <h1>Recent</h1>
+  <h1 id = "profile-header">Recent</h1>
+  
+  <div style="text-align: center; border-width: 20px" id ="message-form-div">
+    <message_submission>
+      <textarea cols="50" rows="4" name="comment" id="comment_area"></textarea>
+      <a href="/profile/<%=@viewed_user.username%>?mode=inbox" class = "main-button" id = "send_button_id"> Send Message! </a>
+      </message_submission>
+  </div>
+
   <ul class="profile-recent" id="friend-profile-recent">
     <% @newsfeed_hashes.each do |item| %>
       <% time = item[:timestamp] %>
@@ -89,12 +97,17 @@
 
         challenge = item[:challenge]
         sender = item[:sender]
-        receiver = item[:receiver] %>
+		receiver = item[:receiver] 
+	    activity_type = item[:activity_type]
+	 %>
         <li elem_type = "challenge" class ="profile-feed-list-item">
           <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged <a href="/profile/<%= receiver.username %>"><%= receiver.first_name %> <%= receiver.last_name %>!</a></p>
-          <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
-          <p><%= challenge.content %></p>
-        </li>
+		  <p class = "challenge_content" >
+		    "<%= challenge.content.capitalize %><% if activity_type != nil %>
+		    <a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
+		  </p>
+		  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>		
+		</li>
         
         <% when 'friendship'
           user1 = item[:user_1]
@@ -108,26 +121,77 @@
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
         </li>
 
+	<% when 'measurement'
+	  user = item[:user]
+      activity_type = item[:activity_type]
+	  measurement = item[:measurement]
+	  measurement_type = item[:measurement_type]
+	%>
+      <li elem_type = "measurement" class = "profile-feed-list-item">
+	    <p><a href = "/profile/<%= user.username %>"><%= user.username %></a> logged a measurement:</p>
+	    <p class = "measurement_content">
+	      <a href = "/track?str=<%= activity_type.name %>"><%= activity_type.name.capitalize %></a> :
+	      <%= measurement.value %> <%= measurement_type.name %>
+	    </p>
+	    <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+	 </li>
 
-        <% else %>
+    <% when 'message'
+	  sender = item[:sender_sig]
+	  receiver = item[:receiver_sig]
+	  content = item[:content]
+  %>
+    <li elem_type = "message" class = "profile-feed-list-item">
+      <p> 
+	    <a href = "/profile/<%= sender %>"> <%=sender %></a>  messaged  <a href = "/profile/<%= receiver %>"> <%= receiver %></a>:
+	  </p>
+	  <p class = "challenge_content" >"<%= content %>"</p>
+	  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+	</li>
+   <% else %>
 
       <% end %>
-    <% end %>
+  <% end %>
   </ul>
 </div>
 
-<div style="text-align: center; border-width: 20px">
-    <message_submission>
-      <textarea cols="50" rows="4" name="comment" id="comment_area"></textarea>
-      <a href="/inbox/<%=@viewed_user.username%>" class = "send_button" id = "send_button_id"> Send </a>
-      </message_submission>
-</div>
-
 <script>
-    $(".filter_header").click(function() {
+	function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	  results = regex.exec(location.search);
+	  return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	$(document).ready(function() {
+	  var mode = getParameterByName('mode');
+	  console.log("Mode: " + mode);
+	  if (mode == 'inbox') {
+		$("#message-form-div").show();
+		console.log($("#profile-header").text("Messages"));  
+	    $(".profile-feed-list-item").each(function (i, elem) {
+	      var list_elem_type = $(this).attr("elem_type");
+	      $(this).show();
+	      if (list_elem_type != 'message') {
+			  $(this).hide();
+		  }
+	    });
+	   } else {
+	     $("#message-form-div").hide();
+	   }
+   }); 
+
+	$(".filter_header").click(function() {
       var elem_type = $(this).attr("elem_type");
-      console.log(elem_type);
-      $(".profile-feed-list-item").each(function (i, elem) {
+	  var header_val = $(this).attr("header_val");
+	  console.log($("#profile-header").text(header_val));
+	  if (header_val != "Messages") {
+	    $("#message-form-div").hide();
+      } else {
+		$("#message-form-div").show();
+	  }
+
+	  $(".profile-feed-list-item").each(function (i, elem) {
         var list_elem_type = $(this).attr("elem_type");
         $(this).show();
 	    if (list_elem_type != elem_type && elem_type != 'happiness') {
