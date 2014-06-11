@@ -318,6 +318,14 @@ class ActivitiesController < ApplicationController
         session["upvoted_responses"] = []
     end
 
+    def getTopComments
+        if session[:comments].nil?
+            new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at, signature')
+            session[:comments] = new_comments.map(&:id)
+        end
+        return session[:comments].first params[:num_needed]
+    end
+
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
