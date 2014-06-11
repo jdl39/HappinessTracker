@@ -1,5 +1,7 @@
 <div class="goal-area no_display">
+<hr>
 <h3 id="goalHeader"></h3>
+<hr>
 <%= form_for :goal, url: "/goals/new" do |f| %>
 	<%= hidden_field_tag "goal[activity_name]", "", id: "hiddenActivityNameField" %>
 	<!-- TODO: Possibly make this a real feature at some point... -->
