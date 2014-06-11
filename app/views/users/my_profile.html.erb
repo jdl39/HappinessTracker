@@ -14,9 +14,6 @@
   <div id="profile-challenges" class = "filter_header" elem_type = "challenge">
     <h1>Challenges</h1>
   </div>
-  <div id="profile-messages">
-    <h1><a href = "/inbox">Messages</a></h1>
-  </div>
 </div>
 <div class="profile-right-column">
   <h1>My Recent</h1>
@@ -29,7 +26,8 @@
 
         challenge = item[:challenge]
         sender = item[:sender]
-		receiver = item[:receiver] 
+		receiver = item[:receiver]
+	    activity_type = item[:activity_type]	
 	  %>
         
 	    <li elem_type = "challenge" class ="profile-feed-list-item">
@@ -38,9 +36,12 @@
           <% else %>
             <p><a href="/profile/<%= sender.username %>"><%= sender.first_name %> <%= sender.last_name %></a> challenged you!</p>
           <% end%>
-          <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
-          <p><%= challenge.content %></p>
-        </li>
+		  <p class = "challenge_content" >
+		    "<%= challenge.content.capitalize %><% if activity_type != nil %>
+			<a href = "/track?str=<%= activity_type.name %>">#<%= activity_type.name %></a><% end %>" 
+		  </p>
+	   	  <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
+		</li>
         
         <% when 'friendship'
           user1 = item[:user_1]
@@ -55,6 +56,20 @@
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
         </li>
 
+	<% when 'measurement'
+	     user = item[:user] 
+		 activity_type = item[:activity_type] 
+		 measurement = item[:measurement] 
+		 measurement_type = item[:measurement_type]
+	 %>
+	     <li elem_type = "measurement" class = "profile-feed-list-item"> 
+		   <p>You logged a measurement:</p>
+		   <p class = "measurement_content">
+		     <a href = "/track?str=<%= activity_type.name %>"><%= activity_type.name.capitalize %></a> :
+		     <%= measurement.value %> <%= measurement_type.name %>
+		   </p>
+		   <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p> 
+		 </li>
         <% else %>
 
       <% end %>
