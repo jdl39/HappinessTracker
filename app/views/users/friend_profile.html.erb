@@ -1,3 +1,63 @@
+<style type="text/css">
+  .send_button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:0px;
+    -moz-border-radius-topleft:0px;
+    border-top-left-radius:0px;
+    -webkit-border-top-right-radius:0px;
+    -moz-border-radius-topright:0px;
+    border-top-right-radius:0px;
+    -webkit-border-bottom-right-radius:0px;
+    -moz-border-radius-bottomright:0px;
+    border-bottom-right-radius:0px;
+    -webkit-border-bottom-left-radius:0px;
+    -moz-border-radius-bottomleft:0px;
+    border-bottom-left-radius:0px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:65px;
+    line-height:65px;
+    width:131px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+    vertical-align:bottom;
+  }
+    
+  .send_button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+  }
+  
+  .send_button:active {
+    position:relative;
+    top:1px;
+  }
+
+  textarea {
+    border-color: #ddd;
+    border-width: 3px;  
+    height: 65px;
+    width: 500px;
+    resize: none;
+    vertical-align:bottom;
+  }
+
+</style>
 <div class="profile-name">
   <h1><%= @viewed_user.first_name %> <%= @viewed_user.last_name %> (friends)</h1>
 </div>
@@ -48,9 +108,31 @@
           <p class="time"><%= time.strftime("%b %d, %l:%M %P") %></p>
         </li>
 
+
         <% else %>
 
       <% end %>
     <% end %>
   </ul>
 </div>
+<div style="text-align: center; border-width: 20px">
+    <message_submission>
+      <textarea cols="50" rows="4" name="comment" id="comment_area"></textarea>
+      <a href="/inbox/<%=@viewed_user.username%>" class = "send_button" id = "send_button_id"> Send </a>
+      </message_submission>
+</div>
+
+<script>
+    $("#send_button_id").click(function() {
+      var text_content = $("#comment_area").val();
+      $.post("/messages/new",
+      {
+        sender_id:<%= current_user.id %>,
+        receiver_id: <%= @viewed_user.id %>,
+        content:text_content    
+      },
+      function(data,status) {
+        location.reload();
+      });
+    });
+</script>
