@@ -143,7 +143,7 @@
 		  <a href = "/profile/<%= message[:sender_sig] %>"> <%= message[:sender_sig] %></a>: <message>"<%= message[:content] %>"</message> 
 		  </left_col>
 		  <right_col>
-		  <a href = "/inbox/<%= message[:sender_sig] %>">View more</a>
+		  <a href = "/profile/<%= message[:sender_sig] %>?mode=inbox">View more</a>
 		  </right_col>
 		</li>
 	    <% end %>
