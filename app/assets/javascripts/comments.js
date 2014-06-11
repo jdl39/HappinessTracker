@@ -1,5 +1,21 @@
 // TODO: create reply buttons for creating (1) activity comment (2) response to comment (3) response (pm) to a response
 
+function load_comments(activity_type_id) {
+// TODO: show upvote
+    $("#comment_area_loading_indicator").show();
+    $.get( "get_top_comments?activity_type_id=" + activity_type_id + "&num_needed=3", function( data ) {
+        $("#comment_area_loading_indicator").hide();
+        for(var i = 0; i < data["new_comments"].length; i++) {
+            var box = new_comment_box(data["new_comments"][i].id)
+            box.find(".comment_body").html(data["new_comments"][i].content)
+            box.find(".signature_box").html(data["new_comments"][i].signature)
+            box.find(".comment_id").val(data["new_comments"][i].id)
+            box.find(".show_responses").click(data["new_comments"][i].id, function(e) { load_new_responses(e.data) } )
+            box.slideDown()
+        }
+    });
+}
+
 function load_new_comments(activity_type_id) {
 // TODO: show upvote
     $("#comment_area_loading_indicator").show();

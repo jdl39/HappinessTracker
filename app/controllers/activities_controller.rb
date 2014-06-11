@@ -319,25 +319,39 @@ class ActivitiesController < ApplicationController
     end
 
     def getTopComments
-        if session[:comments].nil?
+        puts "----------------------------------------"
+        p session[:comments]
+        if session[:comments].nil? || session[:comments].empty?
             new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at, signature')
+            puts "yo"
+            p new_comments
             session[:comments] = new_comments.map(&:id)
         end
-        return session[:comments].first params[:num_needed]
+        new_comments = Comment.where(id: session[:comments]).first params[:num_needed].to_i
+        puts "hi"
+        p new_comments
+        upvoted_comments = new_comments.select{|comment| current_user.up_comments.include? comment.id}.map(&:id)
+        #session[:upvoted_comments] = Comment.where(id: session[:comments]).select{|comment| upvoted_comments.include? comment}.map(&:id)
+        session[:upvoted_comments] = upvoted_comments.map(&:id)
+        render json:  {
+            new_comments: new_comments,
+            upvoted_comments: upvoted_comments
+        }
     end
 
     # call repeatedly to get more comments
     # params; num_needed
     def getComments
         new_comments = current_user.readable_comments.limit(params[:num_needed].to_i).where(activity_type_id: params[:activity_type_id]).where.not(id: session[:comments]).order('created_at DESC').select('comments.id as id, content, created_at, signature')
-        if session[:comments].nil?
+        if session[:comments].nil? || session[:comments].empty?
             session[:comments] = new_comments.map(&:id)
         else
             session[:comments].concat new_comments.map(&:id)
         end
-        upvoted_comments = new_comments.select{|comment| comment.up_voters.include? current_user}
+        upvoted_comments = new_comments.select{|comment| current_user.up_comments.include? comment.id}.map(&:id)
         # for ith comment in comments, true if upvoted, false if not
-        session[:upvoted_comments] = Comment.where(id: session[:comments]).select{|comment| upvoted_comments.include? comment}.map(&:id)
+        #session[:upvoted_comments] = Comment.where(id: session[:comments]).select{|comment| upvoted_comments.include? comment}.map(&:id)
+        session[:upvoted_comments] = upvoted_comments.map(&:id)
         render json:  {
             new_comments: new_comments,
             upvoted_comments: upvoted_comments

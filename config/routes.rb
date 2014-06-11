@@ -38,6 +38,7 @@ HappinessApp::Application.routes.draw do
 
   get 'blah', to: 'activities#delete_me'
   get 'get_comments', to: 'activities#getComments'
+  get 'get_top_comments', to: 'activities#getTopComments'
   post 'submit_new_comment', to: 'activities#new_comment'
   post 'up_comment', to: 'activities#up_comment'
   post 'down_comment', to: 'activities#down_comment'

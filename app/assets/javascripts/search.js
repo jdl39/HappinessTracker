@@ -869,7 +869,7 @@ function hide_goal_form() {
 
 function display_comment_area(displayed_activity_id) {
     document.getElementById("comment_system").style.display = "block";
-    load_new_comments(displayed_activity_id);
+    load_comments(displayed_activity_id);
 }
 function hide_comment_area() {
     reset_comment_area();
